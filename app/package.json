@@ -1,0 +1,79 @@
+{
+  "name": "minecraft-v2",
+  "productName": "Minecraft V2",
+  "version": "1.8.0",
+  "description": "Minecraft V2 - jeu de construction en blocs (WebGL2), solo et réseau local",
+  "author": "pythontester123",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "prepare-game": "node scripts/prepare.js",
+    "start": "node scripts/prepare.js && electron .",
+    "dist": "node scripts/build-win.js",
+    "dist:dir": "node scripts/build-win.js --dir"
+  },
+  "dependencies": {
+    "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "electron": "44.7.2",
+    "electron-builder": "26.15.3",
+    "resedit": "^3.1.0"
+  },
+  "build": {
+    "appId": "fr.pythontester123.minecraftv2",
+    "productName": "Minecraft V2",
+    "copyright": "Textures : Pixel Perfection CE (CC BY-SA 4.0) - Sons : Kenney (CC0) - Police : Monocraft (OFL)",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "lan.js",
+      "icon.png",
+      "game/**",
+      "package.json"
+    ],
+    "electronLanguages": [
+      "fr",
+      "en-US"
+    ],
+    "compression": "maximum",
+    "afterPack": "scripts/afterPack.js",
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "signAndEditExecutable": false,
+      "executableName": "Minecraft V2"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "runAfterFinish": true,
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "shortcutName": "Minecraft V2",
+      "uninstallDisplayName": "Minecraft V2",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerLanguages": [
+        "fr_FR"
+      ],
+      "language": "1036",
+      "deleteAppDataOnUninstall": false,
+      "artifactName": "Minecraft-V2-Installation.${ext}",
+      "differentialPackage": false
+    },
+    "publish": null
+  }
+}

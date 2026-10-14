@@ -1,0 +1,55 @@
+# Fabrique l'installateur Windows de Minecraft V2 et le publie dans « Releases ».
+name: Application Windows
+
+on:
+  push:
+    branches: ['main', 'claude/**']
+    paths: ['app/**', 'minecraft-v2.html', 'assets/LICENSES.md', '.github/workflows/app-windows.yml', '.github/release-notes.md']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: app-windows
+  cancel-in-progress: false
+
+jobs:
+  installateur:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Installer les outils de fabrication
+        working-directory: app
+        env:
+          ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
+        run: npm ci --no-audit --no-fund
+
+      - name: Fabriquer l'installateur Windows
+        working-directory: app
+        run: npm run dist
+
+      - name: Garder l'installateur avec cette exécution
+        uses: actions/upload-artifact@v4
+        with:
+          name: installateur-windows
+          path: app/dist/Minecraft-V2-Installation.exe
+          if-no-files-found: error
+
+      - name: Publier dans « Releases »
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          V=$(node -p "require('./app/package.json').version")
+          if gh release view "v$V" > /dev/null 2>&1; then
+            gh release upload "v$V" app/dist/Minecraft-V2-Installation.exe --clobber
+          else
+            gh release create "v$V" app/dist/Minecraft-V2-Installation.exe --target "$GITHUB_SHA" \
+              --title "Minecraft V2 $V" --notes-file .github/release-notes.md --latest
+          fi

@@ -1,0 +1,6 @@
+node_modules/
+
+# Application de bureau (fichiers générés)
+app/game/
+app/icon.png
+app/dist/

@@ -1,0 +1,12 @@
+{
+  "name": "minecraft-v2-server",
+  "version": "1.0.0",
+  "description": "Minecraft V2 : serveur réseau local pour jouer dans le navigateur",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}
