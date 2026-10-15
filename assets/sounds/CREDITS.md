@@ -169,6 +169,32 @@ leur volume a été normalisé et leur silence de début coupé (modifications).
 | rain.mp3 | weather_rain.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | inchadney — freesound.org/people/inchadney/sounds/58835 | CC BY-SA 3.0 |
 | lava1.mp3 | env_sounds_lava.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | paramat (vl_env_sounds) | CC0 |
 | lava2.mp3 | env_sounds_lava.2.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | paramat (vl_env_sounds) | CC0 |
+| enderman1.mp3 | mobs_mc_enderman_random.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Soundscapes55 — freesound.org/people/Soundscapes55/sounds/434973 | CC0 |
+| enderman_hurt1.mp3 | mobs_mc_enderman_hurt.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | griffinjennings — freesound.org/people/griffinjennings/sounds/463972 (modifié) | CC BY 3.0 |
+| enderman_hurt2.mp3 | mobs_mc_enderman_hurt.2.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | griffinjennings — freesound.org/people/griffinjennings/sounds/463972 (modifié) | CC BY 3.0 |
+| enderman_hurt3.mp3 | mobs_mc_enderman_hurt.3.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | griffinjennings — freesound.org/people/griffinjennings/sounds/463972 (modifié) | CC BY 3.0 |
+| enderman_death.mp3 | mobs_mc_enderman_death.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | griffinjennings — freesound.org/people/griffinjennings/sounds/463972 (modifié) | CC BY 3.0 |
+| ender_tp1.mp3 | mobs_mc_enderman_teleport_src.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | rubberduck — opengameart.org/content/80-cc0-creature-sfx | CC0 |
+| ender_tp2.mp3 | mobs_mc_enderman_teleport_dst.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | rubberduck — opengameart.org/content/80-cc0-creature-sfx | CC0 |
+| dragon_roar.mp3 | mobs_mc_ender_dragon_attack.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | NPXcoot — github.com/NPXcoot1 | CC BY-SA 4.0 |
+| dragon_shoot.mp3 | mobs_mc_ender_dragon_shoot.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | NPXcoot — github.com/NPXcoot1 | CC BY-SA 4.0 |
+| bat_idle.mp3 | mobs_mc_bat_idle.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | suonho — freesound.org/people/suonho/sounds/59344 | CC BY 3.0 |
+| bat_hurt1.mp3 | mobs_mc_bat_hurt.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | toefur — freesound.org/people/toefur/sounds/288941 | CC0 |
+| bat_hurt2.mp3 | mobs_mc_bat_hurt.2.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | toefur — freesound.org/people/toefur/sounds/288941 | CC0 |
+| bat_hurt3.mp3 | mobs_mc_bat_hurt.3.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | toefur — freesound.org/people/toefur/sounds/288941 | CC0 |
+| bat_death.mp3 | mobs_mc_bat_death.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | toefur — freesound.org/people/toefur/sounds/288941 | CC0 |
+| squid_hurt1.mp3 | mobs_mc_squid_hurt.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | qubodup — opengameart.org/content/slime-monster (modifié) | CC BY 3.0 |
+| squid_hurt2.mp3 | mobs_mc_squid_hurt.2.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | qubodup — opengameart.org/content/slime-monster (modifié) | CC BY 3.0 |
+| squid_death.mp3 | mobs_mc_squid_death.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | qubodup — opengameart.org/content/slime-monster (modifié) | CC BY 3.0 |
+| flop1.mp3 | mobs_mc_squid_flop.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | kyles — freesound.org/people/kyles/sounds/450830 | CC0 |
+| flop2.mp3 | mobs_mc_squid_flop.2.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | kyles — freesound.org/people/kyles/sounds/450830 | CC0 |
+| flop3.mp3 | mobs_mc_squid_flop.3.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | kyles — freesound.org/people/kyles/sounds/450830 | CC0 |
+| flop4.mp3 | mobs_mc_squid_flop.4.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | kyles — freesound.org/people/kyles/sounds/450830 | CC0 |
+| firework_launch.mp3 | vl_fireworks_rocket.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Ned Bouhalassa — freesound.org/people/Ned Bouhalassa/sounds/8320 (dérivé par Herowl) | CC0 |
+| firework_blast.mp3 | mcl_bows_firework.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Contributeurs de VoxeLibre (licence par défaut des médias de VoxeLibre) | CC BY-SA 3.0 |
+| fish_splash.mp3 | watersplash.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | tran5ient — freesound.org/people/tran5ient/sounds/190080 | CC0 |
+| fish_bloop.mp3 | bloop.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | You're Perfect Studio — opengameart.org/content/fisheefects | CC0 |
+| fish_reel.mp3 | reel.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | You're Perfect Studio — opengameart.org/content/fisheefects | CC0 |
 
 Licences : CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/), CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/),
 CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0/), CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/),
