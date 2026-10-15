@@ -9,7 +9,7 @@ Ils sont conservés ici pour pouvoir les vérifier, les remplacer ou les réutil
 | `fonts/monocraft-subset.woff2` | Police [Monocraft](https://github.com/IdreesInc/Monocraft) par Idrees Hassan, réduite aux caractères latins | SIL Open Font License 1.1 (`fonts/Monocraft-OFL.txt`) |
 | `sounds/kenney_land.mp3` | Kenney, [Starter Kit 3D Platformer](https://github.com/KenneyNL/Starter-Kit-3D-Platformer), `sounds/land.ogg` | CC0 1.0 (domaine public) |
 | `sounds/kenney_coin.mp3` | Kenney, même kit, `sounds/coin.ogg` | CC0 1.0 |
-| `sounds/sfx/*.mp3` (164 sons : blocs, pas, animaux, monstres, coups, portes, coffres, TNT, arc, pluie, tonnerre…) | Jeux de blocs libres [VoxeLibre](https://github.com/VoxeLibre/VoxeLibre), [Minetest Game](https://github.com/luanti-org/minetest_game), [mobs_animal](https://github.com/minetest-mirrors/mobs_animal) et [Animalia](https://github.com/ElCeejo/animalia) ; auteur et licence de chaque fichier dans `sounds/CREDITS.md` | CC0 1.0, CC BY 3.0, CC BY-SA 3.0, CC BY-SA 4.0 ou MIT selon le fichier |
+| `sounds/sfx/*.mp3` (190 sons : blocs, pas, animaux, monstres, coups, portes, coffres, TNT, arc, pluie, tonnerre, Endermen, Ender Dragon, chauves-souris, calmars, poissons, pêche, feux d'artifice…) | Jeux de blocs libres [VoxeLibre](https://github.com/VoxeLibre/VoxeLibre), [Minetest Game](https://github.com/luanti-org/minetest_game), [mobs_animal](https://github.com/minetest-mirrors/mobs_animal) et [Animalia](https://github.com/ElCeejo/animalia) ; auteur et licence de chaque fichier dans `sounds/CREDITS.md` | CC0 1.0, CC BY 3.0, CC BY-SA 3.0, CC BY-SA 4.0 ou MIT selon le fichier |
 | `music/vibe/freecopyright.mp3` (musique de l'option « vibe ») | Créée par pythontester123, propriétaire de ce projet ; volume ajusté par `music/embed_vibe.py` | Fournie par son auteur pour Minecraft V2 |
 
 | `textures/pixel_perfection_sheet.png` | Textures d'objets, de blocs, de particules et d'animations (eau, lave, portail) du pack [Pixel Perfection Community Edition](https://github.com/Athemis/PixelPerfectionCE) (révision `28e38ca`), créé par XSSheep et mis à jour par la communauté (StonePendant, freejusticehere, Stingraych, Nova_Wostra, lazerl0rd et autres) ; index dans `textures/sheet_index.json` | CC BY-SA 4.0 (`textures/PixelPerfectionCE-LICENSE-CC-BY-SA-4.0.md`) |
@@ -19,7 +19,7 @@ Ils sont conservés ici pour pouvoir les vérifier, les remplacer ou les réutil
 ### Pixel Perfection CE : modifications apportées
 
 Conformément à la licence CC BY-SA 4.0, voici ce qui a été changé :
-- 413 textures 16×16 réunies dans une seule planche (`textures/pixel_perfection_sheet.png`) : objets, blocs, fissures, particules et images des animations ;
+- 439 textures 16×16 réunies dans une seule planche (`textures/pixel_perfection_sheet.png`) : objets, blocs, fissures, particules et images des animations ;
 - armures en cuir teintées avec la couleur de cuir par défaut (#A06540) puis superposées à leur calque `_overlay` ;
 - icône du lit recolorée du bleu au rouge pour correspondre au lit du jeu ;
 - textures teintées par le biome (dessus et côté de l'herbe, feuilles de chêne, herbes hautes, fougère, orbes d'expérience) : transparence fixée à 250/255 pour que le jeu y applique la couleur du biome ; côté de l'herbe fusionné avec son calque `_overlay` ;
@@ -29,7 +29,8 @@ Conformément à la licence CC BY-SA 4.0, voici ce qui a été changé :
 - soleil et phases de lune réduits à 64×64 pixels et réunis dans `textures/pixel_perfection_sky.png` ;
 - créatures : textures réunies dans un atlas 512×512 ; laine du mouton et collier du loup convertis en niveaux de gris normalisés (teintés par le jeu) ;
 - villageois : 35 textures composées (base `villager/villager.png` + tenue du biome `villager/type/…` + métier `villager/profession/…`, en masquant la tête du calque du biome selon les métadonnées `hat`, comme le jeu original) ;
-- prêtre (absent du pack) : tenue du métier `nitwit` recolorée du vert au violet.
+- prêtre (absent du pack) : tenue du métier `nitwit` recolorée du vert au violet ;
+- version 2.0 : icône de l'œuf du dragon (silhouette d'œuf remplie avec `block/dragon_egg`, légèrement ombrée) et icône de la barre de l'End (tige en diagonale recomposée à partir de `block/end_rod`).
 
 Cette planche adaptée reste distribuée sous **CC BY-SA 4.0**. Le pack ne contient
 pas de textures de Mojang pour ces fichiers (le projet tient une liste des
@@ -41,6 +42,11 @@ textures problématiques ; aucune de celles utilisées ici n'y figure).
 - **Particules** : `particle/flame`, `heart`, `critical_hit`, `bubble`, `generic_0…7`, `lava`, `angry`, `glint`, `damage`, `note`, `drip_fall`, `sweep_0…7`, `explosion_0…15`, `bubble_pop_0…4`, `splash_0…3` ; `entity/experience_orb` ;
 - **Créatures** : `entity/steve`, `zombie/zombie`, `skeleton/skeleton`, `creeper/creeper`, `pig/pig`, `cow/cow`, `sheep/sheep`, `sheep/sheep_fur`, `chicken`, `spider/spider`, `spider_eyes`, `blaze`, `wolf/wolf`, `wolf/wolf_tame`, `wolf/wolf_angry`, `wolf/wolf_collar`, `villager/villager`, `villager/type/*` (7 biomes), `villager/profession/farmer`, `librarian`, `armorer`, `butcher`, `nitwit`, `entity/chest/normal` ;
 - **Ciel** : `environment/sun`, `environment/moon_phases`.
+- **Version 2.0** : `block/end_stone`, `end_stone_bricks`, `purpur_block`, `purpur_pillar`, `purpur_pillar_top`, `end_portal_frame_top`, `end_portal_frame_side`, `end_portal_frame_eye`, `end_rod`, `dragon_egg`, `iron_bars` ; `item/ender_eye`, `end_crystal`, `elytra`, `firework_rocket`, `fishing_rod`, `fishing_rod_cast`, `cod`, `salmon`, `tropical_fish`, `pufferfish`, `cooked_cod`, `cooked_salmon`, `ink_sac`.
+
+Les créatures et objets ajoutés en 2.0 sans texture du pack (Enderman, Ender Dragon, cristal de l'End, élytres portées, calmars, poissons,
+poisson-globe, chauve-souris, étiquette, coquille de nautile, poche d'encre luisante, flotteur, étincelles) sont dessinés pixel par pixel
+par le code du jeu : ce sont des créations originales de ce projet.
 
 Les modèles 3D des créatures (taille et position des boîtes, coordonnées de texture,
 animations) sont écrits dans le code du jeu pour correspondre à ces textures.

@@ -103,7 +103,7 @@ JOUER À DEUX (ou plus, jusqu'à 8) SUR LE MÊME RÉSEAU — comme « Ouvrir en 
     - Le jeu ne se met pas en pause avec Échap quand le monde est ouvert,
       et il continue de tourner même si l'hôte change de fenêtre.
     - Seul l'hôte change de dimension : quand il prend un portail, l'ami
-      le suit automatiquement dans le Nether (ou l'Overworld).
+      le suit automatiquement dans le Nether, l'End (ou l'Overworld).
     - Seul l'hôte peut dormir pour passer la nuit ; le lit de l'ami lui
       sert de point de réapparition.
     - Si l'hôte quitte ou ferme le réseau local, l'ami revient à l'écran
@@ -248,6 +248,36 @@ Contenu :
     Il joue les musiques créées par le propriétaire du jeu et intégrées dedans
     (assets/music/vibe), l'une après l'autre avec quelques secondes de pause.
     Tout le monde les a, même sans rien importer.
+  - Version 2.0 (l'update de l'End) :
+    * L'End : des forts sont cachés sous terre. Fabriquez des yeux de l'Ender
+      (perle de l'Ender + poudre de blaze), lancez-les pour trouver le fort,
+      remplissez les 12 cadres du portail et sautez dedans. Île d'end stone,
+      piliers d'obsidienne, cristaux, tours de purpur avec coffres, ciel violet.
+    * L'Ender Dragon : il tourne autour des piliers, fonce, crache son souffle
+      et se soigne grâce aux cristaux ; barre de vie, rayons de lumière à sa
+      mort, portail de retour, œuf du dragon, élytres et générique de fin.
+    * Endermen : ne les regardez pas dans les yeux ! Ils se téléportent,
+      craignent l'eau et lâchent des perles de l'Ender.
+    * Élytres : sautez dans le vide puis appuyez encore sur Espace pour planer
+      (physique de l'original) ; une fusée d'artifice pour accélérer.
+    * Feux d'artifice : boule, double boule, étoile, anneau, cœur, saule doré,
+      visage de creeper… avec lueurs, traînées, crépitements et éclair.
+    * Ciel nocturne : aurores boréales (certaines nuits, surtout dans le froid),
+      étoiles filantes (parfois des pluies entières), lucioles dans l'herbe.
+    * Pêche : lancer, flotteur, sillage du poisson, touche, ferrage ; poissons,
+      déchets et trésors (étiquette, coquille de nautile, émeraudes…).
+    * Vie aquatique et grottes : calmars (encre), calmars luisants, morues et
+      saumons en bancs, poissons tropicaux de toutes les couleurs,
+      poissons-globes qui gonflent et piquent, chauves-souris suspendues.
+    * Sous l'eau : reflets de lumière ondulants sur le fond, vision qui
+      s'éclaircit en restant immergé, fonds marins mieux éclairés.
+    * Carte du monde (touche M) : zones explorées, relief, villages découverts,
+      lit, point de départ, dernière mort, autres joueurs ; zoom à la molette.
+    * Étiquettes : clic droit sur une créature pour lui donner un nom.
+    * Écran titre de nuit avec aurores et feux d'artifice, panneau des
+      nouveautés, guide « Comment aller dans l'End », écran des succès (27).
+    * Nouveaux sons libres (dragon, Endermen, élytres, feux d'artifice, pêche,
+      calmars, chauves-souris), détaillés dans assets/sounds/CREDITS.md.
   - Mode créatif (vol : double espace), commandes (/help, /gamemode,
     /time, /tp, /give, /weather, /summon, /seed, /xp, /heal...).
   - Sauvegarde locale de plusieurs mondes (localStorage), sauvegarde auto.
@@ -257,7 +287,7 @@ Contenu :
 
 Contrôles : ZQSD/WASD, Espace, C (s'accroupir), Maj (courir), E (inventaire),
 clic gauche (miner), clic droit (placer/utiliser), molette/1-9 (barre),
-R (jeter), T (chat), / (commande), F3 (debug), F5 (vue), F1 (masquer HUD).
+R (jeter), T (chat), M (carte), / (commande), F3 (debug), F5 (vue), F1 (masquer HUD).
 
 Sauvegarde : la partie est enregistrée automatiquement toutes les 90 s,
 avec Échap > « Sauvegarder », et quand vous quittez (« Sauvegarder et quitter »).
