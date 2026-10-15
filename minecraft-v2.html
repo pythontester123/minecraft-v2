@@ -64,6 +64,27 @@ canvas#game.playing{cursor:none}
   transform:rotate(-18deg);text-shadow:2px 2px #3f3f00;animation:splash .5s infinite alternate ease-in-out;
   white-space:nowrap;pointer-events:none}
 @keyframes splash{from{transform:rotate(-18deg) scale(1)}to{transform:rotate(-18deg) scale(1.08)}}
+#edition{font-family:var(--font);font-size:min(20px,3.4vw);letter-spacing:4px;margin-top:10px;color:#f3d7ff;-webkit-text-stroke:0;font-weight:bold;animation:edglow 2.4s ease-in-out infinite alternate}
+@keyframes edglow{from{text-shadow:0 0 6px #b04cff,0 0 12px #7a22ff,2px 2px #2a0a3a}to{text-shadow:0 0 14px #d48cff,0 0 30px #9a44ff,2px 2px #2a0a3a}}
+#news{position:absolute;right:2vw;top:24vh;width:min(340px,30vw);padding:12px 14px;background:rgba(10,6,20,.62);border:2px solid rgba(190,120,255,.55);box-shadow:0 0 24px rgba(140,60,255,.35);color:#eee;text-shadow:1px 1px #000;font-size:13px;line-height:1.4;text-align:left}
+#news .newshead{font-size:17px;color:#e9c8ff;margin-bottom:6px}
+#news ul{margin:0 0 10px;padding:0;list-style:none}
+#news li{margin:5px 0;display:flex;gap:8px;align-items:flex-start}
+#news li img{width:24px;height:24px;image-rendering:pixelated;flex:none}
+#news li b{color:#fff}
+#news .mcbtn{width:100%;margin:0}
+@media (max-width:980px),(max-height:540px){#news{display:none}}
+#endguide{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.6)}
+#endguide .box{max-width:min(720px,94vw);max-height:88vh;overflow:auto;background:#1b1328;border:3px solid #a86bff;box-shadow:0 0 40px rgba(150,80,255,.5);padding:18px 22px;color:#eee;text-shadow:1px 1px #000;text-align:left}
+#endguide h2{margin:0 0 10px;color:#e9c8ff}
+#endguide ol{padding-left:22px;line-height:1.55;margin:0 0 10px}
+#endguide li{margin-bottom:4px}
+#achlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px;max-height:62vh;overflow:auto;padding:4px;width:min(900px,94vw)}
+.ach{display:flex;gap:10px;align-items:center;background:rgba(0,0,0,.55);border:2px solid #555;padding:6px 8px;text-align:left}
+.ach.got{border-color:#ffd34d;background:rgba(48,36,0,.65)}
+.ach img{width:32px;height:32px;image-rendering:pixelated;flex:none}
+.ach.lock img{filter:grayscale(1) brightness(.45)}
+.ach .an{color:#ddd;font-size:14px}.ach.got .an{color:#ffe36a}.ach .ad{color:#aaa;font-size:12px}
 #title .menu{margin-top:24px}
 #title .foot{position:absolute;bottom:8px;left:12px;right:12px;display:flex;flex-wrap:wrap;gap:2px 18px;justify-content:space-between;
   font-size:12px;color:#ddd;text-shadow:1px 1px #000;pointer-events:none}
@@ -322,7 +343,7 @@ canvas#game.playing{cursor:none}
 </div>
 
 <div id="title" class="screen hidden">
-  <div id="logo">MINECRAFT<small>V2</small><span id="splash">Fait en HTML !</span></div>
+  <div id="logo">MINECRAFT<small>V2</small><span id="splash">Fait en HTML !</span><div id="edition" data-t="menu.edition">2.0 · L'UPDATE DE L'END</div></div>
   <div class="menu">
     <button class="mcbtn wide" id="btn-single" data-t="menu.single">Un joueur</button>
     <button class="mcbtn wide" id="btn-quick" data-t="menu.quick">Partie rapide (monde aléatoire)</button>
@@ -333,7 +354,8 @@ canvas#game.playing{cursor:none}
     </div>
     <button class="mcbtn wide hidden" id="btn-exit" data-t="menu.exit">Quitter le jeu</button>
   </div>
-  <div class="foot"><span id="version">Minecraft V2 — version 1.7</span><span data-t="menu.assets">Textures : Pixel Perfection CE (CC BY-SA 4.0) • Sons : VoxeLibre, Minetest Game, Animalia, mobs_animal, Kenney (libres) • Police : Monocraft (OFL)</span><span data-t="menu.credit">Un seul fichier HTML • WebGL2 • aucune dépendance</span></div>
+  <div id="news"><div class="newshead" data-t="news.title">Nouveautés de la 2.0</div><ul id="newslist"></ul><button class="mcbtn" id="btn-endguide" data-t="news.guide">Comment aller dans l'End ?</button></div>
+  <div class="foot"><span id="version">Minecraft V2 — version 2.0</span><span data-t="menu.assets">Textures : Pixel Perfection CE (CC BY-SA 4.0) • Sons : VoxeLibre, Minetest Game, Animalia, mobs_animal, Kenney (libres) • Police : Monocraft (OFL)</span><span data-t="menu.credit">Un seul fichier HTML • WebGL2 • aucune dépendance</span></div>
 </div>
 
 <div id="worlds" class="screen dirt hidden">
@@ -380,6 +402,15 @@ canvas#game.playing{cursor:none}
   <button class="mcbtn" id="btn-controls-back" data-t="back">Retour</button>
 </div>
 
+<div id="endguide" class="hidden"><div class="box"><h2 data-t="guide.title">Comment aller dans l'End</h2><ol id="guidelist"></ol><p id="guidetip" style="color:#cfa8ff;font-size:13px"></p><button class="mcbtn" id="btn-endguide-close" data-t="map.close">Fermer</button></div></div>
+
+<div id="achievements" class="screen dirt hidden">
+  <h1 data-t="achs.title">Succès</h1>
+  <p id="achcount" style="margin:0 0 8px;text-shadow:1px 1px #000"></p>
+  <div id="achlist"></div>
+  <div class="btnrow" style="margin-top:10px"><button class="mcbtn" id="btn-ach-back" data-t="ach.back">Retour</button></div>
+</div>
+
 <div id="worldmap" class="hidden">
   <div class="mapframe">
     <div class="maptop"><span data-t="map.title">Carte du monde</span><span id="mapinfo"></span></div>
@@ -394,6 +425,7 @@ canvas#game.playing{cursor:none}
     <button class="mcbtn wide" id="btn-resume" data-t="pause.resume">Retour au jeu</button>
     <button class="mcbtn wide" id="btn-pause-options" data-t="menu.options">Options…</button>
     <button class="mcbtn wide" id="btn-pause-controls" data-t="menu.controls">Contrôles</button>
+    <button class="mcbtn wide" id="btn-ach" data-t="achs.title">Succès</button>
     <button class="mcbtn wide" id="btn-lan" data-t="pause.lan">Ouvrir en réseau local</button>
     <button class="mcbtn wide" id="btn-save" data-t="pause.save">Sauvegarder</button>
     <button class="mcbtn wide" id="btn-quit" data-t="pause.quit">Sauvegarder et quitter</button>
@@ -463,7 +495,7 @@ const GAME_SRC=(document.currentScript&&document.currentScript.textContent)||'';
 
 //@W_START
 /* ============================ UTILITAIRES ============================ */
-const CH=16, WH=128, SEA=48, CLOUD_Y=110, VERSION='1.8';
+const CH=16, WH=128, SEA=48, CLOUD_Y=110, VERSION='2.0';
 const $=id=>document.getElementById(id);
 const clamp=(v,a,b)=>v<a?a:v>b?b:v;
 const lerp=(a,b,t)=>a+(b-a)*t;
@@ -518,7 +550,7 @@ const STR={
  'msg.spawnset':['Point de réapparition défini','Respawn point set'],'msg.sleeping':['Vous dormez…','Sleeping…'],'msg.gamemode':['Mode de jeu changé : {0}','Game mode changed: {0}'],
  'msg.timeset':['Heure réglée sur {0}','Time set to {0}'],'msg.weather':['Météo : {0}','Weather: {0}'],'msg.unknown':['Commande inconnue. Tapez /help','Unknown command. Type /help'],
  'msg.give':['Vous recevez {0} × {1}','Given {0} × {1}'],'msg.noitem':['Objet inconnu : {0}','Unknown item: {0}'],'msg.tp':['Téléporté en {0} {1} {2}','Teleported to {0} {1} {2}'],
- 'msg.seed':['Graine : {0}','Seed: {0}'],'msg.cleared':['Inventaire vidé','Inventory cleared'],'msg.help':['Commandes : /gamemode s|c, /time set day|night|<n>, /tp x y z, /give <objet> [n], /seed, /kill, /weather clear|rain|snow, /clear, /summon <mob>, /spawn, /xp <n>, /fly, /heal, /locate village|fortress|fort, /dim overworld|nether|end','Commands: /gamemode s|c, /time set day|night|<n>, /tp x y z, /give <item> [n], /seed, /kill, /weather clear|rain|snow, /clear, /summon <mob>, /spawn, /xp <n>, /fly, /heal, /locate village|fortress|stronghold, /dim overworld|nether|end'],
+ 'msg.seed':['Graine : {0}','Seed: {0}'],'msg.cleared':['Inventaire vidé','Inventory cleared'],'msg.help':['Commandes : /gamemode s|c, /time set day|night|<n>, /tp x y z, /give <objet> [n], /seed, /kill, /weather clear|rain|snow, /clear, /summon <mob>, /spawn, /xp <n>, /fly, /heal, /locate village|fortress|stronghold, /dim overworld|nether|end · Touches : M = carte, F5 = vue, F1 = masquer l\'interface','Commands: /gamemode s|c, /time set day|night|<n>, /tp x y z, /give <item> [n], /seed, /kill, /weather clear|rain|snow, /clear, /summon <mob>, /spawn, /xp <n>, /fly, /heal, /locate village|fortress|stronghold, /dim overworld|nether|end · Keys: M = map, F5 = view, F1 = hide HUD'],
  'msg.nomob':['Créature inconnue : {0}','Unknown mob: {0}'],'msg.summon':['{0} invoqué','Summoned {0}'],'msg.night':['Nuit','night'],'msg.day':['Jour','day'],
  'msg.fly':['Vol : {0}','Flight: {0}'],'msg.healed':['Soigné','Healed'],'msg.needbed':['Votre lit a disparu ou est obstrué','Your bed is missing or obstructed'],
  'msg.saved_idb':['Monde sauvegardé (IndexedDB)','World saved (IndexedDB)'],'msg.savefail':['Sauvegarde impossible : {0}','Could not save: {0}'],'msg.baby':['Un bébé est né !','A baby was born!'],
@@ -527,7 +559,14 @@ const STR={
  'msg.nether':['Entrée dans le Nether…','Entering the Nether…'],'msg.end':['Entrée dans l\'End…','Entering the End…'],'msg.dragondead':['L\'Ender Dragon est vaincu ! Le portail de sortie s\'est ouvert au centre de l\'île.','The Ender Dragon has been defeated! The exit portal has opened at the centre of the island.'],'msg.dragonritual':['Les cristaux s\'éveillent… le dragon revient !','The crystals awaken… the dragon returns!'],'msg.dragonback':['L\'Ender Dragon est de retour !','The Ender Dragon is back!'],
 'credits.html':['<h1>Minecraft V2</h1><p class="poem">Tu as creusé la pierre et dompté la nuit.</p><p class="poem">Tu as suivi l\'œil jusqu\'au fort oublié,</p><p class="poem">réveillé le portail et traversé le vide.</p><p class="poem2">Là-bas, au bout de tout, un dragon gardait le silence.</p><p class="poem2">Il est tombé. Les étoiles de l\'End brillent pour toi.</p><p class="poem">Mais le monde ne s\'arrête pas ici :</p><p class="poem">il reste des montagnes à gravir, des villages à découvrir,</p><p class="poem">des maisons à construire et des amis à inviter.</p><p class="poem2">Le jeu continue. Le monde est à toi.</p><h2>Minecraft V2</h2><p>Une idée de pythontester123</p><h2>Textures</h2><p>Pixel Perfection CE<br>XSSheep et la communauté Pixel Perfection CE (CC BY-SA 4.0)</p><h2>Sons</h2><p>VoxeLibre, Minetest Game, Animalia, mobs_animal et Kenney<br>(licences libres, détail dans assets/sounds/CREDITS.md)</p><h2>Police</h2><p>Monocraft, par Idrees Hassan (OFL)</p><h2>Musique « vibe »</h2><p>pythontester123</p><h2 style="margin-top:90px">Merci d\'avoir joué !</h2>','<h1>Minecraft V2</h1><p class="poem">You dug through stone and tamed the night.</p><p class="poem">You followed the eye to the forgotten stronghold,</p><p class="poem">woke the portal and crossed the void.</p><p class="poem2">There, at the end of everything, a dragon kept the silence.</p><p class="poem2">It has fallen. The stars of the End shine for you.</p><p class="poem">But the world does not stop here:</p><p class="poem">there are mountains to climb, villages to find,</p><p class="poem">houses to build and friends to invite.</p><p class="poem2">The game goes on. The world is yours.</p><h2>Minecraft V2</h2><p>An idea by pythontester123</p><h2>Textures</h2><p>Pixel Perfection CE<br>XSSheep and the Pixel Perfection CE community (CC BY-SA 4.0)</p><h2>Sounds</h2><p>VoxeLibre, Minetest Game, Animalia, mobs_animal and Kenney<br>(free licences, see assets/sounds/CREDITS.md)</p><h2>Font</h2><p>Monocraft by Idrees Hassan (OFL)</p><h2>“Vibe” music</h2><p>pythontester123</p><h2 style="margin-top:90px">Thanks for playing!</h2>'],'msg.endhello':['Bienvenue dans l\'End. Le dragon vous attend au centre de l\'île…','Welcome to the End. The dragon awaits at the centre of the island…'],'msg.overworld':['Retour dans le monde normal…','Returning to the Overworld…'],'nether.name':['Nether','Nether'],'overworld.name':['Monde normal','Overworld'],'die.nether':['{0} a brûlé dans le Nether','{0} burned in the Nether'],
  'msg.creativeinfo':['Mode créatif — vol : double espace','Creative — double tap space to fly'],
- 'die.fall':['{0} est tombé de trop haut','{0} fell from a high place'],'die.wall':['{0} a percuté un mur à pleine vitesse','{0} experienced kinetic energy'],'msg.elytrabroken':['Vos élytres sont usées : réparez-les avec du cuir dans l\'établi.','Your elytra are worn out: repair them with leather at a crafting table.'],'msg.treasure':['Un trésor !','Treasure!'],'map.title':['Carte du monde','World Map'],'map.center':['Centrer','Center'],'map.close':['Fermer','Close'],'map.help':['Molette : zoom · Glisser : se déplacer · C : centrer · M ou Échap : fermer','Wheel: zoom · Drag: move · C: center · M or Esc: close'],'map.spawn':['Point de départ','Spawn'],'map.bed':['Lit','Bed'],'map.death':['Dernière mort','Last death'],'map.blocks':['blocs','blocks'],'map.village':['Village','Village'],'map.nether':['Impossible de dessiner une carte dans le Nether','Maps don\'t work in the Nether'],'msg.nameprompt':['Nom de la créature (Entrée pour valider)','Creature name (press Enter)'],
+ 'die.fall':['{0} est tombé de trop haut','{0} fell from a high place'],'die.wall':['{0} a percuté un mur à pleine vitesse','{0} experienced kinetic energy'],'msg.elytrabroken':['Vos élytres sont usées : réparez-les avec du cuir dans l\'établi.','Your elytra are worn out: repair them with leather at a crafting table.'],'msg.treasure':['Un trésor !','Treasure!'],'menu.edition':['2.0 · L\'UPDATE DE L\'END','2.0 · THE END UPDATE'],'news.title':['Nouveautés de la 2.0','What\'s new in 2.0'],'news.guide':['Comment aller dans l\'End ?','How to reach the End?'],
+'news.items':['<b>L\'End et l\'Ender Dragon</b> : forts, yeux de l\'Ender, portail et un combat épique|<b>Élytres</b> : planez et accélérez avec des fusées|<b>Feux d\'artifice</b> : cœurs, étoiles, saules dorés… et des creepers !|<b>Ciel nocturne</b> : aurores boréales, étoiles filantes, lucioles|<b>Pêche et vie marine</b> : poissons tropicaux, poissons-globes, calmars luisants, trésors|<b>Eau plus belle</b> : reflets ondulants et vision qui s\'éclaircit sous l\'eau|<b>Carte du monde</b> : touche M|<b>Étiquettes</b> : donnez un nom à vos animaux',
+ '<b>The End and the Ender Dragon</b>: strongholds, eyes of Ender, the portal and an epic fight|<b>Elytra</b>: glide and boost with rockets|<b>Fireworks</b>: hearts, stars, golden willows… and creepers!|<b>Night sky</b>: northern lights, shooting stars, fireflies|<b>Fishing and sea life</b>: tropical fish, pufferfish, glow squids, treasure|<b>Prettier water</b>: dancing caustics and clearer underwater vision|<b>World map</b>: press M|<b>Name tags</b>: name your animals'],
+'guide.title':['Comment aller dans l\'End','How to reach the End'],
+'guide.steps':['Chassez des <b>Endermen</b> la nuit pour leurs <b>perles de l\'Ender</b>, et des <b>Blazes</b> dans une forteresse du Nether pour leurs <b>bâtons de Blaze</b>.|Transformez un bâton en <b>poudre de Blaze</b>, puis fabriquez des <b>yeux de l\'Ender</b> : perle + poudre (il en faut une douzaine).|Lancez un œil (clic droit) : il s\'envole vers le <b>fort</b> le plus proche. Suivez-le, relancez-en un de temps en temps.|Quand l\'œil plonge dans le sol, creusez : le fort est dessous. Trouvez la <b>salle du portail</b>, au-dessus d\'un bassin de lave.|Placez un œil dans chacun des <b>12 cadres</b> : le portail s\'allume. Sautez dedans !|Dans l\'End, détruisez d\'abord les <b>cristaux</b> en haut des piliers (flèches ou boules de neige), puis frappez le dragon quand il se pose sur la fontaine.|Récompense : l\'<b>œuf du dragon</b>, des <b>élytres</b>, beaucoup d\'XP et le portail de retour.',
+ 'Hunt <b>Endermen</b> at night for <b>Ender pearls</b>, and <b>Blazes</b> in a Nether fortress for <b>blaze rods</b>.|Turn a rod into <b>blaze powder</b>, then craft <b>eyes of Ender</b>: pearl + powder (you need about a dozen).|Throw an eye (right click): it flies towards the nearest <b>stronghold</b>. Follow it and throw another from time to time.|When the eye dives into the ground, dig: the stronghold is below. Find the <b>portal room</b>, above a lava pool.|Put an eye in each of the <b>12 frames</b>: the portal lights up. Jump in!|In the End, first destroy the <b>crystals</b> on top of the pillars (arrows or snowballs), then hit the dragon when it lands on the fountain.|Reward: the <b>dragon egg</b>, <b>elytra</b>, lots of XP and the exit portal.'],
+'guide.tip':['Astuce : en mode créatif, /locate stronghold indique le fort le plus proche.','Tip: in creative mode, /locate stronghold shows the nearest stronghold.'],
+'achs.title':['Succès','Achievements'],'ach.back':['Retour','Back'],'ach.count':['{0} succès obtenus sur {1}','{0} of {1} achievements unlocked'],'map.title':['Carte du monde','World Map'],'map.center':['Centrer','Center'],'map.close':['Fermer','Close'],'map.help':['Molette : zoom · Glisser : se déplacer · C : centrer · M ou Échap : fermer','Wheel: zoom · Drag: move · C: center · M or Esc: close'],'map.spawn':['Point de départ','Spawn'],'map.bed':['Lit','Bed'],'map.death':['Dernière mort','Last death'],'map.blocks':['blocs','blocks'],'map.village':['Village','Village'],'map.nether':['Impossible de dessiner une carte dans le Nether','Maps don\'t work in the Nether'],'msg.nameprompt':['Nom de la créature (Entrée pour valider)','Creature name (press Enter)'],
 'msg.elytrahint':['Élytres : équipez-les comme un plastron, sautez dans le vide puis appuyez encore sur Espace pour planer. Une fusée d\'artifice pour accélérer !','Elytra: wear them like a chestplate, jump off a ledge and press Space again to glide. Use a firework rocket to speed up!'],'die.lava':['{0} a essayé de nager dans la lave','{0} tried to swim in lava'],'die.drown':['{0} s\'est noyé','{0} drowned'],
  'die.mob':['{0} a été tué par {1}','{0} was slain by {1}'],'die.explosion':['{0} a explosé','{0} blew up'],'die.arrow':['{0} a été abattu par {1}','{0} was shot by {1}'],
  'die.cactus':['{0} s\'est fait piquer à mort','{0} was pricked to death'],'die.starve':['{0} est mort de faim','{0} starved to death'],'die.void':['{0} est tombé dans le vide','{0} fell out of the world'],'die.cmd':['{0} a été tué','{0} was killed'],
@@ -551,7 +590,7 @@ const STR={
  'sleep.ok':['Bonne nuit… le jour se lève.','Good night… the sun rises.'],
 };
 function t(k,...a){ const s=STR[k]; let r=s?(LANG==='fr'?s[0]:s[1]):k; return r.replace(/\{(\d)\}/g,(m,i)=>a[i]!==undefined?a[i]:''); }
-function applyLang(){ document.querySelectorAll('[data-t]').forEach(el=>{ el.textContent=t(el.dataset.t); }); document.documentElement.lang=LANG; }
+function applyLang(){ document.querySelectorAll('[data-t]').forEach(el=>{ el.textContent=t(el.dataset.t); }); document.documentElement.lang=LANG; if(ATLAS.ctx) try{ buildNews(); }catch(e){} }
 
 //@W_END
 /* ============================ PARAMÈTRES ============================ */
@@ -2625,15 +2664,15 @@ const nightRoll=k=>mulberry32((((world.seed|0)^Math.imul(world.day+11,0x9E3779B1
 const FF_BIOME={plains:0.45,forest:0.8,birch_forest:0.8,swamp:1,jungle:0.9,river:0.75,savanna:0.3,taiga:0.35};
 let ffAcc=0;
 function updateSkyFx(dt){ const ow=world.dim==='overworld', night=1-sky.dl;
-  let want=0; if(ow&&night>0.3){ const cold=biomeAtWorld(floor(player.x),floor(player.z)).temp<=0.25, an=nightRoll(1)<0.4; want=(cold?(an?1:0.35):(an?0.45:0))*smooth(clamp((night-0.3)/0.5,0,1))*(1-world.rainLevel); }
+  let want=0; if(world.menu) want=smooth(clamp((night-0.3)/0.5,0,1)); else if(ow&&night>0.3){ const cold=biomeAtWorld(floor(player.x),floor(player.z)).temp<=0.25, an=nightRoll(1)<0.4; want=(cold?(an?1:0.35):(an?0.45:0))*smooth(clamp((night-0.3)/0.5,0,1))*(1-world.rainLevel); }
   aur.v+=(want-aur.v)*Math.min(1,dt*0.25); if(aur.v>0.45&&player.pitch>0.3) achieve('aurora');
   if(meteor.t>=0){ meteor.t+=dt/meteor.dur; if(meteor.t>1) meteor.t=-1; else if(meteor.t>0.15){ const k=meteor.t, h=[meteor.a[0]+(meteor.b[0]-meteor.a[0])*k,meteor.a[1]+(meteor.b[1]-meteor.a[1])*k,meteor.a[2]+(meteor.b[2]-meteor.a[2])*k], l=Math.hypot(...h), f=forwardVec(); if((f[0]*h[0]+f[1]*h[1]+f[2]*h[2])/l>0.9) achieve('wish'); } }
-  else if(ow&&night>0.75&&world.rainLevel<0.2){ meteor.next-=dt; if(meteor.next<=0){ const shower=nightRoll(2)<0.18; meteor.next=shower?0.6+rnd()*3:5+rnd()*16;
+  else if(ow&&night>0.75&&world.rainLevel<0.2){ meteor.next-=dt; if(meteor.next<=0){ const shower=nightRoll(2)<0.18; meteor.next=world.menu?1+rnd()*4:shower?0.6+rnd()*3:5+rnd()*16;
       const az=rnd()*TAU, el=(28+rnd()*50)*PI/180, az2=az+(rnd()<0.5?1:-1)*(0.25+rnd()*0.35), el2=el-(0.12+rnd()*0.3);
       meteor.a=[Math.cos(el)*Math.cos(az),Math.sin(el),Math.cos(el)*Math.sin(az)]; meteor.b=[Math.cos(el2)*Math.cos(az2),Math.sin(el2),Math.cos(el2)*Math.sin(az2)];
       meteor.dur=0.45+rnd()*0.6; meteor.br=0.6+rnd()*0.7; if(rnd()<0.06){ meteor.br=2.2; meteor.dur*=1.8; } meteor.t=0; } }
   updateFireflies(dt); }
-function updateFireflies(dt){ ffAcc-=dt; if(ffAcc>0) return; ffAcc=0.3; if(world.dim!=='overworld'||!settings.particles||world.rainLevel>0.3) return; const night=1-sky.dl; if(night<0.5) return;
+function updateFireflies(dt){ if(world.menu) return; ffAcc-=dt; if(ffAcc>0) return; ffAcc=0.3; if(world.dim!=='overworld'||!settings.particles||world.rainLevel>0.3) return; const night=1-sky.dl; if(night<0.5) return;
   let n=0; for(const g of glows) if(g.ff) n++; const max=Math.round(55*clamp((night-0.5)/0.3,0,1)); if(n>=max) return;
   for(let k=0;k<6&&n<max;k++){ const a=rnd()*TAU, r=3+rnd()*26; const x=player.x+Math.cos(a)*r, z=player.z+Math.sin(a)*r, bx=floor(x), bz=floor(z); if(!hasChunk(bx,bz)) continue;
     const w=FF_BIOME[biomeAtWorld(bx,bz).name]; if(!w||rnd()>w) continue;
@@ -3385,11 +3424,11 @@ const FW_COLORS=[[255,60,60],[255,190,40],[80,255,110],[60,160,255],[200,80,255]
 const FW_KINDS=['ball','ball','big','big','double','star','ring','willow','heart','creeper','burst'];
 const FW_CREEPER=['.XX..XX.','.XX..XX.','...XX...','..XXXX..','..XXXX..','..X..X..'];
 const fwFl={k:0}; const fwLight=()=>world.dim==='overworld'?fwFl.k*(1-sky.dl):0;
-function fireworkBurst(x,y,z,seed){ const r=mulberry32(seed|0); const pick=()=>FW_COLORS[r()*FW_COLORS.length|0]; const c1=pick(), c2=r()<0.6?pick():c1, fade=r()<0.4?pick():null;
+function fireworkBurst(x,y,z,seed,vol){ const r=mulberry32(seed|0); const pick=()=>FW_COLORS[r()*FW_COLORS.length|0]; const c1=pick(), c2=r()<0.6?pick():c1, fade=r()<0.4?pick():null;
   const kind=FW_KINDS[r()*FW_KINDS.length|0], tw=r()<0.35, trail=r()<0.4;
-  const d=Math.hypot(x-player.x,y-player.y,z-player.z); const v=clamp(1-d/170,0,1), delay=d/343*1000;
+  const d=Math.hypot(x-player.x,y-player.y,z-player.z); const v=vol!==undefined?vol:clamp(1-d/170,0,1), delay=vol!==undefined?0:d/343*1000;
   if(v>0.03) setTimeout(()=>{ sfx(kind==='big'||kind==='double'||kind==='willow'?'firework_large':'firework_blast',undefined,undefined,undefined,v); if(tw) setTimeout(()=>sfx('firework_twinkle',undefined,undefined,undefined,v*0.9),650); },delay);
-  fwFl.k=Math.max(fwFl.k,0.4*clamp(1-d/110,0,1)); if(d<70) achieve('fireworks');
+  fwFl.k=Math.max(fwFl.k,0.4*(vol!==undefined?vol*1.4:clamp(1-d/110,0,1))); if(d<70&&vol===undefined) achieve('fireworks');
   if(!settings.particles) return;
   addGlow({x,y,z,life:0.3,size:6,r:255,g:245,b:225,a:0.85}); addGlow({x,y,z,life:0.6,size:2.2,r:c1[0],g:c1[1],b:c1[2],a:1});
   const spark=(dx,dy,dz,sp,c,o)=>addGlow(Object.assign({x,y,z,vx:dx*sp,vy:dy*sp,vz:dz*sp,life:1.5+r()*0.8,size:0.24,r:c[0],g:c[1],b:c[2],a:1,grav:2.2,drag:0.91,tw,fade,tail:trail?0.1:0.035,ph:r()},o));
@@ -4048,7 +4087,7 @@ document.addEventListener('keydown',e=>{
   input.keys[e.code]=true;
   if(world.menu) return;
   if(MAP.open){ e.preventDefault(); if(e.code==='KeyM'||e.code==='Escape') closeMap(); else if(e.code==='Equal'||e.code==='NumpadAdd') mapZoom(1); else if(e.code==='Minus'||e.code==='NumpadSubtract') mapZoom(-1); else if(e.code==='KeyC'){ MAP.cx=player.x; MAP.cz=player.z; } return; }
-  if(e.code==='Escape'){ e.preventDefault(); if(ui.open) closeGui(); else if(screenOpen()==='pause') closePause(); else if(screenOpen()==='options'||screenOpen()==='controls'){ backFromOptions(); } else if(screenOpen()==='mphost'){ showScreen('pause'); mpRefreshPause(); } else if(!player.dead) openPause(); return; }
+  if(e.code==='Escape'){ e.preventDefault(); if(ui.open) closeGui(); else if(screenOpen()==='pause') closePause(); else if(screenOpen()==='options'||screenOpen()==='controls'){ backFromOptions(); } else if(screenOpen()==='achievements'){ showScreen('pause'); } else if(screenOpen()==='mphost'){ showScreen('pause'); mpRefreshPause(); } else if(!player.dead) openPause(); return; }
   if(e.code==='F3'){ e.preventDefault(); $('debug').classList.toggle('on'); return; }
   if(e.code==='F1'){ e.preventDefault(); hudHidden=!hudHidden; $('hud').style.visibility=hudHidden?'hidden':''; return; }
   if(e.code==='F5'){ e.preventDefault(); player.third=(player.third+1)%3; return; }
@@ -4185,7 +4224,7 @@ function updateToast(dt){ if(toastT>0){ toastT-=dt; if(toastT<=0) $('toast').cla
 
 /* ============================ INTERFACES (INVENTAIRES) ============================ */
 const ui={open:null,container:null,containerPos:null,hover:null,tab:'blocks',search:'',recipeSel:null,showRecipes:false};
-function screenOpen(){ for(const id of ['pause','options','controls','death','title','worlds','newworld','loading','mp','mphost']){ if(!$(id).classList.contains('hidden')) return id; } return null; }
+function screenOpen(){ for(const id of ['pause','options','controls','death','title','worlds','newworld','loading','mp','mphost','achievements']){ if(!$(id).classList.contains('hidden')) return id; } return null; }
 function slotHTML(arr,i,cls){ return `<div class="slot ${cls||''}" data-arr="${arr}" data-i="${i}"><img alt=""><span class="cnt"></span><div class="dur"><i></i></div></div>`; }
 function gridHTML(arr,from,n,cols,cls){ let h=`<div class="grid" style="grid-template-columns:repeat(${cols},38px)">`; for(let i=0;i<n;i++) h+=slotHTML(arr,from+i,cls); return h+'</div>'; }
 const invBottomHTML=()=>`<div style="margin-top:8px">${gridHTML('inv',9,27,9)}</div><div style="margin-top:6px">${gridHTML('inv',0,9,9)}</div>`;
@@ -4299,18 +4338,35 @@ function drawPlayerPreview(cv){ const g=cv.getContext('2d'); g.imageSmoothingEna
   const colors={leather:'rgba(160,100,50,.7)',iron:'rgba(220,220,220,.7)',gold:'rgba(250,215,60,.7)',diamond:'rgba(90,225,220,.7)',elytra:'rgba(150,150,175,.75)'}; const A=player.armor; if(A[0]){ g.fillStyle=A[0].id===B.pumpkin?'rgba(200,120,30,.9)':colors[ITEMS[A[0].id].mat]; g.fillRect(bx-4*s,2,8*s,5*s); } if(A[1]){ g.fillStyle=colors[ITEMS[A[1].id].mat]; g.fillRect(bx-8*s,2+8*s,16*s,12*s); } if(A[2]){ g.fillStyle=colors[ITEMS[A[2].id].mat]; g.fillRect(bx-4*s,2+20*s,8*s,8*s); } if(A[3]){ g.fillStyle=colors[ITEMS[A[3].id].mat]; g.fillRect(bx-4*s,2+28*s,8*s,4*s); } }
 
 /* ============================ MENUS & ÉCRANS ============================ */
-function showScreen(id){ for(const s of ['pause','options','controls','death','title','worlds','newworld','loading','mp','mphost']) $(s).classList.toggle('hidden',s!==id); }
+function showScreen(id){ for(const s of ['pause','options','controls','death','title','worlds','newworld','loading','mp','mphost','achievements']) $(s).classList.toggle('hidden',s!==id); }
 function hideScreens(){ showScreen(null); }
 let optionsFrom='title';
 function openPause(){ if(world.menu||player.dead) return; showScreen('pause'); mpRefreshPause(); releasePointer(); input.mine=input.use=false; $('pauseinfo').textContent=`${world.name} — seed ${world.seed} — ${t('day',world.day+1)}`; }
 function closePause(){ hideScreens(); requestPointer(); }
 function backFromOptions(){ saveSettings(); if(optionsFrom==='pause') showScreen('pause'); else showScreen('title'); }
-const SPLASHES=['Fait en HTML !','100% JavaScript !','Sans dépendances !','WebGL2 pur !','Un seul fichier !','Creusez profond !','Attention aux creepers !','Éclairage lissé !','Génération infinie !','Sssssss…','Aussi en anglais !','Now in English!','Made with ♥','Cactus inclus !','Diamants garantis*','Essayez /gamemode c','F3 pour le debug !','Prenez un lit !','Les moutons sont teintables !','Ne creusez jamais tout droit !'];
+const SPLASHES=['Fait en HTML !','100% JavaScript !','Sans dépendances !','WebGL2 pur !','Un seul fichier !','Creusez profond !','Attention aux creepers !','Éclairage lissé !','Génération infinie !','Sssssss…','Aussi en anglais !','Now in English!','Made with ♥','Cactus inclus !','Diamants garantis*','Essayez /gamemode c','F3 pour le debug !','Prenez un lit !','Les moutons sont teintables !','Ne creusez jamais tout droit !','L\'End est arrivé !','Attention au dragon !','Regardez le ciel cette nuit !','Ça mord !','Faites un vœu !','Les élytres, c\'est la vie !','Gloubi le calmar vous salue !','Nouvelle carte du monde !','Des aurores boréales !','2.0 !'];
+const ACH_DESC={inventory:['Ouvrir l\'inventaire (touche E)','Open your inventory (E key)'],wood:['Récolter du bois','Punch a tree to get wood'],bench:['Fabriquer un établi','Craft a crafting table'],pickaxe:['Fabriquer une pioche','Craft a pickaxe'],furnace:['Fabriquer un four','Craft a furnace'],iron:['Fondre du fer','Smelt an iron ingot'],diamond:['Trouver des diamants','Find diamonds'],hunter:['Vaincre un monstre','Defeat a monster'],cow:['Récolter du cuir','Get some leather'],bread:['Faire du pain','Bake bread'],bed:['Dormir dans un lit','Sleep in a bed'],farmer:['Récolter du blé','Harvest wheat'],dish:['Cuire de la viande','Cook some meat'],explode:['Faire exploser de la TNT','Blow up some TNT'],nether:['Entrer dans le Nether','Enter the Nether'],trade:['Commercer avec un villageois','Trade with a villager'],tame:['Apprivoiser un loup','Tame a wolf'],
+  eye:['Lancer un œil de l\'Ender','Throw an eye of Ender'],end_portal:['Allumer un portail de l\'End','Light an End portal'],the_end:['Entrer dans l\'End','Enter the End'],free_end:['Vaincre l\'Ender Dragon','Defeat the Ender Dragon'],elytra:['Planer avec des élytres','Glide with elytra'],fish:['Pêcher un poisson','Catch a fish'],map:['Ouvrir la carte du monde (touche M)','Open the world map (M key)'],fireworks:['Admirer un feu d\'artifice','Watch a firework show'],wish:['Voir passer une étoile filante','See a shooting star'],aurora:['Contempler une aurore boréale','Gaze at the northern lights']};
+function buildNews(){ const ul=$('newslist'); if(!ul) return; const ic=[B.dragon_egg,I.elytra,I.firework_rocket,I.glowstone_dust,I.fishing_rod,I.tropical_fish,I.compass,I.name_tag]; ul.innerHTML=t('news.items').split('|').map((h,i)=>`<li><img alt="" src="${iconURL(ic[i])||''}"><span>${h}</span></li>`).join(''); }
+function buildGuide(){ $('guidelist').innerHTML=t('guide.steps').split('|').map(h=>`<li>${h}</li>`).join(''); $('guidetip').textContent=t('guide.tip'); }
+function openAchievements(){ const keys=Object.keys(ACH), got=keys.filter(k=>world.achievements[k]).length; $('achcount').textContent=t('ach.count',got,keys.length);
+  $('achlist').innerHTML=keys.map(k=>{ const a=ACH[k], has=!!world.achievements[k], d=ACH_DESC[k]; let src=''; try{ src=iconURL(a[2]())||''; }catch(e){} return `<div class="ach ${has?'got':'lock'}"><img alt="" src="${src}"><div><div class="an">${LANG==='fr'?a[0]:a[1]}</div><div class="ad">${d?(LANG==='fr'?d[0]:d[1]):''}</div></div></div>`; }).join(''); showScreen('achievements'); }
+// Écran titre 2.0 : nuit étoilée, aurores boréales, étoiles filantes et feux d'artifice
+const menuFx={rockets:[],t:2.5};
+function updateMenuFx(dt){ dt=Math.min(dt,0.1); updateGlows(dt); updateSkyFx(dt); const night=1-sky.dl;
+  menuFx.t-=dt; if(menuFx.t<=0&&night>0.55){ menuFx.t=1.6+rnd()*3.4; const yaw=menuCam.a+PI/2, fx=-Math.sin(yaw), fz=-Math.cos(yaw), side=rnd()<0.75?-(0.42+rnd()*0.5):0.45+rnd()*0.25, d=60+rnd()*35, ty=cam.y+d*Math.tan(-0.04+rnd()*0.2);
+    const x=cam.x+fx*d+Math.cos(yaw)*side*d, z=cam.z+fz*d-Math.sin(yaw)*side*d, gy=hasChunk(floor(x),floor(z))?topY(floor(x),floor(z)):cam.y-12; const n=rnd()<0.3?3:1;
+    for(let k=0;k<n;k++) { const y0=Math.min(Math.max(gy,cam.y-30),ty-12); menuFx.rockets.push({x:x+(k-1)*7,y:y0,z:z+(k-1)*4,vy:22,t:-k*0.25,fuse:(ty+(k-1)*3-y0)/22,seed:rnd()*1e9|0}); } if(n===1||rnd()<0.5) sfx('firework_launch',undefined,undefined,undefined,0.25); }
+  for(let i=menuFx.rockets.length-1;i>=0;i--){ const r=menuFx.rockets[i]; r.t+=dt; if(r.t<0) continue; r.y+=r.vy*dt;
+    if(settings.particles) addGlow({x:r.x+(rnd()-.5)*0.2,y:r.y-0.3,z:r.z+(rnd()-.5)*0.2,vx:(rnd()-.5)*0.8,vy:-1-rnd(),vz:(rnd()-.5)*0.8,life:0.4+rnd()*0.4,size:0.16,r:255,g:200,b:120,a:0.9,grav:3,drag:0.88,shrink:1});
+    if(r.t>=r.fuse){ menuFx.rockets.splice(i,1); fireworkBurst(r.x,r.y,r.z,r.seed,0.3); } } }
 function initMenus(){
   $('splash').textContent=SPLASHES[rnd()*SPLASHES.length|0];
   $('btn-single').onclick=()=>{ sfx('click'); openWorlds(); }; $('btn-quick').onclick=()=>{ sfx('click'); createWorld('Monde rapide '+(loadWorldList().length+1),'', 'survival','normal'); };
   $('btn-options').onclick=()=>{ optionsFrom='title'; openOptions(); }; $('btn-pause-options').onclick=()=>{ optionsFrom='pause'; openOptions(); };
   $('btn-controls').onclick=()=>{ optionsFrom='title'; openControls(); }; $('btn-pause-controls').onclick=()=>{ optionsFrom='pause'; openControls(); };
+  $('btn-ach').onclick=()=>{ sfx('click'); openAchievements(); }; $('btn-ach-back').onclick=()=>{ sfx('click'); showScreen('pause'); };
+  $('btn-endguide').onclick=()=>{ sfx('click'); buildGuide(); $('endguide').classList.remove('hidden'); }; $('btn-endguide-close').onclick=()=>{ sfx('click'); $('endguide').classList.add('hidden'); }; buildNews();
   $('btn-options-done').onclick=backFromOptions; $('btn-controls-back').onclick=backFromOptions;
   $('btn-worlds-back').onclick=()=>showScreen('title'); $('btn-create').onclick=()=>{ $('nw-name').value=(LANG==='fr'?'Nouveau monde':'New World'); $('nw-seed').value=''; showScreen('newworld'); };
   $('nw-cancel').onclick=()=>showScreen('worlds'); let nwMode='survival', nwType='normal'; const types=['normal','flat','islands','amplified'];
@@ -4407,7 +4463,7 @@ function chunksReady(focusX,focusZ){ const pcx=focusX>>4,pcz=focusZ>>4,R=setting
 const cam={x:0,y:0,z:0,yaw:0,pitch:0,fov:70};
 function resizeCanvas(){ const dpr=Math.min(window.devicePixelRatio||1,shaderQ()>0?1.0:1.5); const w=floor(window.innerWidth*dpr), h=floor(window.innerHeight*dpr); if(canvas.width!==w||canvas.height!==h){ canvas.width=w; canvas.height=h; } }
 function computeCamera(dt){
-  if(world.menu){ menuCam.a+=dt*0.05; cam.x=menuCam.x+Math.cos(menuCam.a)*2; cam.y=menuCam.y; cam.z=menuCam.z+Math.sin(menuCam.a)*2; cam.yaw=menuCam.a+PI/2; cam.pitch=-0.42; cam.dist=99; return; }
+  if(world.menu){ menuCam.a+=dt*0.05; cam.x=menuCam.x+Math.cos(menuCam.a)*2; cam.y=menuCam.y; cam.z=menuCam.z+Math.sin(menuCam.a)*2; cam.yaw=menuCam.a+PI/2; cam.pitch=-0.14; cam.dist=99; return; }
   let ex=player.x, ey=playerEye(), ez=player.z, yaw=player.yaw, pitch=player.pitch;
   if(settings.bobbing&&player.third===0){ const b=player.bob; ey+=Math.sin(player.bobT*2)*0.045*b; const rx=Math.cos(yaw), rz=-Math.sin(yaw); ex+=rx*Math.sin(player.bobT)*0.03*b; ez+=rz*Math.sin(player.bobT)*0.03*b; }
   if(player.hurtTime>0){ pitch+=Math.sin(player.hurtTime*40)*0.03; yaw+=player.hurtYaw*player.hurtTime; }
@@ -4704,7 +4760,7 @@ function renderFrame(dt){
   for(const [,c] of vis){ const m=c.mesh.op; if(!m) continue; gl.uniform3f(P.u.uOffset,c.cx*16,0,c.cz*16); gl.bindVertexArray(m.vao); gl.drawElements(gl.TRIANGLES,m.n,gl.UNSIGNED_INT,0); drawCalls++; }
   gl.bindVertexArray(null); gl.uniform3f(P.u.uOffset,0,0,0); gl.uniform1f(P.u.uBump,0);
   // Entités
-  if(!world.menu){ drawEntities(proj,view); drawBlobShadows(); drawBolts(); drawFx(); drawFishing(proj,view); }
+  if(!world.menu){ drawEntities(proj,view); drawBlobShadows(); drawBolts(); drawFx(); drawFishing(proj,view); } else drawFx();
   // Nuages
   if(settings.clouds&&world.dim==='overworld'&&!SHQ.active){ if(now()-clouds.lastGen>1500||abs(cam.x-clouds.lastCx)>40||abs(cam.z-clouds.lastCz)>40) buildClouds(cam.x,cam.z); gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA); gl.disable(gl.CULL_FACE); gl.uniform1f(P.u.uFogNear,fogFar*1.2); gl.uniform1f(P.u.uFogFar,fogFar*3); gl.uniform1f(P.u.uAlphaCut,0.01); gl.uniform1f(P.u.uShadowStr,0); gfx.dynClouds.draw(); gl.uniform1f(P.u.uShadowStr,shadow.str); gl.uniform1f(P.u.uFogNear,fogNear); gl.uniform1f(P.u.uFogFar,fogFar); gl.enable(gl.CULL_FACE); gl.disable(gl.BLEND); }
   if(SHQ.active) hqCopyOpaque();
@@ -4898,8 +4954,8 @@ function simStep(dt,scr){
 }
 function frame(ts){
   requestAnimationFrame(frame); mpLastFrame=performance.now(); const realDt=(ts-lastT)/1000||0.016; const dt=Math.min(0.05,realDt); lastT=ts; fpsAcc+=realDt; fpsN++; if(fpsAcc>=0.5){ fps=Math.round(fpsN/fpsAcc); if(SHQ.active&&!world.menu&&fps<22){ SHQ.lowT=(SHQ.lowT||0)+fpsAcc; if(SHQ.lowT>10&&!SHQ.hinted){ SHQ.hinted=true; chat(t(settings.shaders==='ultra'?'sh.slowU':'sh.slow'),'#fc8'); } } else SHQ.lowT=0; fpsAcc=0; fpsN=0; }
-  if(world.menu){ if(menuReady){ tickAnimTextures(); streamChunks(6,menuCam.x,menuCam.z); world.time+=dt*TICKS_PER_SEC*0.5; if(world.time>=DAY_TICKS) world.time-=DAY_TICKS; renderFrame(dt); } return; }
-  const scr=screenOpen(); paused=(scr==='pause'||scr==='options'||scr==='controls'||scr==='mphost')&&!isTouchUI()&&!mp.active||scr==='loading';
+  if(world.menu){ if(menuReady){ tickAnimTextures(); streamChunks(6,menuCam.x,menuCam.z); world.time+=dt*TICKS_PER_SEC*0.5; if(world.time>=DAY_TICKS) world.time-=DAY_TICKS; computeSky(); updateMenuFx(dt); renderFrame(dt); } return; }
+  const scr=screenOpen(); paused=(scr==='pause'||scr==='options'||scr==='controls'||scr==='mphost'||scr==='achievements')&&!isTouchUI()&&!mp.active||scr==='loading';
   pollGamepad();
   if(!paused) simStep(dt,scr);
   mpUpdate(dt);
@@ -4945,7 +5001,7 @@ async function startWorld(meta,data){
   saveWorld(); requestPointer();
 }
 function quitToTitle(){ releasePointer(); if(ui.open) closeGui(true); clearWorld(); world.menu=true; world.id=''; $('hud').classList.add('hidden'); $('chatlog').innerHTML=''; chatLines.length=0; $('touch').classList.remove('on'); setupMenuWorld(); showScreen('title'); $('splash').textContent=SPLASHES[rnd()*SPLASHES.length|0]; }
-function setupMenuWorld(){ world.seed=hashStr('menu-panorama-'+((Date.now()/86400000)|0))|0; world.type='normal'; world.gamemode='survival'; world.time=3000+rnd()*6000; world.weather='clear'; world.rainLevel=0; const sp=findSpawn(); menuCam.x=sp.x; menuCam.z=sp.z; menuCam.y=sp.y+9; menuCam.a=rnd()*TAU; workersSyncWorld(); menuReady=true; }
+function setupMenuWorld(){ world.seed=hashStr('menu-panorama-'+((Date.now()/86400000)|0))|0; world.type='normal'; world.gamemode='survival'; world.time=13900+rnd()*2500; world.weather='clear'; world.rainLevel=0; aur.v=1; meteor.next=1.5; menuFx.t=2; menuFx.rockets.length=0; glows.length=0; const sp=findSpawn(); let bx=sp.x, bz=sp.z, bh=columnInfo(floor(sp.x),floor(sp.z)).h; for(let dx=-40;dx<=40;dx+=4) for(let dz=-40;dz<=40;dz+=4){ const h=columnInfo(floor(sp.x)+dx,floor(sp.z)+dz).h; if(h>bh){ bh=h; bx=sp.x+dx; bz=sp.z+dz; } } menuCam.x=bx; menuCam.z=bz; menuCam.y=Math.max(bh,SEA)+16; menuCam.a=rnd()*TAU; workersSyncWorld(); menuReady=true; }
 /* ============================ MULTIJOUEUR (RÉSEAU LOCAL) ============================
    Comme « Ouvrir en LAN » : le navigateur de l'hôte simule et sauvegarde le monde (blocs, créatures,
    météo, coffres) ; server.js ne fait que relayer les messages. Chaque invité génère le même terrain
