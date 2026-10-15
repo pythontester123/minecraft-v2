@@ -83,6 +83,11 @@ canvas#game.playing{cursor:none}
 .form{display:flex;flex-direction:column;gap:12px;width:min(420px,90vw)}
 .form label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:#ccc}
 #nametags{position:fixed;inset:0;pointer-events:none;z-index:9;overflow:hidden}
+#worldmap{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center}
+.mapframe{width:min(96vw,1400px);height:min(92vh,900px);display:flex;flex-direction:column;gap:6px;padding:8px;background:#c9b48a;border:4px solid #3b2f1f;box-shadow:0 0 0 2px #000,0 10px 40px rgba(0,0,0,.6)}
+.maptop{display:flex;justify-content:space-between;gap:12px;color:#2b2113;font-size:18px}
+#mapcanvas{flex:1;width:100%;min-height:0;border:2px solid #3b2f1f;cursor:grab;touch-action:none;background:#dccb9f repeating-linear-gradient(45deg,rgba(120,90,40,.06) 0 6px,transparent 6px 12px)}
+.mapbar{display:flex;gap:6px;align-items:center}.mapbar .mcbtn{min-width:52px;padding:4px 12px;margin:0}.maphelp{flex:1;color:#3b2f1f;font-size:13px;text-align:center}
 .ntag{position:absolute;transform:translate(-50%,-100%);padding:1px 6px 2px;background:rgba(0,0,0,.38);color:#fff;font-size:15px;line-height:1.25;white-space:nowrap}
 .mpstatus{min-height:1.3em;margin:0;font-size:13px;white-space:pre-line;text-shadow:1px 1px #000;line-height:1.5}
 .mphelp{margin:4px 0 0;font-size:12px;color:#bbb;line-height:1.55;text-shadow:1px 1px #000;white-space:pre-line}
@@ -239,6 +244,7 @@ canvas#game.playing{cursor:none}
 #tjump{right:30px;bottom:110px}
 #tsneak{right:110px;bottom:60px;font-size:16px}
 #tinv{right:30px;bottom:200px;font-size:16px}
+#tmap{right:30px;bottom:270px;font-size:20px}
 #tpause{left:50%;top:8px;transform:translateX(-50%);width:44px;height:36px;font-size:16px}
 #lookpad{position:absolute;left:35%;top:0;right:0;bottom:180px;pointer-events:auto}
 
@@ -304,6 +310,7 @@ canvas#game.playing{cursor:none}
   <div class="tbtn" id="tjump">⤒</div>
   <div class="tbtn" id="tsneak">Sneak</div>
   <div class="tbtn" id="tinv">Inv.</div>
+  <div class="tbtn" id="tmap">🗺</div>
   <div class="tbtn" id="tpause">| |</div>
 </div>
 
@@ -371,6 +378,14 @@ canvas#game.playing{cursor:none}
   <h1 data-t="ctl.title">Contrôles</h1>
   <div class="ctrls" id="ctrllist"></div>
   <button class="mcbtn" id="btn-controls-back" data-t="back">Retour</button>
+</div>
+
+<div id="worldmap" class="hidden">
+  <div class="mapframe">
+    <div class="maptop"><span data-t="map.title">Carte du monde</span><span id="mapinfo"></span></div>
+    <canvas id="mapcanvas"></canvas>
+    <div class="mapbar"><button class="mcbtn" id="mapzout">−</button><button class="mcbtn" id="mapzin">+</button><button class="mcbtn" id="mapcenter" data-t="map.center">Centrer</button><span class="maphelp" data-t="map.help"></span><button class="mcbtn" id="mapclose" data-t="map.close">Fermer</button></div>
+  </div>
 </div>
 
 <div id="pause" class="screen hidden">
@@ -512,7 +527,7 @@ const STR={
  'msg.nether':['Entrée dans le Nether…','Entering the Nether…'],'msg.end':['Entrée dans l\'End…','Entering the End…'],'msg.dragondead':['L\'Ender Dragon est vaincu ! Le portail de sortie s\'est ouvert au centre de l\'île.','The Ender Dragon has been defeated! The exit portal has opened at the centre of the island.'],'msg.dragonritual':['Les cristaux s\'éveillent… le dragon revient !','The crystals awaken… the dragon returns!'],'msg.dragonback':['L\'Ender Dragon est de retour !','The Ender Dragon is back!'],
 'credits.html':['<h1>Minecraft V2</h1><p class="poem">Tu as creusé la pierre et dompté la nuit.</p><p class="poem">Tu as suivi l\'œil jusqu\'au fort oublié,</p><p class="poem">réveillé le portail et traversé le vide.</p><p class="poem2">Là-bas, au bout de tout, un dragon gardait le silence.</p><p class="poem2">Il est tombé. Les étoiles de l\'End brillent pour toi.</p><p class="poem">Mais le monde ne s\'arrête pas ici :</p><p class="poem">il reste des montagnes à gravir, des villages à découvrir,</p><p class="poem">des maisons à construire et des amis à inviter.</p><p class="poem2">Le jeu continue. Le monde est à toi.</p><h2>Minecraft V2</h2><p>Une idée de pythontester123</p><h2>Textures</h2><p>Pixel Perfection CE<br>XSSheep et la communauté Pixel Perfection CE (CC BY-SA 4.0)</p><h2>Sons</h2><p>VoxeLibre, Minetest Game, Animalia, mobs_animal et Kenney<br>(licences libres, détail dans assets/sounds/CREDITS.md)</p><h2>Police</h2><p>Monocraft, par Idrees Hassan (OFL)</p><h2>Musique « vibe »</h2><p>pythontester123</p><h2 style="margin-top:90px">Merci d\'avoir joué !</h2>','<h1>Minecraft V2</h1><p class="poem">You dug through stone and tamed the night.</p><p class="poem">You followed the eye to the forgotten stronghold,</p><p class="poem">woke the portal and crossed the void.</p><p class="poem2">There, at the end of everything, a dragon kept the silence.</p><p class="poem2">It has fallen. The stars of the End shine for you.</p><p class="poem">But the world does not stop here:</p><p class="poem">there are mountains to climb, villages to find,</p><p class="poem">houses to build and friends to invite.</p><p class="poem2">The game goes on. The world is yours.</p><h2>Minecraft V2</h2><p>An idea by pythontester123</p><h2>Textures</h2><p>Pixel Perfection CE<br>XSSheep and the Pixel Perfection CE community (CC BY-SA 4.0)</p><h2>Sounds</h2><p>VoxeLibre, Minetest Game, Animalia, mobs_animal and Kenney<br>(free licences, see assets/sounds/CREDITS.md)</p><h2>Font</h2><p>Monocraft by Idrees Hassan (OFL)</p><h2>“Vibe” music</h2><p>pythontester123</p><h2 style="margin-top:90px">Thanks for playing!</h2>'],'msg.endhello':['Bienvenue dans l\'End. Le dragon vous attend au centre de l\'île…','Welcome to the End. The dragon awaits at the centre of the island…'],'msg.overworld':['Retour dans le monde normal…','Returning to the Overworld…'],'nether.name':['Nether','Nether'],'overworld.name':['Monde normal','Overworld'],'die.nether':['{0} a brûlé dans le Nether','{0} burned in the Nether'],
  'msg.creativeinfo':['Mode créatif — vol : double espace','Creative — double tap space to fly'],
- 'die.fall':['{0} est tombé de trop haut','{0} fell from a high place'],'die.wall':['{0} a percuté un mur à pleine vitesse','{0} experienced kinetic energy'],'msg.elytrabroken':['Vos élytres sont usées : réparez-les avec du cuir dans l\'établi.','Your elytra are worn out: repair them with leather at a crafting table.'],'msg.treasure':['Un trésor !','Treasure!'],'msg.nameprompt':['Nom de la créature (Entrée pour valider)','Creature name (press Enter)'],
+ 'die.fall':['{0} est tombé de trop haut','{0} fell from a high place'],'die.wall':['{0} a percuté un mur à pleine vitesse','{0} experienced kinetic energy'],'msg.elytrabroken':['Vos élytres sont usées : réparez-les avec du cuir dans l\'établi.','Your elytra are worn out: repair them with leather at a crafting table.'],'msg.treasure':['Un trésor !','Treasure!'],'map.title':['Carte du monde','World Map'],'map.center':['Centrer','Center'],'map.close':['Fermer','Close'],'map.help':['Molette : zoom · Glisser : se déplacer · C : centrer · M ou Échap : fermer','Wheel: zoom · Drag: move · C: center · M or Esc: close'],'map.spawn':['Point de départ','Spawn'],'map.bed':['Lit','Bed'],'map.death':['Dernière mort','Last death'],'map.blocks':['blocs','blocks'],'map.village':['Village','Village'],'map.nether':['Impossible de dessiner une carte dans le Nether','Maps don\'t work in the Nether'],'msg.nameprompt':['Nom de la créature (Entrée pour valider)','Creature name (press Enter)'],
 'msg.elytrahint':['Élytres : équipez-les comme un plastron, sautez dans le vide puis appuyez encore sur Espace pour planer. Une fusée d\'artifice pour accélérer !','Elytra: wear them like a chestplate, jump off a ledge and press Space again to glide. Use a firework rocket to speed up!'],'die.lava':['{0} a essayé de nager dans la lave','{0} tried to swim in lava'],'die.drown':['{0} s\'est noyé','{0} drowned'],
  'die.mob':['{0} a été tué par {1}','{0} was slain by {1}'],'die.explosion':['{0} a explosé','{0} blew up'],'die.arrow':['{0} a été abattu par {1}','{0} was shot by {1}'],
  'die.cactus':['{0} s\'est fait piquer à mort','{0} was pricked to death'],'die.starve':['{0} est mort de faim','{0} starved to death'],'die.void':['{0} est tombé dans le vide','{0} fell out of the world'],'die.cmd':['{0} a été tué','{0} was killed'],
@@ -1644,7 +1659,7 @@ function lightChunk(c){ // éclairage initial d'un chunk fraîchement généré
 
 /* ============================ MODIFICATION DE BLOCS ============================ */
 const pendingNeighbor=[];
-function setBlock(x,y,z,id,meta=0,opt){
+function setBlock(x,y,z,id,meta=0,opt){ MAP.dirty.add(ckey(x>>4,z>>4));
   if(y<0||y>=WH) return false;
   const c=world.chunks.get(ckey(x>>4,z>>4)); if(!c||!c.state) return false;
   const lx=x&15,lz=z&15,i=idx(lx,y,lz), old=c.blocks[i], oldMeta=c.meta[i];
@@ -2819,7 +2834,7 @@ function hurt(amount,cause,attacker,bypassArmor){
 function armorPoints(){ let p=0; for(const a of player.armor) if(a) p+=ITEMS[a.id].pts||0; return p; }
 function cleanupArmor(){ for(let i=0;i<4;i++){ const a=player.armor[i]; if(a&&a.dur!==undefined&&a.dur<=0){ player.armor[i]=null; sfx('break'); } } refreshHUD(); }
 function die(cause,attacker){
-  player.dead=true; player.deaths++; player.mineProg=0; player.eating=0; player.bowCharge=-1; player.flying=false; sfx('death');
+  world.lastDeath={x:player.x,z:player.z,dim:world.dim}; player.dead=true; player.deaths++; player.mineProg=0; player.eating=0; player.bowCharge=-1; player.flying=false; sfx('death');
   const name=player.name; const who=attacker?nameOfMob(attacker.type):'';
   const key={wall:'die.wall',fall:'die.fall',lava:'die.lava',drown:'die.drown',mob:'die.mob',explosion:'die.explosion',arrow:'die.arrow',cactus:'die.cactus',starve:'die.starve',void:'die.void',cmd:'die.cmd',fire:'die.fire',poison:'die.mob'}[cause]||'die.cmd';
   const msg=t(key,name,who||'?'); $('deathcause').textContent=msg; $('deathscore').textContent=t('death.score',player.score); chat(msg,'#f66');
@@ -3568,6 +3583,68 @@ function updateMob(e,dt,i,d2){
   if(e.type==='wolf'){ if(fl.water){ e.wet=true; e.shake=0; } else if(e.wet&&e.onGround){ e.wet=false; e.shake=0.001; }
     if(e.shake>0){ e.shake+=dt; if(settings.particles&&e.shake>0.4&&e.shake<1.6&&TEX.p_splash_0!==undefined){ const fr=pframes('p_splash_',4); for(let k=0;k<2;k++) addParticle({x:e.x+(rnd()-.5)*e.w*1.4,y:e.y+0.6+rnd()*0.3,z:e.z+(rnd()-.5)*e.w*1.4,vx:(rnd()-.5)*2,vy:1+rnd(),vz:(rnd()-.5)*2,life:0.5,size:0.06,tile:fr[0],frames:fr,gravity:0.8}); } if(e.shake>=2) e.shake=0; } }
 }
+/* ============================ CARTE DU MONDE (touche M) ============================
+   Les zones explorées sont mémorisées (et sauvegardées). Couleur de chaque colonne = couleur moyenne de la
+   texture du bloc du dessus (teintée par le biome), assombrie en profondeur sous l'eau, ombrée selon le relief.
+   Hors des chunks chargés, la carte reprend le terrain du générateur. */
+const MAP={open:false,zoom:2,cx:0,cz:0,dims:{},col:null,dirty:new Set(),scanT:0,queue:[],drag:null,hover:null};
+function mapDim(dn){ return MAP.dims[dn]||(MAP.dims[dn]={explored:new Set(),tiles:new Set(),regions:new Map(),genq:[]}); }
+function mapColors(){ if(MAP.col) return MAP.col; const n=BLOCKS.length, col=new Float32Array(n*3); const g=ATLAS.ctx;
+  for(const d of BLOCKS){ let r=0,gg=0,b=0,k=0; if(d.faces&&g){ const [u,v]=tileUV(d.faces[2]); const px=g.getImageData(u,v,16,16).data; for(let i=0;i<px.length;i+=4){ if(px[i+3]<40) continue; r+=px[i]; gg+=px[i+1]; b+=px[i+2]; k++; } }
+    if(k){ col[d.id*3]=r/k; col[d.id*3+1]=gg/k; col[d.id*3+2]=b/k; } else { col[d.id*3]=col[d.id*3+1]=col[d.id*3+2]=128; } }
+  MAP.col=col; return col; }
+function mapRegion(md,rx,rz){ const k=rx+','+rz; let c=md.regions.get(k); if(!c){ c=document.createElement('canvas'); c.width=c.height=512; md.regions.set(k,c); } return c; }
+function mapPut(md,cx,cz,data){ const c=mapRegion(md,cx>>5,cz>>5); c.getContext('2d').putImageData(new ImageData(data,16,16),(cx&31)*16,(cz&31)*16); md.tiles.add(ckey(cx,cz)); }
+const mapShade=(arr,o,c,f)=>{ arr[o]=clamp(c[0]*f,0,255); arr[o+1]=clamp(c[1]*f,0,255); arr[o+2]=clamp(c[2]*f,0,255); arr[o+3]=255; };
+function mapTileChunk(c){ const col=mapColors(), out=new Uint8ClampedArray(1024), nb=chunkAt(c.cx,c.cz-1), nether=world.dim==='nether';
+  const topOf=(ch,lx,lz)=>{ let y=ch.heights[(lx<<4)|lz]-1; if(nether){ y=Math.min(y,100); while(y>1&&ch.blocks[idx(lx,y,lz)]!==0) y--; while(y>1&&ch.blocks[idx(lx,y,lz)]===0) y--; } return y; };
+  for(let lz=0;lz<16;lz++) for(let lx=0;lx<16;lx++){ const o=(lz*16+lx)*4; let y=topOf(c,lx,lz); if(y<0){ out[o+3]=world.dim==='end'?255:0; continue; }
+    const id=c.blocks[idx(lx,y,lz)], d=BLOCKS[id], bio=BIOMES[c.biome[(lx<<4)|lz]]||BIOMES[1]; let rgb=[col[id*3],col[id*3+1],col[id*3+2]];
+    if(d.tint&&!nether&&world.dim==='overworld'){ const tc=d.tint==='water'?bio.water:bio[d.tint]; if(tc) rgb=[rgb[0]*tc[0]/255,rgb[1]*tc[1]/255,rgb[2]*tc[2]/255]; }
+    let f=1; if(id===B.water){ let dep=0; while(dep<12&&y-dep-1>0&&c.blocks[idx(lx,y-dep-1,lz)]===B.water) dep++; f=1.12-Math.min(dep,10)*0.05; rgb=[rgb[0]*1.15,rgb[1]*1.15,rgb[2]*1.25]; }
+    else { const ny=lz>0?topOf(c,lx,lz-1):(nb&&nb.state?topOf(nb,lx,15):y); f=y>ny?1.12:y<ny?0.84:1; }
+    mapShade(out,o,rgb,f); }
+  return out; }
+function mapTileGen(cx,cz){ const col=mapColors(), out=new Uint8ClampedArray(1024); const C=id=>[col[id*3],col[id*3+1],col[id*3+2]];
+  const grass=C(B.grass_block), sand=C(B.sand), snow=C(B.snow_block!==undefined?B.snow_block:B.snow), stone=C(B.stone), water=C(B.water);
+  for(let lz=0;lz<16;lz++) for(let lx=0;lx<16;lx++){ const wx=cx*16+lx, wz=cz*16+lz, ci=columnInfo(wx,wz), bio=BIOMES[ci.b]||BIOMES[1], o=(lz*16+lx)*4; let rgb, f=1;
+    if(ci.h<SEA){ const w=bio.water; rgb=[water[0]*w[0]/255*1.15,water[1]*w[1]/255*1.15,water[2]*w[2]/255*1.25]; f=1.12-Math.min(SEA-ci.h,10)*0.05; }
+    else { rgb=bio.snow?snow:bio.sandy?sand:(bio.stony&&ci.h>SEA+18)?stone:[grass[0]*bio.grass[0]/255,grass[1]*bio.grass[1]/255,grass[2]*bio.grass[2]/255]; const nh=columnInfo(wx,wz-1).h; f=ci.h>nh?1.12:ci.h<nh?0.84:1; }
+    mapShade(out,o,rgb,f); }
+  return out; }
+function updateMapData(dt){ if(world.menu) return; const md=mapDim(world.dim); MAP.scanT-=dt;
+  if(MAP.scanT<=0){ MAP.scanT=0.6; for(const c of world.chunks.values()){ if(!c.state) continue; const k=ckey(c.cx,c.cz); if(!md.tiles.has(k)||MAP.dirty.has(k)){ if(!MAP.queue.includes(c)) MAP.queue.push(c); } } MAP.dirty.clear(); }
+  const t0=performance.now(); while(MAP.queue.length&&performance.now()-t0<(MAP.open?6:1.5)){ const c=MAP.queue.shift(); if(world.chunks.get(ckey(c.cx,c.cz))!==c||!c.state) continue; md.explored.add(ckey(c.cx,c.cz)); mapPut(md,c.cx,c.cz,mapTileChunk(c)); }
+  if(MAP.open&&world.dim==='overworld'){ while(md.genq.length&&performance.now()-t0<8){ const k=md.genq.pop(); if(md.tiles.has(k)) continue; const cx=(k>>>16)<<16>>16, cz=(k&0xffff)<<16>>16; mapPut(md,cx,cz,mapTileGen(cx,cz)); } } }
+function openMap(){ if(world.dim==='nether'){ actionBar(t('map.nether')); return; } MAP.open=true; MAP.cx=player.x; MAP.cz=player.z; releasePointer(); $('worldmap').classList.remove('hidden'); achieve('map');
+  const md=mapDim(world.dim); md.genq=[...md.explored].filter(k=>!md.tiles.has(k)); MAP.scanT=0; sfx('click'); }
+function closeMap(){ MAP.open=false; MAP.drag=null; $('worldmap').classList.add('hidden'); requestPointer(); }
+function mapZoom(dir,px,py){ const cv=$('mapcanvas'), Z=[0.5,1,2,4,8]; let i=Z.indexOf(MAP.zoom); const ni=clamp(i+dir,0,Z.length-1); if(ni===i) return; const z0=MAP.zoom, z1=Z[ni];
+  if(px!==undefined){ const wx=MAP.cx+(px-cv.width/2)/z0, wz=MAP.cz+(py-cv.height/2)/z0; MAP.cx=wx-(px-cv.width/2)/z1; MAP.cz=wz-(py-cv.height/2)/z1; } MAP.zoom=z1; }
+function drawMap(){ const cv=$('mapcanvas'); if(!cv) return; const dpr=Math.min(2,window.devicePixelRatio||1), W=Math.round(cv.clientWidth*dpr), H=Math.round(cv.clientHeight*dpr); if(cv.width!==W||cv.height!==H){ cv.width=W; cv.height=H; }
+  const g=cv.getContext('2d'), z=MAP.zoom*dpr, md=mapDim(world.dim); g.imageSmoothingEnabled=false; g.clearRect(0,0,W,H);
+  const x0=MAP.cx-W/2/z, z0=MAP.cz-H/2/z, x1=MAP.cx+W/2/z, z1=MAP.cz+H/2/z;
+  for(let rx=Math.floor(x0/512);rx<=Math.floor(x1/512);rx++) for(let rz=Math.floor(z0/512);rz<=Math.floor(z1/512);rz++){ const c=md.regions.get(rx+','+rz); if(c) g.drawImage(c,(rx*512-x0)*z,(rz*512-z0)*z,512*z,512*z); }
+  const S=(wx,wz)=>[(wx-x0)*z,(wz-z0)*z];
+  const label=(x,y,txt,col)=>{ g.font=`${Math.round(13*dpr)}px Monocraft, monospace`; g.textAlign='center'; g.lineWidth=3*dpr; g.strokeStyle='rgba(0,0,0,.75)'; g.strokeText(txt,x,y); g.fillStyle=col||'#fff'; g.fillText(txt,x,y); };
+  const arrow=(wx,wz,yaw,fill)=>{ const [sx,sy]=S(wx,wz), s=9*dpr; g.save(); g.translate(sx,sy); g.rotate(-yaw+Math.PI); g.beginPath(); g.moveTo(0,s*1.2); g.lineTo(s*0.8,-s*0.8); g.lineTo(0,-s*0.35); g.lineTo(-s*0.8,-s*0.8); g.closePath(); g.fillStyle=fill; g.fill(); g.lineWidth=2*dpr; g.strokeStyle='#000'; g.stroke(); g.restore(); };
+  const icon=(wx,wz,ch,col,txt)=>{ const [sx,sy]=S(wx,wz); if(sx<-20||sy<-20||sx>W+20||sy>H+20) return; g.font=`${Math.round(18*dpr)}px sans-serif`; g.textAlign='center'; g.textBaseline='middle'; g.lineWidth=3*dpr; g.strokeStyle='rgba(0,0,0,.8)'; g.strokeText(ch,sx,sy); g.fillStyle=col; g.fillText(ch,sx,sy); g.textBaseline='alphabetic'; if(txt&&MAP.zoom>=1) label(sx,sy+20*dpr,txt); };
+  if(world.dim==='overworld'){ // villages découverts
+    for(let rx=Math.floor(x0/(VREG*16))-1;rx<=Math.floor(x1/(VREG*16))+1;rx++) for(let rz=Math.floor(z0/(VREG*16))-1;rz<=Math.floor(z1/(VREG*16))+1;rz++){ const v=villageInfo(rx,rz); if(v&&md.explored.has(ckey(floor(v.cx)>>4,floor(v.cz)>>4))) icon(v.cx,v.cz,'⌂','#ffd34d',t('map.village')); } }
+  if(world.dim==='overworld'){ icon(world.spawn.x,world.spawn.z,'★','#fff27a',t('map.spawn')); if(world.bed) icon(world.bed.x,world.bed.z,'▬','#e04040',t('map.bed')); }
+  if(world.lastDeath&&world.lastDeath.dim===world.dim) icon(world.lastDeath.x,world.lastDeath.z,'✖','#ff5050',t('map.death'));
+  if(mp.active) for(const p of mp.peers.values()){ if(p.dim!==world.dim||p.dead) continue; arrow(p.x,p.z,p.yaw,'#5ab0ff'); const [sx,sy]=S(p.x,p.z); label(sx,sy-14*dpr,p.name,'#bfe0ff'); }
+  arrow(player.x,player.z,player.yaw,'#fff');
+  // échelle
+  const blocks=MAP.zoom>=4?16:MAP.zoom>=2?32:MAP.zoom>=1?64:128, bw=blocks*z; g.fillStyle='rgba(0,0,0,.55)'; g.fillRect(W-bw-24*dpr,H-30*dpr,bw+12*dpr,18*dpr); g.fillStyle='#fff'; g.fillRect(W-bw-18*dpr,H-20*dpr,bw,3*dpr); label(W-bw/2-18*dpr,H-24*dpr,blocks+' '+t('map.blocks'));
+  const h=MAP.hover; $('mapinfo').textContent=h?`X ${h[0]}  Z ${h[1]}${h[2]?'  ·  '+h[2]:''}`:''; }
+function mapInit(){ const cv=$('mapcanvas'); if(!cv||cv.dataset.ok) return; cv.dataset.ok=1;
+  cv.addEventListener('wheel',e=>{ e.preventDefault(); const r=cv.getBoundingClientRect(), dpr=cv.width/r.width; mapZoom(e.deltaY<0?1:-1,(e.clientX-r.left)*dpr,(e.clientY-r.top)*dpr); },{passive:false});
+  cv.addEventListener('pointerdown',e=>{ MAP.drag=[e.clientX,e.clientY,MAP.cx,MAP.cz]; cv.setPointerCapture(e.pointerId); });
+  cv.addEventListener('pointermove',e=>{ const r=cv.getBoundingClientRect(), dpr=cv.width/r.width, z=MAP.zoom*dpr; if(MAP.drag){ MAP.cx=MAP.drag[2]-(e.clientX-MAP.drag[0])*dpr/z; MAP.cz=MAP.drag[3]-(e.clientY-MAP.drag[1])*dpr/z; }
+    const wx=Math.floor(MAP.cx+((e.clientX-r.left)*dpr-cv.width/2)/z), wz=Math.floor(MAP.cz+((e.clientY-r.top)*dpr-cv.height/2)/z); const md=mapDim(world.dim); let bn=''; if(md.explored.has(ckey(wx>>4,wz>>4))&&world.dim==='overworld'){ const c=chunkAt(wx>>4,wz>>4); const b=c&&c.state?BIOMES[c.biome[((wx&15)<<4)|(wz&15)]]:BIOMES[columnInfo(wx,wz).b]; if(b) bn=LANG==='fr'?b.fr:b.en; } MAP.hover=[wx,wz,bn]; });
+  cv.addEventListener('pointerup',()=>{ MAP.drag=null; }); cv.addEventListener('pointerleave',()=>{ MAP.hover=null; });
+  $('mapzin').onclick=()=>mapZoom(1); $('mapzout').onclick=()=>mapZoom(-1); $('mapcenter').onclick=()=>{ MAP.cx=player.x; MAP.cz=player.z; }; $('mapclose').onclick=()=>closeMap(); }
 /* ============================ VIE AQUATIQUE ET CHAUVES-SOURIS ============================
    Calmars (propulsion par à-coups, encre), poissons (bancs, fuite, se débattent hors de l'eau),
    poisson-globe (gonfle et pique), chauves-souris (vol erratique, suspendues au plafond). */
@@ -3970,6 +4047,7 @@ document.addEventListener('keydown',e=>{
   if(e.target&&e.target.tagName==='INPUT') return;
   input.keys[e.code]=true;
   if(world.menu) return;
+  if(MAP.open){ e.preventDefault(); if(e.code==='KeyM'||e.code==='Escape') closeMap(); else if(e.code==='Equal'||e.code==='NumpadAdd') mapZoom(1); else if(e.code==='Minus'||e.code==='NumpadSubtract') mapZoom(-1); else if(e.code==='KeyC'){ MAP.cx=player.x; MAP.cz=player.z; } return; }
   if(e.code==='Escape'){ e.preventDefault(); if(ui.open) closeGui(); else if(screenOpen()==='pause') closePause(); else if(screenOpen()==='options'||screenOpen()==='controls'){ backFromOptions(); } else if(screenOpen()==='mphost'){ showScreen('pause'); mpRefreshPause(); } else if(!player.dead) openPause(); return; }
   if(e.code==='F3'){ e.preventDefault(); $('debug').classList.toggle('on'); return; }
   if(e.code==='F1'){ e.preventDefault(); hudHidden=!hudHidden; $('hud').style.visibility=hudHidden?'hidden':''; return; }
@@ -3980,6 +4058,7 @@ document.addEventListener('keydown',e=>{
   else if(e.code==='KeyE'){ e.preventDefault(); openGui(isCreative()?'creative':'inventory'); }
   else if(e.code==='KeyR'){ dropHeld(e.ctrlKey); }
   else if(e.code==='KeyT'){ e.preventDefault(); openChat(''); }
+  else if(e.code==='KeyM'){ e.preventDefault(); mapInit(); openMap(); }
   else if(e.code==='Slash'||e.key==='/'){ e.preventDefault(); openChat('/'); }
   else if(e.code==='Space'){ e.preventDefault(); const n=now(); if(isCreative()&&n-input.lastSpace<300){ player.flying=!player.flying; player.vy=0; input.lastSpace=0; } else input.lastSpace=n; input.jump=true; }
   else if(e.code==='KeyC') input.sneak=true;
@@ -4014,6 +4093,7 @@ function initTouch(){ const T=$('touch'); if(!isTouchUI()){ T.classList.remove('
   btn('tjump',()=>{ input.jump=true; const n=now(); if(isCreative()&&n-input.lastSpace<300){ player.flying=!player.flying; } input.lastSpace=n; },()=>input.jump=false);
   btn('tsneak',()=>{ input.sneak=!input.sneak; $('tsneak').classList.toggle('on',input.sneak); },()=>{ $('tsneak').classList.toggle('on',input.sneak); });
   btn('tinv',()=>{ if(ui.open) closeGui(); else if(playing()) openGui(isCreative()?'creative':'inventory'); });
+  btn('tmap',()=>{ if(MAP.open) closeMap(); else if(playing()){ mapInit(); openMap(); } });
   btn('tpause',()=>{ if(screenOpen()==='pause') closePause(); else if(playing()) openPause(); });
 }
 
@@ -4283,7 +4363,7 @@ function serializeDim(d){
   return {edits,containers,ents}; }
 function serializeWorld(){
   const ow=serializeDim(world.dims.overworld), ne=serializeDim(world.dims.nether), en=serializeDim(world.dims.end); const edits=ow.edits, containers=ow.containers, ents=ow.ents;
-  const p=player; ow.edits=[]; ne.edits=[]; en.edits=[]; return {v:4,mp:{players:world.mpPlayers||{}},spawned:{overworld:[...world.dims.overworld.spawnedKeys],nether:[...world.dims.nether.spawnedKeys],end:[...world.dims.end.spawnedKeys]},dim:world.dim,nether:ne,end:en,endState:world.endState,seed:world.seed,type:world.type,gamemode:world.gamemode,time:world.time,day:world.day,weather:world.weather,weatherTimer:world.weatherTimer,spawn:world.spawn,bed:world.bed,stats:world.stats,achievements:world.achievements,
+  const p=player; ow.edits=[]; ne.edits=[]; en.edits=[]; return {v:4,mp:{players:world.mpPlayers||{}},spawned:{overworld:[...world.dims.overworld.spawnedKeys],nether:[...world.dims.nether.spawnedKeys],end:[...world.dims.end.spawnedKeys]},dim:world.dim,nether:ne,end:en,endState:world.endState,seed:world.seed,type:world.type,gamemode:world.gamemode,time:world.time,day:world.day,weather:world.weather,weatherTimer:world.weatherTimer,spawn:world.spawn,bed:world.bed,stats:world.stats,achievements:world.achievements,map:{overworld:[...mapDim('overworld').explored],end:[...mapDim('end').explored]},lastDeath:world.lastDeath||null,
     player:{x:p.x,y:p.y,z:p.z,yaw:p.yaw,pitch:p.pitch,health:p.health,food:p.food,sat:p.sat,xp:p.xp,level:p.level,inv:p.inv,armor:p.armor,hot:p.hot,flying:p.flying,deaths:p.deaths,score:p.score,air:p.air},edits,containers,ents};
 }
 let saveBusy=false, saveAgain=false;
@@ -4812,7 +4892,7 @@ function simStep(dt,scr){
     randomTickAcc+=dt*20*3; const rt=floor(randomTickAcc); if(rt>0){ randomTickAcc-=rt; runRandomTicks(floor(player.x),floor(player.z),Math.min(rt,6)); }
     tickContainers(dt);
     if(!ui.open&&!player.dead&&scr===null){ if(input.use){ useRepeat-=dt; if(useRepeat<=0){ useRepeat=0.25; doUse(); } } }
-    updatePlayer(dt); updateFishing(dt); updateTarget(); updateEntities(dt); updateSpawning(dt); updateSpawners(dt); animateTick(dt); updateParticles(dt); updateGlows(dt); updateSkyFx(dt); updateMusic(dt);
+    updatePlayer(dt); updateFishing(dt); updateTarget(); updateEntities(dt); updateSpawning(dt); updateSpawners(dt); animateTick(dt); updateParticles(dt); updateGlows(dt); updateSkyFx(dt); updateMapData(dt); updateMusic(dt);
     autosaveT+=dt; if(autosaveT>90){ autosaveT=0; saveWorld(); }
     processNeighborUpdates();
 }
@@ -4823,7 +4903,7 @@ function frame(ts){
   pollGamepad();
   if(!paused) simStep(dt,scr);
   mpUpdate(dt);
-  tickAnimTextures(); renderFrame(dt); updateHUD(); updateBossBar(); updateHudTimers(dt); updateChat(); updateToast(dt); updateDebug();
+  tickAnimTextures(); renderFrame(dt); if(MAP.open) drawMap(); updateHUD(); updateBossBar(); updateHudTimers(dt); updateChat(); updateToast(dt); updateDebug();
 }
 const DIRNAMES=['sud (+z)','ouest (-x)','nord (-z)','est (+x)'];
 function updateDebug(){ const el=$('debug'); if(!el.classList.contains('on')&&!settings.fps) return; if(!el.classList.contains('on')){ el.classList.add('on'); el.textContent=fps+' fps'; return; }
@@ -4837,7 +4917,7 @@ const tickAsync=()=>new Promise(r=>setTimeout(r,0));
 function setLoading(p,txt){ $('loadfill').style.width=(p*100)+'%'; if(txt) $('loadtext').textContent=txt; }
 function findSpawn(){ let best=null; for(let r=0;r<400&&!best;r+=8){ for(let a=0;a<TAU;a+=PI/6){ const x=floor(Math.cos(a)*r), z=floor(Math.sin(a)*r); const ci=columnInfo(x,z); if(ci.h>=SEA+1&&ci.b!==BIO.ocean&&ci.b!==BIO.river&&ci.b!==BIO.frozen_ocean){ best={x:x+0.5,y:ci.h+1,z:z+0.5}; break; } } } colCache.clear(); return best||{x:0.5,y:SEA+10,z:0.5}; }
 function setDimRefs(){ const d=world.dims[world.dim]; world.chunks=d.chunks; world.edits=d.edits; world.containers=d.containers; world.entities=d.entities; world.tickQueue=d.tickQueue; }
-function clearWorld(){ for(const dn in world.dims){ for(const c of world.dims[dn].chunks.values()) if(c.mesh) deleteMesh(c.mesh); } world.dims={overworld:newDim(),nether:newDim(),end:newDim()}; world.endState={killed:false,exitShown:false}; world.dim='overworld'; setDimRefs(); workersSyncWorld(); particles.length=0; glows.length=0; player.hook=null; pendingNeighbor.length=0; world.stats={}; world.achievements={}; world.bed=null; world.mpPlayers={}; }
+function clearWorld(){ MAP.dims={}; MAP.queue.length=0; MAP.dirty.clear(); if(MAP.open) closeMap(); world.lastDeath=null; for(const dn in world.dims){ for(const c of world.dims[dn].chunks.values()) if(c.mesh) deleteMesh(c.mesh); } world.dims={overworld:newDim(),nether:newDim(),end:newDim()}; world.endState={killed:false,exitShown:false}; world.dim='overworld'; setDimRefs(); workersSyncWorld(); particles.length=0; glows.length=0; player.hook=null; pendingNeighbor.length=0; world.stats={}; world.achievements={}; world.bed=null; world.mpPlayers={}; }
 async function startWorld(meta,data){
   showScreen('loading'); $('loadtitle').textContent=data?t('load.load'):t('load.title'); setLoading(0,t('load.gen')); await tickAsync();
   clearWorld(); world.menu=false; world.id=meta.id; world.name=meta.name; world.seed=meta.seed|0; world.type=meta.type||'normal'; world.gamemode=meta.gamemode||'survival'; world.time=1000; world.day=0; world.weather='clear'; world.weatherTimer=600+rnd()*600; world.rainLevel=0;
@@ -4859,7 +4939,8 @@ async function startWorld(meta,data){
   if(data){ const restore=(list,dn)=>{ const prev=world.entities; world.entities=world.dims[dn].entities; for(const e of list||[]){ if(e.type==='item'){ spawnItem(e.x,e.y,e.z,e.item.id,e.item.n,e.item.dur); continue; } const m=spawnMob(e.type,e.x,e.y,e.z); if(!m) continue;
       m.health=e.health; if(e.color) m.color=e.color; m.sheared=!!e.sheared; m.yaw=e.yaw||0; if(e.baby>0){ m.baby=e.baby; m.w*=0.5; m.h*=0.5; } if(e.maxHealth) m.maxHealth=e.maxHealth;
       if(e.tamed){ m.tamed=true; m.sitting=!!e.sitting; m.owner=e.owner; } if(e.prof){ m.prof=e.prof; m.offers=e.offers||m.offers; m.home=e.home; m.restockDay=e.restockDay; } if(e.cn) m.customName=e.cn; if(e.vr!==undefined) m.variant=e.vr; } world.entities=prev; };
-    restore(data.ents,'overworld'); restore(data.nether&&data.nether.ents,'nether'); restore(data.end&&data.end.ents,'end'); }
+    restore(data.ents,'overworld'); restore(data.nether&&data.nether.ents,'nether'); restore(data.end&&data.end.ents,'end');
+    if(data.map) for(const dn in data.map) mapDim(dn).explored=new Set(data.map[dn]); world.lastDeath=data.lastDeath||null; }
   hideScreens(); $('hud').classList.remove('hidden'); buildHotbar(); refreshHUD(); hud.lastHealth=-1; hud.lastFood=-1; hud.lastArmor=-1; hud.lastXp=-1; initTouch(); chat(t('chat.welcome'),'#ff8'); if(world.gamemode==='creative') actionBar(t('msg.creativeinfo'));
   saveWorld(); requestPointer();
 }
