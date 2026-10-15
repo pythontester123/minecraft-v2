@@ -48,7 +48,13 @@ jobs:
         run: |
           V=$(node -p "require('./app/package.json').version")
           if gh release view "v$V" > /dev/null 2>&1; then
-            gh release upload "v$V" app/dist/Minecraft-V2-Installation.exe --clobber
+            # Une version déjà publiée n'est remplacée que depuis main : sur une branche de travail,
+            # l'installateur est seulement fabriqué (et vérifié), pas publié.
+            if [ "$GITHUB_REF_NAME" = "main" ]; then
+              gh release upload "v$V" app/dist/Minecraft-V2-Installation.exe --clobber
+            else
+              echo "La version $V est déjà publiée : rien n'est publié depuis $GITHUB_REF_NAME (changer la version dans app/package.json)."
+            fi
           else
             gh release create "v$V" app/dist/Minecraft-V2-Installation.exe --target "$GITHUB_SHA" \
               --title "Minecraft V2 $V" --notes-file .github/release-notes.md --latest
