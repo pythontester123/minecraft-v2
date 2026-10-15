@@ -492,13 +492,13 @@ const STR={
  'msg.spawnset':['Point de réapparition défini','Respawn point set'],'msg.sleeping':['Vous dormez…','Sleeping…'],'msg.gamemode':['Mode de jeu changé : {0}','Game mode changed: {0}'],
  'msg.timeset':['Heure réglée sur {0}','Time set to {0}'],'msg.weather':['Météo : {0}','Weather: {0}'],'msg.unknown':['Commande inconnue. Tapez /help','Unknown command. Type /help'],
  'msg.give':['Vous recevez {0} × {1}','Given {0} × {1}'],'msg.noitem':['Objet inconnu : {0}','Unknown item: {0}'],'msg.tp':['Téléporté en {0} {1} {2}','Teleported to {0} {1} {2}'],
- 'msg.seed':['Graine : {0}','Seed: {0}'],'msg.cleared':['Inventaire vidé','Inventory cleared'],'msg.help':['Commandes : /gamemode s|c, /time set day|night|<n>, /tp x y z, /give <objet> [n], /seed, /kill, /weather clear|rain|snow, /clear, /summon <mob>, /spawn, /xp <n>, /fly, /heal, /locate village|fortress','Commands: /gamemode s|c, /time set day|night|<n>, /tp x y z, /give <item> [n], /seed, /kill, /weather clear|rain|snow, /clear, /summon <mob>, /spawn, /xp <n>, /fly, /heal, /locate village|fortress'],
+ 'msg.seed':['Graine : {0}','Seed: {0}'],'msg.cleared':['Inventaire vidé','Inventory cleared'],'msg.help':['Commandes : /gamemode s|c, /time set day|night|<n>, /tp x y z, /give <objet> [n], /seed, /kill, /weather clear|rain|snow, /clear, /summon <mob>, /spawn, /xp <n>, /fly, /heal, /locate village|fortress|fort, /dim overworld|nether|end','Commands: /gamemode s|c, /time set day|night|<n>, /tp x y z, /give <item> [n], /seed, /kill, /weather clear|rain|snow, /clear, /summon <mob>, /spawn, /xp <n>, /fly, /heal, /locate village|fortress|stronghold, /dim overworld|nether|end'],
  'msg.nomob':['Créature inconnue : {0}','Unknown mob: {0}'],'msg.summon':['{0} invoqué','Summoned {0}'],'msg.night':['Nuit','night'],'msg.day':['Jour','day'],
  'msg.fly':['Vol : {0}','Flight: {0}'],'msg.healed':['Soigné','Healed'],'msg.needbed':['Votre lit a disparu ou est obstrué','Your bed is missing or obstructed'],
  'msg.saved_idb':['Monde sauvegardé (IndexedDB)','World saved (IndexedDB)'],'msg.savefail':['Sauvegarde impossible : {0}','Could not save: {0}'],'msg.baby':['Un bébé est né !','A baby was born!'],
  'gui.villager':['Villageois','Villager'],'gui.trade':['Échanger','Trade'],'gui.soldout':['Épuisé','Sold out'],'msg.tamed':['Loup apprivoisé ! Clic droit : assis / debout','Wolf tamed! Right-click: sit / stand'],'msg.sit':['Assis','Sitting'],'msg.stand':['Debout','Standing'],
  'msg.locate':['{0} le plus proche : X {1}, Z {2} ({3} blocs)','Nearest {0}: X {1}, Z {2} ({3} blocks)'],'msg.locfail':['Aucun {0} trouvé à proximité','No {0} found nearby'],'loc.village':['village','village'],'loc.fortress':['forteresse','fortress'],'loc.stronghold':['fort','stronghold'],'msg.endportal':['Le portail de l\'End s\'est ouvert…','The End portal has opened…'],'msg.locnether':['Les forteresses sont dans le Nether','Fortresses are in the Nether'],
- 'msg.nether':['Entrée dans le Nether…','Entering the Nether…'],'msg.overworld':['Retour dans le monde normal…','Returning to the Overworld…'],'nether.name':['Nether','Nether'],'overworld.name':['Monde normal','Overworld'],'die.nether':['{0} a brûlé dans le Nether','{0} burned in the Nether'],
+ 'msg.nether':['Entrée dans le Nether…','Entering the Nether…'],'msg.end':['Entrée dans l\'End…','Entering the End…'],'msg.endhello':['Bienvenue dans l\'End. Le dragon vous attend au centre de l\'île…','Welcome to the End. The dragon awaits at the centre of the island…'],'msg.overworld':['Retour dans le monde normal…','Returning to the Overworld…'],'nether.name':['Nether','Nether'],'overworld.name':['Monde normal','Overworld'],'die.nether':['{0} a brûlé dans le Nether','{0} burned in the Nether'],
  'msg.creativeinfo':['Mode créatif — vol : double espace','Creative — double tap space to fly'],
  'die.fall':['{0} est tombé de trop haut','{0} fell from a high place'],'die.lava':['{0} a essayé de nager dans la lave','{0} tried to swim in lava'],'die.drown':['{0} s\'est noyé','{0} drowned'],
  'die.mob':['{0} a été tué par {1}','{0} was slain by {1}'],'die.explosion':['{0} a explosé','{0} blew up'],'die.arrow':['{0} a été abattu par {1}','{0} was shot by {1}'],
@@ -1216,7 +1216,7 @@ class Chunk{
     this.heights=new Uint8Array(256); this.biome=new Uint8Array(256); this.state=0; this.dirty=false; this.mesh=null; this.spawned=false; this.dungeons=[]; this.chests=[]; this.spawners=[]; this.villagers=[]; this.lastMesh=0; this.genPending=false; this.meshPending=false; }
 }
 function newDim(){ return {chunks:new Map(),edits:new Map(),containers:new Map(),entities:[],tickQueue:new Map(),dirtyEdits:new Map(),spawners:new Set(),spawnedKeys:new Set()}; }
-const world={ seed:0, name:'', id:'', type:'normal', gamemode:'survival', dim:'overworld', dims:{overworld:newDim(),nether:newDim()}, chunks:new Map(), time:6000, day:0, weather:'clear', weatherTimer:600, rainLevel:0,
+const world={ seed:0, name:'', id:'', type:'normal', gamemode:'survival', dim:'overworld', dims:{overworld:newDim(),nether:newDim(),end:newDim()}, endState:{killed:false,exitShown:false}, chunks:new Map(), time:6000, day:0, weather:'clear', weatherTimer:600, rainLevel:0,
   edits:new Map(), containers:new Map(), entities:[], tickQueue:new Map(), spawn:{x:0,y:70,z:0}, bed:null, stats:{}, achievements:{}, menu:false };
 const DAY_TICKS=24000, TICKS_PER_SEC=24000/900; // une journée = 15 minutes réelles
 const chunkAt=(cx,cz)=>world.chunks.get(ckey(cx,cz));
@@ -1362,7 +1362,7 @@ function vlw(p,u,v){ const {x,z,w,d,f}=p; switch(f){ case 0: return [x+u,z+v]; c
 function vdims(p){ return (p.f===0||p.f===2)?[p.w,p.d]:[p.d,p.w]; }
 function villageInfo(rx,rz){ const k=world.seed+':'+world.type+':'+rx+','+rz; if(villageCache.has(k)) return villageCache.get(k); const v=computeVillage(rx,rz); if(villageCache.size>400) villageCache.clear(); villageCache.set(k,v); return v; }
 function computeVillage(rx,rz){
-  const s=world.seed; if(world.dim==='nether') return null; if(hash2f(rx,rz,s+500)>(world.type==='flat'?0.6:0.45)) return null;
+  const s=world.seed; if(world.dim!=='overworld') return null; if(hash2f(rx,rz,s+500)>(world.type==='flat'?0.6:0.45)) return null;
   const R=mulberry32(h2(rx,rz,s+501)); const cx=rx*VREG+40+(R()*(VREG-80)|0), cz=rz*VREG+40+(R()*(VREG-80)|0);
   const ci=columnInfo(cx,cz); const okB=[BIO.plains,BIO.savanna,BIO.desert,BIO.taiga,BIO.snowy_plains,BIO.snowy_taiga];
   if(!okB.includes(ci.b)||ci.h<SEA+1||ci.mf>0.3) return null;
@@ -1391,7 +1391,7 @@ function computeVillage(rx,rz){
   return {cx,cz,y:ci.h,style,parts,path:pl,villagers,box:[x0,z0,x1,z1]};
 }
 function placeVillages(c,bl,mt,x0,z0){
-  if(world.dim==='nether') return;
+  if(world.dim!=='overworld') return;
   for(let rx=floor((x0-90)/VREG);rx<=floor((x0+105)/VREG);rx++)for(let rz=floor((z0-90)/VREG);rz<=floor((z0+105)/VREG);rz++){
     const v=villageInfo(rx,rz); if(!v) continue; const b=v.box; if(b[2]<x0||b[0]>x0+15||b[3]<z0||b[1]>z0+15) continue;
     const inC=(x,z)=>x>=x0&&x<x0+16&&z>=z0&&z<z0+16;
@@ -1507,6 +1507,7 @@ function placeStrongholds(c,bl,mt,x0,z0){ if(world.dim!=='overworld') return; co
     for(const [cx,cy,cz,m] of SH_CHESTS){ const wx=st.x+cx, wz=st.z+cz; if(wx<x0||wx>x0+15||wz<z0||wz>z0+15) continue; const i=idx(wx-x0,st.y+cy,wz-z0); bl[i]=B.chest; mt[i]=m; c.chests.push([wx,st.y+cy,wz,'stronghold']); } } }
 function generateChunk(c){
   if(world.dim==='nether'){ generateNetherChunk(c); return; }
+  if(world.dim==='end'){ generateEndChunk(c); return; }
   colCache.clear();
   const s=world.seed, x0=c.cx<<4, z0=c.cz<<4, bl=c.blocks, mt=c.meta;
   const cols=new Array(256);
@@ -1996,11 +1997,17 @@ const VS_SKY=`#version 300 es
 precision highp float; layout(location=0) in vec2 aPos; uniform mat4 uInvVP; uniform vec3 uCam; out vec3 vDir;
 void main(){ gl_Position=vec4(aPos,0.9999,1.0); vec4 w=uInvVP*vec4(aPos,1.0,1.0); vDir=w.xyz/w.w-uCam; }`; // normalisé par fragment (sinon le halo du soleil est décalé)
 const FS_SKY=`#version 300 es
-precision highp float; in vec3 vDir; uniform vec3 uZenith,uHorizon,uSunDir,uSunColor,uSunLight; uniform float uDay,uStars,uTime,uRain,uUnder,uNether,uSQ; uniform sampler2D uSkyLUT; out vec4 frag;
+precision highp float; in vec3 vDir; uniform vec3 uZenith,uHorizon,uSunDir,uSunColor,uSunLight; uniform float uDay,uStars,uTime,uRain,uUnder,uNether,uEnd,uSQ; uniform sampler2D uSkyLUT; out vec4 frag;
 vec2 lutUV(vec3 d){ float el=asin(clamp(d.y,-1.0,1.0)); return vec2(atan(d.z,d.x)*0.15915494+0.5,0.5+0.5*sign(el)*sqrt(abs(el)*0.63661977)); }
 float hash(vec3 p){ p=fract(p*0.3183099+vec3(0.1,0.2,0.3)); p*=17.0; return fract(p.x*p.y*p.z*(p.x+p.y+p.z)); }
 void main(){
   vec3 d=normalize(vDir); float h=clamp(d.y,-1.0,1.0);
+  if(uEnd>0.5&&uUnder<0.5){ // ciel de l'End : vide d'un violet profond, voile grenu, nébuleuse et étoiles
+    vec3 c=mix(uHorizon,uZenith,smoothstep(-0.2,0.7,h)); c+=vec3(0.035,0.028,0.045)*hash(floor(d*85.0));
+    vec3 q=d*2.6; float neb=0.0, a=1.0; for(int i=0;i<4;i++){ neb+=a*(sin(q.x*1.7+uTime*0.012)+sin(q.y*2.3+q.z*1.1)+sin(q.z*1.9-q.x*0.7+uTime*0.008)); q=q.yzx*2.03+vec3(1.7,9.2,3.1); a*=0.5; }
+    c+=vec3(0.20,0.06,0.30)*smoothstep(0.7,2.3,neb)+vec3(0.02,0.11,0.12)*smoothstep(1.6,2.8,neb);
+    vec3 sg=floor(d*230.0); float r=hash(sg); if(r>0.993) c+=vec3(0.8,0.75,1.0)*(0.55+0.45*sin(uTime*2.0+r*70.0))*0.6;
+    frag=vec4(uSQ>0.5?pow(c,vec3(2.2))*1.8:c,1.0); return; }
   if(uSQ>0.5&&uNether<0.5&&uUnder<0.5){ // ciel physique (table de diffusion) + disque solaire HDR
     vec3 c=texture(uSkyLUT,lutUV(vec3(d.x,max(d.y,0.03),d.z))).rgb;
     float cs=dot(d,uSunDir); c+=uSunLight*(smoothstep(0.99955,0.99975,cs)*40.0+pow(max(cs,0.0),700.0)*2.0)*(1.0-uRain);
@@ -2345,7 +2352,8 @@ function computeSky(){
   let zen=mixc([0.012,0.018,0.05],[0.40,0.64,0.98],dl), hor=mixc([0.03,0.04,0.08],[0.72,0.84,0.98],dl);
   const gray=mixc([0.05,0.05,0.07],[0.5,0.53,0.58],dl); zen=mixc(zen,gray,rain*0.85); hor=mixc(hor,gray,rain*0.85);
   if(world.dim==='nether'){ zen=[0.16,0.02,0.02]; hor=[0.30,0.06,0.05]; sky.day=0; sky.dl=0; }
-  sky.zenith=zen; sky.horizon=hor; sky.fog=hor; sky.stars=world.dim==='nether'?0:clamp(1-dl*1.4,0,1);
+  if(world.dim==='end'){ zen=[0.035,0.022,0.055]; hor=[0.085,0.06,0.11]; sky.day=0.74; sky.dl=0; }
+  sky.zenith=zen; sky.horizon=hor; sky.fog=hor; sky.stars=world.dim!=='overworld'?0:clamp(1-dl*1.4,0,1);
   const sunset=clamp(1-abs(sky.sun[1])*3.5,0,1); sky.sunColor=mixc([1,0.92,0.75],[1,0.5,0.2],sunset);
 }
 const clouds={x:0,lastGen:-1e9,lastCx:0,lastCz:0};
@@ -2845,6 +2853,47 @@ function generateNetherChunk(c){
   const ed=world.edits.get(ckey(c.cx,c.cz)); if(ed) for(const [i,v] of ed){ bl[i]=v>>8; mt[i]=v&255; }
   computeHeights(c); c.state=1;
 }
+/* ============================ L'END ============================
+   Île principale en pierre de l'End (rayon ~90) suspendue au-dessus du vide, dix piliers d'obsidienne
+   (rayon 42) qui portent les cristaux de l'End (deux sont protégés par des barreaux), fontaine du portail
+   de sortie au centre (allumée quand le dragon meurt) et îles lointaines au-delà de 650 blocs,
+   avec quelques tours de purpur qui gardent un coffre. */
+function endRadius(ang){ return 88+fbm2(Math.cos(ang)*1.6+3,Math.sin(ang)*1.6+7,2,world.seed+700)*16; }
+function endPlatformX(){ return Math.ceil(endRadius(0))+12; } // plateforme d'arrivée : 12 blocs au large du bord de l'île
+function endColumn(wx,wz){ const s=world.seed, d=Math.hypot(wx,wz);
+  if(d<125){ const R=endRadius(Math.atan2(wz,wx)); if(d>=R) return null; const t=1-d/R;
+    const top=Math.round(57+t*6+fbm2(wx/30,wz/30,2,s+701)*2.5); return [Math.round(top-3-t*t*38-Math.abs(fbm2(wx/18,wz/18,2,s+702))*6),top]; }
+  if(d>650){ const v=fbm2(wx/56,wz/56,3,s+703); if(v<0.3) return null; const k=v-0.3; const top=Math.round(57+k*22+fbm2(wx/20,wz/20,2,s+704)*2); return [Math.round(top-2-k*70),top]; }
+  return null; }
+const EP_CACHE={seed:null,list:[]};
+function endPillars(){ const s=world.seed; if(EP_CACHE.seed===s) return EP_CACHE.list; const r=mulberry32(h2(5,7,s+710)); const hs=[0,1,2,3,4,5,6,7,8,9]; for(let i=9;i>0;i--){ const j=r()*(i+1)|0; const t=hs[i]; hs[i]=hs[j]; hs[j]=t; }
+  const list=[]; for(let i=0;i<10;i++){ const a=2*(-PI+PI/10*i); list.push({x:floor(42*Math.cos(a)),z:floor(42*Math.sin(a)),r:2+floor(i/3),h:76+hs[i]*3,caged:i===1||i===2}); } EP_CACHE.seed=s; EP_CACHE.list=list; return list; }
+function endFountainY(){ const c=endColumn(0,0); return c?c[1]:60; }
+function generateEndChunk(c){
+  const s=world.seed, x0=c.cx<<4, z0=c.cz<<4, bl=c.blocks, mt=c.meta;
+  for(let lx=0;lx<16;lx++)for(let lz=0;lz<16;lz++){ const wx=x0+lx, wz=z0+lz, base=(lx<<4|lz)*WH; c.biome[(lx<<4)|lz]=BIO.plains; const col=endColumn(wx,wz); if(!col) continue; for(let y=Math.max(1,col[0]);y<=Math.min(WH-2,col[1]);y++) bl[base+y]=B.end_stone; }
+  // piliers d'obsidienne, cages de barreaux, socle de bedrock du cristal
+  for(const p of endPillars()){ const R=p.r+2; if(p.x-R>x0+15||p.x+R<x0||p.z-R>z0+15||p.z+R<z0) continue;
+    for(let wx=Math.max(x0,p.x-R);wx<=Math.min(x0+15,p.x+R);wx++)for(let wz=Math.max(z0,p.z-R);wz<=Math.min(z0+15,p.z+R);wz++){ const base=(((wx-x0)<<4)|(wz-z0))*WH; const dx=wx-p.x, dz=wz-p.z;
+      if(dx*dx+dz*dz<=p.r*p.r+p.r) for(let y=50;y<=p.h;y++) bl[base+y]=B.obsidian;
+      if(p.caged&&abs(dx)<=2&&abs(dz)<=2){ for(let y=p.h+1;y<=p.h+3;y++) if(abs(dx)===2||abs(dz)===2) bl[base+y]=B.iron_bars; bl[base+p.h+4]=B.iron_bars; }
+      if(dx===0&&dz===0) bl[base+p.h+1]=B.bedrock; } }
+  // fontaine du portail de sortie (éteinte tant que le dragon vit)
+  if(x0<=4&&x0+15>=-4&&z0<=4&&z0+15>=-4){ const fy=endFountainY();
+    for(let wx=Math.max(x0,-4);wx<=Math.min(x0+15,4);wx++)for(let wz=Math.max(z0,-4);wz<=Math.min(z0+15,4);wz++){ const base=(((wx-x0)<<4)|(wz-z0))*WH; const r=Math.hypot(wx,wz);
+      if(r<=3.5){ bl[base+fy-1]=B.bedrock; bl[base+fy]=B.bedrock; bl[base+fy+1]=r>2.5?B.bedrock:0; for(let y=fy+2;y<=fy+6;y++) bl[base+y]=0; }
+      if(wx===0&&wz===0) for(let y=fy;y<=fy+4;y++) bl[base+y]=B.bedrock; }
+    for(const [tx,tz,m] of [[1,0,2],[-1,0,4],[0,1,3],[0,-1,1]]){ if(tx<x0||tx>x0+15||tz<z0||tz>z0+15) continue; const i=idx(tx-x0,fy+3,tz-z0); bl[i]=B.torch; mt[i]=m; } }
+  // tours de purpur sur les îles lointaines
+  if(Math.hypot(x0+8,z0+8)>700&&hash2f(c.cx,c.cz,s+720)<0.05){ const tx=x0+4+(hash2f(c.cx,c.cz,s+721)*8|0), tz=z0+4+(hash2f(c.cx,c.cz,s+722)*8|0); const col=endColumn(tx,tz);
+    if(col&&col[1]-col[0]>4){ const y0=col[1]+1, hgt=8+(hash2f(c.cx,c.cz,s+723)*8|0);
+      for(let dx=-2;dx<=2;dx++)for(let dz=-2;dz<=2;dz++){ const wx=tx+dx, wz=tz+dz, base=(((wx-x0)<<4)|(wz-z0))*WH; const edge=abs(dx)===2||abs(dz)===2, corner=abs(dx)===2&&abs(dz)===2;
+        for(let y=y0;y<y0+hgt;y++){ bl[base+y]=corner?B.purpur_pillar:edge?((y-y0)%4===2&&!corner&&(dx===0||dz===0)?0:B.purpur_block):0; }
+        bl[base+y0-1]=B.purpur_block; bl[base+y0+hgt]=edge?B.purpur_block:B.end_stone_bricks; if(corner) bl[base+y0+hgt+1]=B.end_rod; }
+      const ci=idx(tx-x0,y0,tz-z0); bl[ci]=B.chest; mt[ci]=0; c.chests.push([tx,y0,tz,'endtower']); bl[idx(tx-x0,y0+hgt-1,tz-z0)]=B.end_rod; } }
+  const ed=world.edits.get(ckey(c.cx,c.cz)); if(ed) for(const [i,v] of ed){ bl[i]=v>>8; mt[i]=v&255; }
+  computeHeights(c); c.state=1;
+}
 //@W_END
 // Détection d'un cadre de portail autour d'une cellule d'air (largeur 2-21, hauteur 3-21, coins facultatifs)
 const portalAir=b=>b===0||b===B.nether_portal||(!BLOCKS[b].solid&&BLOCKS[b].shape!=='liquid');
@@ -2871,6 +2920,8 @@ function tryLightPortal(tg){
 // Séjour dans un portail → changement de dimension
 function updatePortal(dt){
   if(player.portalCooldown>0){ player.portalCooldown-=dt; }
+  if(player.portalCooldown<=0&&!player.changingDim){ const fx=floor(player.x), fz=floor(player.z); // portail de l'End : passage immédiat
+    for(let y=floor(player.y);y<=floor(player.y+0.6);y++) if(getBlock(fx,y,fz)===B.end_portal){ player.portalCooldown=3; if(world.dim==='end') leaveEnd(); else switchDimension('end'); return; } }
   const hw=0.3; let inPortal=false;
   for(let x=floor(player.x-hw);x<=floor(player.x+hw)&&!inPortal;x++)for(let z=floor(player.z-hw);z<=floor(player.z+hw)&&!inPortal;z++)for(let y=floor(player.y);y<=floor(player.y+1.7)&&!inPortal;y++) if(getBlock(x,y,z)===B.nether_portal) inPortal=true;
   if(inPortal&&player.portalCooldown<=0&&!player.changingDim){ player.portalT=(player.portalT||0)+dt; const need=isCreative()?0.8:4; $('tint').style.background='rgba(120,40,200,'+(0.25+0.35*Math.min(1,player.portalT/need))+')'; $('tint').style.opacity=1; player.portalTint=true;
@@ -2894,20 +2945,32 @@ function buildPortal(x,z){
 }
 async function switchDimension(target,opts){
   if(player.changingDim) return; player.changingDim=true; releasePointer(); input.mine=input.use=false; if(ui.open) closeGui(true);
-  showScreen('loading'); $('loadtitle').textContent=t(target==='nether'?'msg.nether':'msg.overworld'); setLoading(0,''); await tickAsync();
-  const from=world.dim; const scale=target==='nether'?1/8:8; let tx=player.x*scale, tz=player.z*scale;
+  const title=t(target==='nether'?'msg.nether':target==='end'?'msg.end':'msg.overworld');
+  showScreen('loading'); $('loadtitle').textContent=title; setLoading(0,''); await tickAsync();
+  const from=world.dim; const scale=from==='overworld'&&target==='nether'?1/8:from==='nether'&&target==='overworld'?8:1; let tx=player.x*scale, tz=player.z*scale;
   for(const c of world.chunks.values()) if(c.mesh){ deleteMesh(c.mesh); c.mesh=null; c.dirty=true; } world.chunks.clear(); particles.length=0; pendingNeighbor.length=0;
   world.dim=target; setDimRefs(); workersSyncWorld(); sfx('portal');
-  if(opts&&opts.respawn){ tx=world.spawn.x; tz=world.spawn.z; }
-  player.x=tx; player.z=tz; player.y=clamp(player.y,10,WH-12); player.vx=player.vy=player.vz=0;
+  // en mourant, ou en sortant de l'End : retour au lit (ou au point d'apparition)
+  const home=!!(opts&&opts.respawn)||from==='end'; let sp=null;
+  if(home&&target==='overworld'){ sp={x:world.spawn.x,y:world.spawn.y,z:world.spawn.z}; if(world.bed) sp={x:world.bed.x+0.5,y:world.bed.y+0.6,z:world.bed.z+0.5}; tx=sp.x; tz=sp.z; }
+  if(target==='end'){ tx=endPlatformX()+0.5; tz=0.5; }
+  player.x=tx; player.z=tz; player.y=clamp(player.y,10,WH-12); player.vx=player.vy=player.vz=0; player.fallDist=0; player.gliding=false;
   await loadAround(tx,tz);
   if(opts&&opts.respawn){ player.changingDim=false; hideScreens(); $('hud').classList.remove('hidden'); await respawn(); return; }
-  let p=findPortalNear(floor(tx),floor(tz),40); if(!p) p=buildPortal(floor(tx),floor(tz));
-  // se placer devant le portail
-  const ax=p.axis?0:1, az=p.axis?1:0; let px_=p.x+0.5, pz_=p.z+0.5; let side=1; for(const s of [1,-1]){ const cx=floor(px_+az*s), cz=floor(pz_+ax*s); if(getBlock(cx,p.y,cz)===0&&getBlock(cx,p.y+1,cz)===0){ side=s; break; } }
-  player.x=px_+az*side; player.z=pz_+ax*side; player.y=p.y; ensureSafeSpawn(); player.portalCooldown=6; player.portalT=0;
-  hideScreens(); $('hud').classList.remove('hidden'); player.changingDim=false; chat(t(target==='nether'?'msg.nether':'msg.overworld'),'#c8f'); requestPointer(); saveWorld(); void from;
+  if(target==='end'){ endPlatform(); player.x=endPlatformX()+0.5; player.y=49; player.z=0.5; player.yaw=PI/2; player.pitch=0.12; }
+  else if(home){ if(world.bed&&getBlock(world.bed.x,world.bed.y,world.bed.z)!==B.bed){ world.bed=null; sp={x:world.spawn.x,y:world.spawn.y,z:world.spawn.z}; } player.x=sp.x; player.y=sp.y; player.z=sp.z; ensureSafeSpawn(); }
+  else { let p=findPortalNear(floor(tx),floor(tz),40); if(!p) p=buildPortal(floor(tx),floor(tz));
+    // se placer devant le portail
+    const ax=p.axis?0:1, az=p.axis?1:0; let px_=p.x+0.5, pz_=p.z+0.5; let side=1; for(const s of [1,-1]){ const cx=floor(px_+az*s), cz=floor(pz_+ax*s); if(getBlock(cx,p.y,cz)===0&&getBlock(cx,p.y+1,cz)===0){ side=s; break; } }
+    player.x=px_+az*side; player.z=pz_+ax*side; player.y=p.y; ensureSafeSpawn(); }
+  player.portalCooldown=6; player.portalT=0;
+  hideScreens(); $('hud').classList.remove('hidden'); player.changingDim=false; chat(title,'#c8f'); requestPointer();
+  if(target==='end') endArrive(); saveWorld(); void from;
 }
+// Plateforme d'obsidienne d'arrivée dans l'End (refaite à chaque voyage, comme dans le jeu original)
+function endPlatform(){ const X=endPlatformX(); for(let dx=-2;dx<=2;dx++)for(let dz=-2;dz<=2;dz++){ if(getBlock(X+dx,48,dz)!==B.obsidian) setBlock(X+dx,48,dz,B.obsidian,0,{silent:true}); for(let dy=1;dy<=3;dy++) if(getBlock(X+dx,48+dy,dz)!==0) setBlock(X+dx,48+dy,dz,0,0,{silent:true}); } }
+function endArrive(){ achieve('the_end'); if(!world.endState.killed) chat(t('msg.endhello'),'#d9f'); }
+function leaveEnd(){ switchDimension('overworld'); }
 
 /* ============================ ENTITÉS ============================ */
 const MOBS={
@@ -3117,9 +3180,11 @@ function findSpawnSpot(minD,maxD,dark){ for(let k=0;k<6;k++){ const a=rnd()*TAU,
     if(dark){ if(lightAt(x,y,z)>7) continue; } else { if(getBlock(x,y-1,z)!==B.grass_block||lightAt(x,y,z)<9) continue; }
     return [x+0.5,y,z+0.5]; } return null; }
 function updateSpawning(dt){
+  if(world.dim==='end'){ updateEndSpawning(dt); return; }
   spawnTimer-=dt; if(spawnTimer<=0){ spawnTimer=2.5; if(countMobs(true)<14&&world.type!=='flat'){ for(let k=0;k<2;k++){ const s=findSpawnSpot(24,50,true); if(!s) continue; const r=rnd(); const type=r<0.4?'zombie':r<0.65?'skeleton':r<0.85?'creeper':'spider'; const n=type==='spider'?1:1+(rnd()<0.3?1:0); for(let j=0;j<n;j++) spawnMob(type,s[0]+(rnd()-.5),s[1],s[2]+(rnd()-.5)); } } }
   passiveTimer-=dt; if(passiveTimer<=0){ passiveTimer=12; if(countMobs(false)<12&&sky.dl>0.4){ const s=findSpawnSpot(24,48,false); if(s){ const bio=biomeAtWorld(floor(s[0]),floor(s[2])); const type=pickPassive(bio); if(type){ const n=2+(rnd()*3|0); for(let j=0;j<n;j++) spawnMob(type,s[0]+(rnd()-.5)*3,s[1],s[2]+(rnd()-.5)*3); } } } }
 }
+function updateEndSpawning(dt){ }
 function pickPassive(bio){ if(bio.sandy||bio.name==='ocean'||bio.name==='frozen_ocean'||bio.name==='river') return null; const r=rnd(); if((bio.name==='forest'||bio.name==='taiga'||bio.name==='snowy_taiga'||bio.name==='birch_forest')&&r<0.16) return 'wolf'; if(bio.snow) return r<0.5?'sheep':r<0.8?'cow':null; if(bio.name==='jungle') return r<0.6?'chicken':'pig'; return r<0.3?'pig':r<0.55?'cow':r<0.8?'sheep':'chicken'; }
 let spawnerT=0;
 function updateSpawners(dt){ spawnerT-=dt; if(spawnerT>0) return; spawnerT=2; const sp=world.dims[world.dim].spawners; if(!sp.size) return;
@@ -3133,8 +3198,11 @@ function fillFortressChest(x,y,z,seed){ const c=getContainer(x,y,z,true); if(!c|
 function fillStrongholdChest(x,y,z,seed){ const c=getContainer(x,y,z,true); if(!c||c.filled) return; c.filled=true; const r=mulberry32(seed);
   const loot=[[I.ender_pearl,1,2,8],[I.iron_ingot,1,5,10],[I.gold_ingot,1,3,5],[I.bread,1,3,15],[I.apple,1,3,15],[I.iron_pickaxe,1,1,5],[I.iron_sword,1,1,5],[I.iron_chestplate,1,1,3],[I.iron_helmet,1,1,3],[I.diamond,1,3,3],[I.redstone,4,9,5],[I.book,1,3,10],[I.paper,2,6,10],[I.compass,1,1,4],[I.golden_apple,1,1,1],[I.blaze_powder,1,2,2]];
   const total=loot.reduce((s,l)=>s+l[3],0); const n=3+(r()*5|0); for(let i=0;i<n;i++){ let v=r()*total; let pick=loot[0]; for(const l of loot){ v-=l[3]; if(v<=0){ pick=l; break; } } const slot=r()*27|0; if(!c.items[slot]) c.items[slot]=makeStack(pick[0],pick[1]+(r()*(pick[2]-pick[1]+1)|0)); } }
+function fillEndChest(x,y,z,seed){ const c=getContainer(x,y,z,true); if(!c||c.filled) return; c.filled=true; const r=mulberry32(seed);
+  const loot=[[I.diamond,2,6,6],[I.emerald,2,6,6],[I.iron_ingot,4,8,10],[I.gold_ingot,2,7,10],[I.ender_pearl,1,3,8],[B.end_rod,2,6,6],[I.diamond_sword,1,1,3],[I.diamond_chestplate,1,1,2],[I.diamond_pickaxe,1,1,3],[I.firework_rocket,4,12,6],[I.golden_apple,1,2,3],[I.elytra,1,1,1]];
+  const total=loot.reduce((s,l)=>s+l[3],0); const n=4+(r()*5|0); for(let i=0;i<n;i++){ let v=r()*total; let pick=loot[0]; for(const l of loot){ v-=l[3]; if(v<=0){ pick=l; break; } } const slot=r()*27|0; if(!c.items[slot]) c.items[slot]=makeStack(pick[0],pick[1]+(r()*(pick[2]-pick[1]+1)|0)); } }
 function initialSpawns(c){ if(c.spawned||c.state<2) return; c.spawned=true; const x0=c.cx<<4,z0=c.cz<<4; const dimd=world.dims[world.dim]; const ck2=ckey(c.cx,c.cz); const first=!dimd.spawnedKeys.has(ck2); dimd.spawnedKeys.add(ck2);
-  for(const s of c.spawners||[]) dimd.spawners.add(s.join(',')); for(const ch of c.chests||[]){ if(ch[3]==='village') fillVillageChest(ch[0],ch[1],ch[2],h2(ch[0],ch[2],world.seed+78)); else if(ch[3]==='stronghold') fillStrongholdChest(ch[0],ch[1],ch[2],h2(ch[0],ch[2],world.seed+79)); else fillFortressChest(ch[0],ch[1],ch[2],h2(ch[0],ch[2],world.seed+77)); }
+  for(const s of c.spawners||[]) dimd.spawners.add(s.join(',')); for(const ch of c.chests||[]){ if(ch[3]==='village') fillVillageChest(ch[0],ch[1],ch[2],h2(ch[0],ch[2],world.seed+78)); else if(ch[3]==='stronghold') fillStrongholdChest(ch[0],ch[1],ch[2],h2(ch[0],ch[2],world.seed+79)); else if(ch[3]==='endtower') fillEndChest(ch[0],ch[1],ch[2],h2(ch[0],ch[2],world.seed+80)); else fillFortressChest(ch[0],ch[1],ch[2],h2(ch[0],ch[2],world.seed+77)); }
   if(first) for(const vg of c.villagers||[]) spawnVillagerAt(vg);
   for(const d of c.dungeons){ fillDungeonChest(d.chest[0],d.chest[1],d.chest[2],d.rng); const r=mulberry32(d.rng); const n=first?2+(r()*2|0):0; for(let i=0;i<n;i++) spawnMob(r()<0.6?'zombie':'skeleton',d.x+(r()-.5)*2,d.y,d.z+(r()-.5)*2); }
   if(!first||world.type==='flat'||hash2f(c.cx,c.cz,world.seed+70)>0.1) return;
@@ -3445,6 +3513,7 @@ function runCommand(cmd){ const a=cmd.split(/\s+/); const c=a[0].toLowerCase();
     case 'tp': { const rel=(s,cur)=>s&&s[0]==='~'?cur+(parseFloat(s.slice(1))||0):parseFloat(s); const x=rel(a[1],player.x),y=rel(a[2],player.y),z=rel(a[3],player.z); if([x,y,z].some(isNaN)){ chat(t('msg.unknown'),'#f88'); break; } player.x=x; player.y=y; player.z=z; player.vx=player.vy=player.vz=0; chat(t('msg.tp',x|0,y|0,z|0),'#8f8'); break; }
     case 'give': { const id=findItemByName(a[1]||''); if(id===null){ chat(t('msg.noitem',a[1]),'#f88'); break; } const n=Math.max(1,parseInt(a[2])||1); const left=addItem(id,n); if(left) spawnItem(player.x,player.y+1,player.z,id,left); chat(t('msg.give',n,nameOf(id)),'#8f8'); break; }
     case 'seed': chat(t('msg.seed',world.seed),'#8f8'); break;
+    case 'dimension': case 'dim': { const m=(a[1]||'').toLowerCase(); const d={overworld:'overworld',monde:'overworld',normal:'overworld',nether:'nether',end:'end'}[m]; if(!d){ chat(t('msg.unknown'),'#f88'); break; } if(d!==world.dim) switchDimension(d); break; }
     case 'kill': hurt(1000,'cmd',null,true); if(isCreative()){ player.health=0; die('cmd'); } break;
     case 'weather': { const w=(a[1]||'').toLowerCase(); const map={clear:'clear',rain:'rain',snow:'snow',pluie:'rain',neige:'snow',beau:'clear',dégagé:'clear'}; if(!map[w]){ chat(t('msg.unknown'),'#f88'); break; } world.weather=map[w]; world.weatherTimer=600+rnd()*600; chat(t('msg.weather',t('weather.'+map[w])),'#8f8'); break; }
     case 'clear': for(let i=0;i<36;i++) player.inv[i]=null; player.armor=[null,null,null,null]; refreshHUD(); chat(t('msg.cleared'),'#8f8'); break;
@@ -3645,8 +3714,8 @@ function serializeDim(d){
   const ents=[]; for(const e of d.entities){ if(e.dead) continue; if(MOBS[e.type]) ents.push({type:e.type,x:e.x,y:e.y,z:e.z,health:e.health,color:e.color,sheared:e.sheared,yaw:e.yaw,baby:e.baby||0,tamed:e.tamed||undefined,sitting:e.sitting||undefined,owner:e.owner,maxHealth:e.maxHealth,prof:e.prof,offers:e.offers,home:e.home,restockDay:e.restockDay}); else if(e.type==='item') ents.push({type:'item',x:e.x,y:e.y,z:e.z,item:e.item}); }
   return {edits,containers,ents}; }
 function serializeWorld(){
-  const ow=serializeDim(world.dims.overworld), ne=serializeDim(world.dims.nether); const edits=ow.edits, containers=ow.containers, ents=ow.ents;
-  const p=player; ow.edits=[]; ne.edits=[]; return {v:4,mp:{players:world.mpPlayers||{}},spawned:{overworld:[...world.dims.overworld.spawnedKeys],nether:[...world.dims.nether.spawnedKeys]},dim:world.dim,nether:ne,seed:world.seed,type:world.type,gamemode:world.gamemode,time:world.time,day:world.day,weather:world.weather,weatherTimer:world.weatherTimer,spawn:world.spawn,bed:world.bed,stats:world.stats,achievements:world.achievements,
+  const ow=serializeDim(world.dims.overworld), ne=serializeDim(world.dims.nether), en=serializeDim(world.dims.end); const edits=ow.edits, containers=ow.containers, ents=ow.ents;
+  const p=player; ow.edits=[]; ne.edits=[]; en.edits=[]; return {v:4,mp:{players:world.mpPlayers||{}},spawned:{overworld:[...world.dims.overworld.spawnedKeys],nether:[...world.dims.nether.spawnedKeys],end:[...world.dims.end.spawnedKeys]},dim:world.dim,nether:ne,end:en,endState:world.endState,seed:world.seed,type:world.type,gamemode:world.gamemode,time:world.time,day:world.day,weather:world.weather,weatherTimer:world.weatherTimer,spawn:world.spawn,bed:world.bed,stats:world.stats,achievements:world.achievements,
     player:{x:p.x,y:p.y,z:p.z,yaw:p.yaw,pitch:p.pitch,health:p.health,food:p.food,sat:p.sat,xp:p.xp,level:p.level,inv:p.inv,armor:p.armor,hot:p.hot,flying:p.flying,deaths:p.deaths,score:p.score,air:p.air},edits,containers,ents};
 }
 let saveBusy=false, saveAgain=false;
@@ -3661,8 +3730,8 @@ async function saveWorld(silent){ if(world.menu||!world.id) return false; for(le
 function createWorld(name,seedText,gamemode,type){ const id='w'+Date.now().toString(36)+Math.random().toString(36).slice(2,6); const seed=seedFromText(seedText); const list=loadWorldList(); list.push({id,name,seed,gamemode,type,created:Date.now(),lastPlayed:Date.now()}); saveWorldList(list); startWorld({id,name,seed,gamemode,type},null); }
 async function loadWorld(id){ const meta=loadWorldList().find(w=>w.id===id); if(!meta) return; showScreen('loading'); $('loadtitle').textContent=t('load.load'); setLoading(0,''); let data=null;
   try{ const db=await dbOpen(); data=await dbReq(db.transaction('worlds').objectStore('worlds').get(id));
-    if(data){ const recs=await dbReq(db.transaction('chunks').objectStore('chunks').index('w').getAll(id)); data.edits=[]; data.nether=data.nether||{edits:[],containers:[],ents:[]}; data.nether.edits=[];
-      for(const rec of recs){ const arr=rec.data, pairs=[]; for(let i=0;i<arr.length;i+=2) pairs.push([arr[i],arr[i+1]]); (rec.d==='nether'?data.nether.edits:data.edits).push([rec.k,pairs]); } } }
+    if(data){ const recs=await dbReq(db.transaction('chunks').objectStore('chunks').index('w').getAll(id)); data.edits=[]; data.nether=data.nether||{edits:[],containers:[],ents:[]}; data.nether.edits=[]; data.end=data.end||{edits:[],containers:[],ents:[]}; data.end.edits=[];
+      for(const rec of recs){ const arr=rec.data, pairs=[]; for(let i=0;i<arr.length;i+=2) pairs.push([arr[i],arr[i+1]]); (rec.d==='nether'?data.nether.edits:rec.d==='end'?data.end.edits:data.edits).push([rec.k,pairs]); } } }
   catch(e){ console.warn('IndexedDB',e); }
   let legacy=false; if(!data){ try{ data=JSON.parse(localStorage.getItem('mchtml_world_'+id)||'null'); legacy=!!data; }catch(e){} }
   await startWorld(meta,data);
@@ -3707,7 +3776,7 @@ function useMain(proj,view){ const P=gfx.main; gl.useProgram(P.p); gl.uniformMat
 const shadow={vp:M4.ident(),str:0,dir:[0,1,0],chunks:0};
 function renderShadows(){
   shadow.str=0; const sun=sky.sun; shadow.dir=sun.slice();
-  if(!settings.shadows||!gfx.shadowOk||world.dim==='nether') return;
+  if(!settings.shadows||!gfx.shadowOk||world.dim!=='overworld') return;
   let dir=sun, str=smooth(clamp((sun[1]-0.03)/0.22,0,1));
   if(sun[1]<0.03){ dir=[-sun[0],-sun[1],-sun[2]]; str=0.3*smooth(clamp((-sun[1]-0.06)/0.25,0,1)); }
   str*=1-0.8*world.rainLevel; shadow.dir=dir; if(str<0.02) return;
@@ -3728,7 +3797,7 @@ function renderShadows(){
 }
 const IDENT=M4.ident(); let fogCol=[0.7,0.8,1], fogNear=50, fogFar=90;
 function drawSunMoon(proj,view){
-  if(world.dim==='nether'||!gfx.skyTex) return; const b=gfx.dynSky.b; b.reset(); const vis=clamp(1-world.rainLevel*1.1,0,1); if(vis<=0) return; const dist=160;
+  if(world.dim!=='overworld'||!gfx.skyTex) return; const b=gfx.dynSky.b; b.reset(); const vis=clamp(1-world.rainLevel*1.1,0,1); if(vis<=0) return; const dist=160;
   const quad=(d,size,u0,v0,u1,v1,alpha)=>{ const upv=abs(d[1])>0.99?[1,0,0]:[0,1,0]; let r=[d[1]*upv[2]-d[2]*upv[1],d[2]*upv[0]-d[0]*upv[2],d[0]*upv[1]-d[1]*upv[0]]; const rl=Math.hypot(r[0],r[1],r[2])||1; r=r.map(v=>v/rl);
     const u=[r[1]*d[2]-r[2]*d[1],r[2]*d[0]-r[0]*d[2],r[0]*d[1]-r[1]*d[0]]; const cx=cam.x+d[0]*dist, cy=cam.y+d[1]*dist, cz=cam.z+d[2]*dist; const P=(a,bb)=>[cx+r[0]*a+u[0]*bb,cy+r[1]*a+u[1]*bb,cz+r[2]*a+u[2]*bb];
     const pts=[P(-size,-size),P(size,-size),P(size,size),P(-size,size)], uvs=[[u0,v1],[u1,v1],[u1,v0],[u0,v0]]; b.ensure(4,6); for(let k=0;k<4;k++) b.vert(pts[k][0],pts[k][1],pts[k][2],uvs[k][0],uvs[k][1],255,255,255,0,255,255,255,alpha|0); b.quad(false); };
@@ -3763,9 +3832,9 @@ function postRays(vp){ post.raysOn=0; if(world.dim!=='overworld'||world.menu&&fa
   gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D,null); gl.activeTexture(gl.TEXTURE0);
   gl.bindFramebuffer(gl.FRAMEBUFFER,post.scene.f); gl.viewport(0,0,post.w,post.h); gl.enable(gl.DEPTH_TEST); }
 function endPost(under){ gl.disable(gl.DEPTH_TEST); gl.disable(gl.BLEND); const bw=post.b1.w, bh=post.b1.h;
-  postPass('bright',post.b1,[post.scene.t],u=>{ gl.uniform1i(u.uTex,0); gl.uniform2f(u.uTexel,1/post.w,1/post.h); gl.uniform1f(u.uThresh,world.dim==='nether'?0.62:0.9); });
+  postPass('bright',post.b1,[post.scene.t],u=>{ gl.uniform1i(u.uTex,0); gl.uniform2f(u.uTexel,1/post.w,1/post.h); gl.uniform1f(u.uThresh,world.dim!=='overworld'?0.62:0.9); });
   for(let k=0;k<2;k++){ postPass('blur',post.b2,[post.b1.t],u=>{ gl.uniform1i(u.uTex,0); gl.uniform2f(u.uDir,(1+k)/bw,0); }); postPass('blur',post.b1,[post.b2.t],u=>{ gl.uniform1i(u.uTex,0); gl.uniform2f(u.uDir,0,(1+k)/bh); }); }
-  postPass('compose',post.ldr,[post.scene.t,post.b1.t,post.r2.t],u=>{ gl.uniform1i(u.uTex,0); gl.uniform1i(u.uBloom,2); gl.uniform1i(u.uRays,3); gl.uniform1f(u.uBloomStr,world.dim==='nether'?0.5:0.32); gl.uniform1f(u.uRaysStr,post.raysOn*0.6); gl.uniform3fv(u.uRayCol,post.rayCol||[1,1,1]); gl.uniform1f(u.uUnder,under?1:0); gl.uniform1f(u.uTime,now()/1000%1000); gl.uniform1f(u.uVig,0.42); });
+  postPass('compose',post.ldr,[post.scene.t,post.b1.t,post.r2.t],u=>{ gl.uniform1i(u.uTex,0); gl.uniform1i(u.uBloom,2); gl.uniform1i(u.uRays,3); gl.uniform1f(u.uBloomStr,world.dim==='nether'?0.5:world.dim==='end'?0.45:0.32); gl.uniform1f(u.uRaysStr,post.raysOn*0.6); gl.uniform3fv(u.uRayCol,post.rayCol||[1,1,1]); gl.uniform1f(u.uUnder,under?1:0); gl.uniform1f(u.uTime,now()/1000%1000); gl.uniform1f(u.uVig,0.42); });
   postPass('fxaa',null,[post.ldr.t],u=>{ gl.uniform1i(u.uTex,0); gl.uniform2f(u.uTexel,1/post.w,1/post.h); });
   for(const i of [2,3]){ gl.activeTexture(gl.TEXTURE0+i); gl.bindTexture(gl.TEXTURE_2D,null); } gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D,gfx.shadowTex); gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D,gfx.atlas);
   gl.bindVertexArray(null); gl.enable(gl.DEPTH_TEST); }
@@ -3888,6 +3957,7 @@ const nrm3=v=>{ const l=Math.hypot(v[0],v[1],v[2])||1; return [v[0]/l,v[1]/l,v[2
 function updateAtmosphere(dt){ const s=sky.sun, m=[-s[0],-s[1],-s[2]], rain=world.rainLevel, fl=flashLevel();
   SHQ.wind[0]+=dt*9; SHQ.wind[1]+=dt*3.5; SHQ.cov=clamp(0.42+rain*0.5,0,0.95); SHQ.wet=clamp((rain-0.2)/0.6,0,1)*(world.dim==='overworld'?1:0);
   if(world.dim==='nether'){ SHQ.light=[0,0,0]; SHQ.sunDisc=[0,0,0]; SHQ.ambient=[0.05,0.018,0.012]; SHQ.lightDir=[0,1,0]; }
+  else if(world.dim==='end'){ SHQ.light=[0.085,0.072,0.115]; SHQ.sunDisc=[0,0,0]; SHQ.ambient=[0.1,0.084,0.13]; SHQ.lightDir=nrm3([0.3,1,0.2]); }
   else { const Ts=atmTrans(nrm3([s[0],Math.max(s[1],0.004),s[2]])), Tm=atmTrans(nrm3([m[0],Math.max(m[1],0.004),m[2]]));
     const sv=smooth(clamp((s[1]+0.03)/0.08,0,1)), mv=smooth(clamp((m[1]-0.03)/0.1,0,1)), useSun=s[1]>=0.03;
     SHQ.sunDisc=Ts.map(v=>v*sv*1.15); const sunL=Ts.map(v=>v*1.15*smooth(clamp((s[1]-0.03)/0.06,0,1))), moonL=Tm.map((v,i)=>v*0.06*mv*[0.72,0.84,1.0][i]);
@@ -3897,7 +3967,7 @@ function updateAtmosphere(dt){ const s=sky.sun, m=[-s[0],-s[1],-s[2]], rain=worl
     A=A.map((v,k)=>v*1.05+[0.004,0.0055,0.01][k]); const g=lum3(A); A=A.map((v,k)=>v+(g*[0.85,0.9,1.0][k]*0.75-v)*rain*0.8); L=L.map(v=>v*(1-0.8*rain));
     SHQ.ambient=A.map((v,k)=>v+fl*[0.5,0.55,0.75][k]*0.6); SHQ.light=L; }
   const eye=getSky(floor(cam.x),floor(cam.y),floor(cam.z)), bl=getLight(floor(cam.x),floor(cam.y),floor(cam.z));
-  let target=clamp(0.7/(lum3(SHQ.ambient)+0.25*lum3(SHQ.light)+0.01),0.9,4.0); if(world.dim==='nether') target=2.2; else target*=1+(1-eye/15)*0.6*(1-bl/15*0.6);
+  let target=clamp(0.7/(lum3(SHQ.ambient)+0.25*lum3(SHQ.light)+0.01),0.9,4.0); if(world.dim==='nether') target=2.2; else if(world.dim==='end') target=2.3; else target*=1+(1-eye/15)*0.6*(1-bl/15*0.6);
   SHQ.expo+=(target-SHQ.expo)*(1-Math.exp(-dt*1.4)); }
 /* ---- ressources ---- */
 function hqTex(w,h,hdr,filter,wrap){ const t=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,t); gl.texImage2D(gl.TEXTURE_2D,0,hdr?gl.RGBA16F:gl.RGBA8,w,h,0,gl.RGBA,hdr?gl.HALF_FLOAT:gl.UNSIGNED_BYTE,null);
@@ -3932,7 +4002,7 @@ function hqBindMain(P){ // textures et uniformes HQ du programme principal
   gl.uniform1i(P.u.uSkyLUT,4); gl.uniform1i(P.u.uOpaque,5); gl.uniform1i(P.u.uOpaqueDepth,6); gl.uniform1i(P.u.uWeather,7);
   if(!SHQ.active){ gl.uniform1f(P.u.uSQ,0); return; }
   gl.uniform1f(P.u.uSQ,1); gl.uniform3fv(P.u.uSunLight,SHQ.light); gl.uniform3fv(P.u.uAmbient,SHQ.ambient); gl.uniform3fv(P.u.uSunDir,SHQ.lightDir); gl.uniform2f(P.u.uScreen,post.w,post.h); gl.uniform2f(P.u.uNearFar,SHQ.near,SHQ.far);
-  gl.uniform1f(P.u.uWet,SHQ.wet); gl.uniform1f(P.u.uCloudCov,settings.clouds&&world.dim==='overworld'?SHQ.cov:-1); gl.uniform2f(P.u.uCloudWind,SHQ.wind[0],SHQ.wind[1]); gl.uniform1f(P.u.uNetherHQ,world.dim==='nether'?1:0); gl.uniform1f(P.u.uBump,0);
+  gl.uniform1f(P.u.uWet,SHQ.wet); gl.uniform1f(P.u.uCloudCov,settings.clouds&&world.dim==='overworld'?SHQ.cov:-1); gl.uniform2f(P.u.uCloudWind,SHQ.wind[0],SHQ.wind[1]); gl.uniform1f(P.u.uNetherHQ,world.dim!=='overworld'?1:0); gl.uniform1f(P.u.uBump,0);
   gl.activeTexture(gl.TEXTURE4); gl.bindTexture(gl.TEXTURE_2D,SHQ.lut.t); gl.activeTexture(gl.TEXTURE5); gl.bindTexture(gl.TEXTURE_2D,post.hq.opaque.t); gl.activeTexture(gl.TEXTURE6); gl.bindTexture(gl.TEXTURE_2D,post.hq.opaque.d); gl.activeTexture(gl.TEXTURE7); gl.bindTexture(gl.TEXTURE_2D,SHQ.weather); gl.activeTexture(gl.TEXTURE0); }
 function hqCopyOpaque(){ const H=post.hq.opaque; gl.bindFramebuffer(gl.READ_FRAMEBUFFER,post.scene.f); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER,H.f); gl.blitFramebuffer(0,0,post.w,post.h,0,0,post.w,post.h,gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT,gl.NEAREST); gl.bindFramebuffer(gl.FRAMEBUFFER,post.scene.f); }
 function hqPass(prog,target,binds,setup){ const P=SHQ.progs[prog]; gl.useProgram(P.p); gl.bindFramebuffer(gl.FRAMEBUFFER,target?target.f:null); gl.viewport(0,0,target?target.w:post.w,target?target.h:post.h);
@@ -3967,12 +4037,12 @@ function renderFrame(dt){
   const fov=clamp(settings.fov*(1+player.fovMod),20,140)*PI/180; const far=Math.max(200,(settings.renderDist+2)*16*1.6);
   const proj=M4.persp(fov,W/H,0.05,far), view=M4.view(cam.x,cam.y,cam.z,cam.yaw,cam.pitch); const vpU=M4.mul(proj,view); SHQ.near=0.05; SHQ.far=far; if(SHQ.active) hqJitter(proj,W,H); const vp=M4.mul(proj,view); const inv=M4.invert(vp); const planes=frustumPlanes(vpU); mpNameTags(vpU);
   const camBlock=eyeInBlock(cam.x,cam.y,cam.z); const under=camBlock===B.water, inLava=camBlock===B.lava;
-  const rd=settings.renderDist*16; fogNear=rd*0.62; fogFar=rd*0.98; fogCol=sky.fog.slice(); if(world.dim==='nether'){ fogNear=rd*0.25; fogFar=rd*0.75; }
+  const rd=settings.renderDist*16; fogNear=rd*0.62; fogFar=rd*0.98; fogCol=sky.fog.slice(); if(world.dim==='nether'){ fogNear=rd*0.25; fogFar=rd*0.75; } else if(world.dim==='end'){ fogNear=rd*0.5; fogFar=rd*1.05; }
   if(world.rainLevel>0){ fogNear*=1-0.4*world.rainLevel; fogFar*=1-0.3*world.rainLevel; }
   if(under){ const wc=biomeAtWorld(floor(cam.x),floor(cam.z)).water; fogCol=[wc[0]/255*0.35*sky.day+0.02,wc[1]/255*0.45*sky.day+0.03,wc[2]/255*0.7*sky.day+0.08]; fogNear=1; fogFar=14; } if(inLava){ fogCol=[0.75,0.25,0.05]; fogNear=0.1; fogFar=1.8; }
   gl.clearColor(fogCol[0],fogCol[1],fogCol[2],1); gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
   // Ciel
-  gl.disable(gl.DEPTH_TEST); gl.disable(gl.CULL_FACE); const S=gfx.sky; gl.useProgram(S.p); gl.uniformMatrix4fv(S.u.uInvVP,false,inv); gl.uniform3f(S.u.uCam,cam.x,cam.y,cam.z); gl.uniform3fv(S.u.uZenith,sky.zenith); gl.uniform3fv(S.u.uHorizon,under||inLava?fogCol:sky.horizon); gl.uniform3fv(S.u.uSunDir,sky.sun); gl.uniform3fv(S.u.uSunColor,sky.sunColor); gl.uniform1f(S.u.uDay,sky.dl); gl.uniform1f(S.u.uStars,sky.stars); gl.uniform1f(S.u.uTime,now()/1000%1000); gl.uniform1f(S.u.uRain,world.rainLevel); gl.uniform1f(S.u.uUnder,under||inLava?1:0); gl.uniform1f(S.u.uNether,world.dim==='nether'?1:0); gl.uniform1f(S.u.uSQ,SHQ.active?1:0); gl.uniform1i(S.u.uSkyLUT,4); gl.uniform3fv(S.u.uSunLight,SHQ.sunDisc); if(SHQ.active){ gl.activeTexture(gl.TEXTURE4); gl.bindTexture(gl.TEXTURE_2D,SHQ.lut.t); gl.activeTexture(gl.TEXTURE0); }
+  gl.disable(gl.DEPTH_TEST); gl.disable(gl.CULL_FACE); const S=gfx.sky; gl.useProgram(S.p); gl.uniformMatrix4fv(S.u.uInvVP,false,inv); gl.uniform3f(S.u.uCam,cam.x,cam.y,cam.z); gl.uniform3fv(S.u.uZenith,sky.zenith); gl.uniform3fv(S.u.uHorizon,under||inLava?fogCol:sky.horizon); gl.uniform3fv(S.u.uSunDir,sky.sun); gl.uniform3fv(S.u.uSunColor,sky.sunColor); gl.uniform1f(S.u.uDay,sky.dl); gl.uniform1f(S.u.uStars,sky.stars); gl.uniform1f(S.u.uTime,now()/1000%1000); gl.uniform1f(S.u.uRain,world.rainLevel); gl.uniform1f(S.u.uUnder,under||inLava?1:0); gl.uniform1f(S.u.uNether,world.dim==='nether'?1:0); gl.uniform1f(S.u.uEnd,world.dim==='end'?1:0); gl.uniform1f(S.u.uSQ,SHQ.active?1:0); gl.uniform1i(S.u.uSkyLUT,4); gl.uniform3fv(S.u.uSunLight,SHQ.sunDisc); if(SHQ.active){ gl.activeTexture(gl.TEXTURE4); gl.bindTexture(gl.TEXTURE_2D,SHQ.lut.t); gl.activeTexture(gl.TEXTURE0); }
   gl.bindVertexArray(gfx.skyVao); gl.drawArrays(gl.TRIANGLES,0,3); gl.bindVertexArray(null);
   if(!under&&!inLava) drawSunMoon(proj,view);
   gl.enable(gl.DEPTH_TEST); gl.enable(gl.CULL_FACE);
@@ -3987,7 +4057,7 @@ function renderFrame(dt){
   // Entités
   if(!world.menu){ drawEntities(proj,view); drawBlobShadows(); drawBolts(); }
   // Nuages
-  if(settings.clouds&&world.dim!=='nether'&&!SHQ.active){ if(now()-clouds.lastGen>1500||abs(cam.x-clouds.lastCx)>40||abs(cam.z-clouds.lastCz)>40) buildClouds(cam.x,cam.z); gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA); gl.disable(gl.CULL_FACE); gl.uniform1f(P.u.uFogNear,fogFar*1.2); gl.uniform1f(P.u.uFogFar,fogFar*3); gl.uniform1f(P.u.uAlphaCut,0.01); gl.uniform1f(P.u.uShadowStr,0); gfx.dynClouds.draw(); gl.uniform1f(P.u.uShadowStr,shadow.str); gl.uniform1f(P.u.uFogNear,fogNear); gl.uniform1f(P.u.uFogFar,fogFar); gl.enable(gl.CULL_FACE); gl.disable(gl.BLEND); }
+  if(settings.clouds&&world.dim==='overworld'&&!SHQ.active){ if(now()-clouds.lastGen>1500||abs(cam.x-clouds.lastCx)>40||abs(cam.z-clouds.lastCz)>40) buildClouds(cam.x,cam.z); gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA); gl.disable(gl.CULL_FACE); gl.uniform1f(P.u.uFogNear,fogFar*1.2); gl.uniform1f(P.u.uFogFar,fogFar*3); gl.uniform1f(P.u.uAlphaCut,0.01); gl.uniform1f(P.u.uShadowStr,0); gfx.dynClouds.draw(); gl.uniform1f(P.u.uShadowStr,shadow.str); gl.uniform1f(P.u.uFogNear,fogNear); gl.uniform1f(P.u.uFogFar,fogFar); gl.enable(gl.CULL_FACE); gl.disable(gl.BLEND); }
   if(SHQ.active) hqCopyOpaque();
   // Translucides (eau, glace)
   gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA); gl.uniform1f(P.u.uAlphaCut,0.01); gl.disable(gl.CULL_FACE);
@@ -4109,7 +4179,7 @@ function drawBolts(){ const L=lightning.bolts; if(!L.length) return; const b=gfx
   gfx.dynBolt.draw(); gl.enable(gl.CULL_FACE); gl.depthMask(true); gl.disable(gl.BLEND); gl.uniform1f(P.u.uFlat,0); gl.uniform1f(P.u.uShadowStr,shadow.str); }
 function updateWeather(dt){
   world.weatherTimer-=dt; if(world.weatherTimer<=0){ if(world.weather==='clear'){ world.weather=rnd()<0.5?'rain':'clear'; world.weatherTimer=world.weather==='clear'?300+rnd()*600:120+rnd()*300; } else { world.weather='clear'; world.weatherTimer=400+rnd()*900; } }
-  const want=(world.weather==='clear'||world.dim==='nether')?0:1; world.rainLevel+=(want-world.rainLevel)*Math.min(1,dt*0.35);
+  const want=(world.weather==='clear'||world.dim!=='overworld')?0:1; world.rainLevel+=(want-world.rainLevel)*Math.min(1,dt*0.35);
   if(world.rainLevel>0.1&&settings.particles&&!world.menu){ const bio=biomeAtWorld(floor(player.x),floor(player.z)); const snow=bio.snow||world.weather==='snow'; const n=Math.ceil(dt*220*world.rainLevel*(snow?0.5:1)); for(let i=0;i<n;i++){ const x=player.x+(rnd()-.5)*24, z=player.z+(rnd()-.5)*24; const ty=topY(floor(x),floor(z)); const sy=cam.y+10; if(ty>sy) continue; addParticle({x,y:sy,z,vx:snow?(rnd()-.5)*0.5:0,vy:snow?-1.5:-16,vz:snow?(rnd()-.5)*0.5:0,life:snow?8:1.4,size:snow?0.06:0.35,tile:snow?TEX.snowflake:TEX.rain,gravity:0,rain:true,a:snow?255:180,collide:true}); }
     if(!snow&&rnd()<dt*(world.rainLevel>0.8?0.035:0.012)) spawnLightning(); }
   updateLightning(dt);
@@ -4151,16 +4221,17 @@ const tickAsync=()=>new Promise(r=>setTimeout(r,0));
 function setLoading(p,txt){ $('loadfill').style.width=(p*100)+'%'; if(txt) $('loadtext').textContent=txt; }
 function findSpawn(){ let best=null; for(let r=0;r<400&&!best;r+=8){ for(let a=0;a<TAU;a+=PI/6){ const x=floor(Math.cos(a)*r), z=floor(Math.sin(a)*r); const ci=columnInfo(x,z); if(ci.h>=SEA+1&&ci.b!==BIO.ocean&&ci.b!==BIO.river&&ci.b!==BIO.frozen_ocean){ best={x:x+0.5,y:ci.h+1,z:z+0.5}; break; } } } colCache.clear(); return best||{x:0.5,y:SEA+10,z:0.5}; }
 function setDimRefs(){ const d=world.dims[world.dim]; world.chunks=d.chunks; world.edits=d.edits; world.containers=d.containers; world.entities=d.entities; world.tickQueue=d.tickQueue; }
-function clearWorld(){ for(const dn in world.dims){ for(const c of world.dims[dn].chunks.values()) if(c.mesh) deleteMesh(c.mesh); } world.dims={overworld:newDim(),nether:newDim()}; world.dim='overworld'; setDimRefs(); workersSyncWorld(); particles.length=0; pendingNeighbor.length=0; world.stats={}; world.achievements={}; world.bed=null; world.mpPlayers={}; }
+function clearWorld(){ for(const dn in world.dims){ for(const c of world.dims[dn].chunks.values()) if(c.mesh) deleteMesh(c.mesh); } world.dims={overworld:newDim(),nether:newDim(),end:newDim()}; world.endState={killed:false,exitShown:false}; world.dim='overworld'; setDimRefs(); workersSyncWorld(); particles.length=0; pendingNeighbor.length=0; world.stats={}; world.achievements={}; world.bed=null; world.mpPlayers={}; }
 async function startWorld(meta,data){
   showScreen('loading'); $('loadtitle').textContent=data?t('load.load'):t('load.title'); setLoading(0,t('load.gen')); await tickAsync();
   clearWorld(); world.menu=false; world.id=meta.id; world.name=meta.name; world.seed=meta.seed|0; world.type=meta.type||'normal'; world.gamemode=meta.gamemode||'survival'; world.time=1000; world.day=0; world.weather='clear'; world.weatherTimer=600+rnd()*600; world.rainLevel=0;
   player.name='Steve'; player.inv.fill(null); player.armor=[null,null,null,null]; player.craft.fill(null); player.cursor=null; player.hot=0; player.xp=0; player.level=0; player.score=0; player.deaths=0; player.yaw=0; player.pitch=0; player.third=0; player.flying=false; resetPlayerStats();
   if(data){ world.time=data.time||1000; world.day=data.day||0; world.weather=data.weather||'clear'; world.weatherTimer=data.weatherTimer||600; world.spawn=data.spawn; world.bed=data.bed||null; world.stats=data.stats||{}; world.achievements=data.achievements||{}; world.gamemode=data.gamemode||world.gamemode; world.mpPlayers=(data.mp&&data.mp.players)||{};
     for(const [k,arr] of data.edits||[]) world.edits.set(+k,new Map(arr)); for(const [k,c] of data.containers||[]) world.containers.set(k,c);
-    if(data.nether){ const nd=world.dims.nether; for(const [k,arr] of data.nether.edits||[]) nd.edits.set(+k,new Map(arr)); for(const [k,c] of data.nether.containers||[]) nd.containers.set(k,c); }
+    for(const dn of ['nether','end']){ const dd=data[dn]; if(!dd) continue; const nd=world.dims[dn]; for(const [k,arr] of dd.edits||[]) nd.edits.set(+k,new Map(arr)); for(const [k,c] of dd.containers||[]) nd.containers.set(k,c); }
+    world.endState=Object.assign({killed:false,exitShown:false},data.endState||{});
     if(data.spawned){ for(const dn in data.spawned) if(world.dims[dn]) for(const k of data.spawned[dn]) world.dims[dn].spawnedKeys.add(k); }
-    if(data.dim==='nether'){ world.dim='nether'; setDimRefs(); }
+    if(data.dim&&data.dim!=='overworld'&&world.dims[data.dim]){ world.dim=data.dim; setDimRefs(); }
     const p=data.player; Object.assign(player,{x:p.x,y:p.y,z:p.z,yaw:p.yaw,pitch:p.pitch,health:p.health,food:p.food,sat:p.sat,xp:p.xp,level:p.level,hot:p.hot,flying:p.flying,deaths:p.deaths||0,score:p.score||0,air:p.air||300}); for(let i=0;i<36;i++) player.inv[i]=p.inv[i]||null; player.armor=p.armor||[null,null,null,null]; }
   else { world.spawn=findSpawn(); player.x=world.spawn.x; player.y=world.spawn.y; player.z=world.spawn.z; if(world.gamemode==='creative'){ } else { } }
   workersSyncWorld();
@@ -4172,7 +4243,7 @@ async function startWorld(meta,data){
   if(data){ const restore=(list,dn)=>{ const prev=world.entities; world.entities=world.dims[dn].entities; for(const e of list||[]){ if(e.type==='item'){ spawnItem(e.x,e.y,e.z,e.item.id,e.item.n,e.item.dur); continue; } const m=spawnMob(e.type,e.x,e.y,e.z); if(!m) continue;
       m.health=e.health; if(e.color) m.color=e.color; m.sheared=!!e.sheared; m.yaw=e.yaw||0; if(e.baby>0){ m.baby=e.baby; m.w*=0.5; m.h*=0.5; } if(e.maxHealth) m.maxHealth=e.maxHealth;
       if(e.tamed){ m.tamed=true; m.sitting=!!e.sitting; m.owner=e.owner; } if(e.prof){ m.prof=e.prof; m.offers=e.offers||m.offers; m.home=e.home; m.restockDay=e.restockDay; } } world.entities=prev; };
-    restore(data.ents,'overworld'); restore(data.nether&&data.nether.ents,'nether'); }
+    restore(data.ents,'overworld'); restore(data.nether&&data.nether.ents,'nether'); restore(data.end&&data.end.ents,'end'); }
   hideScreens(); $('hud').classList.remove('hidden'); buildHotbar(); refreshHUD(); hud.lastHealth=-1; hud.lastFood=-1; hud.lastArmor=-1; hud.lastXp=-1; initTouch(); chat(t('chat.welcome'),'#ff8'); if(world.gamemode==='creative') actionBar(t('msg.creativeinfo'));
   saveWorld(); requestPointer();
 }
@@ -4331,23 +4402,23 @@ function mpGuestMsg(m){
     case 'msg': actionBar(m.m); break;
     case 'ach': achieve(m.k); break;
   } }
-async function mpStartGuest(m){ const ws=mp.ws; mp.starting=true; mp.mirrors.clear(); const hp=m.host||{x:0,y:80,z:0,yaw:0}; const me=m.me; const nether=m.dim==='nether';
+async function mpStartGuest(m){ const ws=mp.ws; mp.starting=true; mp.mirrors.clear(); const hp=m.host||{x:0,y:80,z:0,yaw:0}; const me=m.me;
   const pl=me?Object.assign({},me):{health:20,food:20,sat:5,xp:0,level:0,inv:[],armor:[null,null,null,null],hot:0,flying:false,air:300};
   if(!me||me.dim!==m.dim||!isFinite(pl.x)){ pl.x=hp.x+1.2; pl.y=hp.y; pl.z=hp.z+0.8; pl.yaw=hp.yaw||0; pl.pitch=0; }
   if(!(pl.health>0)) pl.health=20;
-  const data={time:m.time,day:m.day,weather:m.weather,weatherTimer:1e9,spawn:m.spawn,bed:me&&me.bed||null,stats:{},achievements:{},gamemode:m.gm,edits:nether?[]:m.edits,containers:[],ents:[],
-    nether:{edits:nether?m.edits:[],containers:[],ents:[]},dim:m.dim,player:pl};
+  const data={time:m.time,day:m.day,weather:m.weather,weatherTimer:1e9,spawn:m.spawn,bed:me&&me.bed||null,stats:{},achievements:{},gamemode:m.gm,edits:m.dim==='overworld'?m.edits:[],containers:[],ents:[],
+    nether:{edits:m.dim==='nether'?m.edits:[],containers:[],ents:[]},end:{edits:m.dim==='end'?m.edits:[],containers:[],ents:[]},endState:m.endState,dim:m.dim,player:pl};
   await startWorld({id:'',name:m.name,seed:m.seed,gamemode:m.gm,type:m.type},data);
   world.id=''; world.weatherTimer=1e9; world.rainLevel=m.rain||0; player.name=mp.name;
   if(mp.ws!==ws){ mp.starting=false; if(!world.menu) quitToTitle(); mpOpenScreen('mp'); mpStatusJoin(tr('La connexion avec l\'hôte a été perdue pendant le chargement.','Lost connection to the host while loading.'),true); return; }
   mp.peers.set('h',Object.assign(mpNewPeer('h',hp.name||'?'),mp.peers.get('h')||{}));
   mp.active=true; mp.starting=false; mp.pT=0; mpRefreshPause(); chat(tr('Vous avez rejoint la partie de ','You joined ')+(hp.name||'?')+'.','#8f8');
   const q=mp.queue.splice(0); for(const qm of q) mpGuestMsg(qm); }
-async function mpGuestDim(m){ mp.starting=true; releasePointer(); input.mine=input.use=false; if(ui.open) closeGui(true); showScreen('loading'); $('loadtitle').textContent=t(m.dim==='nether'?'msg.nether':'msg.overworld'); setLoading(0,''); await tickAsync();
+async function mpGuestDim(m){ mp.starting=true; releasePointer(); input.mine=input.use=false; if(ui.open) closeGui(true); showScreen('loading'); $('loadtitle').textContent=t(m.dim==='nether'?'msg.nether':m.dim==='end'?'msg.end':'msg.overworld'); setLoading(0,''); await tickAsync();
   for(const c of world.chunks.values()) if(c.mesh){ deleteMesh(c.mesh); c.mesh=null; } world.chunks.clear(); particles.length=0; pendingNeighbor.length=0;
   world.dim=m.dim; const d=world.dims[m.dim]; d.edits.clear(); for(const [k,arr] of m.edits||[]) d.edits.set(+k,new Map(arr)); d.entities.length=0; d.containers.clear(); setDimRefs(); mp.mirrors.clear(); workersSyncWorld(); sfx('portal');
   player.x=m.x+1.2; player.y=m.y; player.z=m.z+0.8; player.vx=player.vy=player.vz=0; player.fallDist=0; await loadAround(player.x,player.z); ensureSafeSpawn(); player.portalCooldown=6;
-  hideScreens(); $('hud').classList.remove('hidden'); mp.starting=false; requestPointer(); chat(t(m.dim==='nether'?'msg.nether':'msg.overworld'),'#c8f'); const q=mp.queue.splice(0); for(const qm of q) mpGuestMsg(qm); }
+  hideScreens(); $('hud').classList.remove('hidden'); mp.starting=false; requestPointer(); chat(t(m.dim==='nether'?'msg.nether':m.dim==='end'?'msg.end':'msg.overworld'),'#c8f'); const q=mp.queue.splice(0); for(const qm of q) mpGuestMsg(qm); }
 function mpGuestEnd(msg){ const inGame=!world.menu; mpClose(); if(inGame) quitToTitle(); mpOpenScreen('mp'); mpStatusJoin(msg,true); }
 function mpSendPst(){ if(world.menu) return; mpSend({t:'pst',s:{x:player.x,y:player.y,z:player.z,yaw:player.yaw,pitch:player.pitch,dim:world.dim,health:player.dead?20:player.health,food:player.dead?20:player.food,sat:player.sat,xp:player.xp,level:player.level,inv:mpInvCopy(player.inv),armor:mpInvCopy(player.armor),hot:player.hot,bed:world.bed,air:player.air}}); }
 function mpApplyEnts(list){ const seen=new Set();
@@ -4511,7 +4582,7 @@ async function importWorldFile(file){ let j=null; try{ j=JSON.parse(await file.t
   if(!j||j.format!=='minecraft-v2-world'||!j.meta||!(j.data||j.legacy)){ await mcDialog(t('ws.importbad'),{noCancel:true}); return; }
   const id='w'+Date.now().toString(36)+Math.random().toString(36).slice(2,6); const list=loadWorldList(); let name=String(j.meta.name||'Monde').slice(0,32); if(list.some(w=>w.name===name)) name=name+' '+t('ws.importsuffix');
   try{ const db=await dbOpen(); const tx=db.transaction(['worlds','chunks'],'readwrite'); if(j.data) tx.objectStore('worlds').put(j.data,id); const cs=tx.objectStore('chunks');
-    for(const c of j.chunks||[]){ const dn=c.d==='nether'?'nether':'overworld', k=+c.k; cs.put({w:id,d:dn,k,data:b64ToU16(c.data)},id+':'+dn+':'+k); } await dbTx(tx); }
+    for(const c of j.chunks||[]){ const dn=(c.d==='nether'||c.d==='end')?c.d:'overworld', k=+c.k; cs.put({w:id,d:dn,k,data:b64ToU16(c.data)},id+':'+dn+':'+k); } await dbTx(tx); }
   catch(e){ await mcDialog(t('ws.importbad')+' '+(e&&e.message||e),{noCancel:true}); return; }
   if(!j.data&&j.legacy){ try{ localStorage.setItem('mchtml_world_'+id,JSON.stringify(j.legacy)); }catch(e){} }
   list.push({id,name,seed:j.meta.seed|0,gamemode:j.meta.gamemode||'survival',type:j.meta.type||'normal',created:j.meta.created||Date.now(),lastPlayed:Date.now()}); saveWorldList(list); selWorld=id; openWorlds(); mcDialog(t('ws.importok',name),{noCancel:true}); }
