@@ -271,8 +271,6 @@ Contenu :
       poissons-globes qui gonflent et piquent, chauves-souris suspendues.
     * Sous l'eau : reflets de lumière ondulants sur le fond, vision qui
       s'éclaircit en restant immergé, fonds marins mieux éclairés.
-    * Carte du monde (touche M) : zones explorées, relief, villages découverts,
-      lit, point de départ, dernière mort, autres joueurs ; zoom à la molette.
     * Étiquettes : clic droit sur une créature pour lui donner un nom.
     * Écran titre de nuit avec aurores et feux d'artifice, panneau des
       nouveautés, guide « Comment aller dans l'End », écran des succès (27).
@@ -287,7 +285,7 @@ Contenu :
 
 Contrôles : ZQSD/WASD, Espace, C (s'accroupir), Maj (courir), E (inventaire),
 clic gauche (miner), clic droit (placer/utiliser), molette/1-9 (barre),
-R (jeter), T (chat), M (carte), / (commande), F3 (debug), F5 (vue), F1 (masquer HUD).
+R (jeter), T (chat), / (commande), F3 (debug), F5 (vue), F1 (masquer HUD).
 
 Sauvegarde : la partie est enregistrée automatiquement toutes les 90 s,
 avec Échap > « Sauvegarder », et quand vous quittez (« Sauvegarder et quitter »).
