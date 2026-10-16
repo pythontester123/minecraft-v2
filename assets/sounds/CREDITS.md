@@ -195,6 +195,13 @@ leur volume a été normalisé et leur silence de début coupé (modifications).
 | fish_splash.mp3 | watersplash.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | tran5ient — freesound.org/people/tran5ient/sounds/190080 | CC0 |
 | fish_bloop.mp3 | bloop.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | You're Perfect Studio — opengameart.org/content/fisheefects | CC0 |
 | fish_reel.mp3 | reel.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | You're Perfect Studio — opengameart.org/content/fisheefects | CC0 |
+| enchant1.mp3 | mcl_enchanting_enchant.0.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Alecia Shepherd — SnowSong sound and music pack (opengameart.org) | CC BY-SA 4.0 |
+| enchant2.mp3 | mcl_enchanting_enchant.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Alecia Shepherd — SnowSong sound and music pack (opengameart.org) | CC BY-SA 4.0 |
+| enchant3.mp3 | mcl_enchanting_enchant.2.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Alecia Shepherd — SnowSong sound and music pack (opengameart.org) | CC BY-SA 4.0 |
+| xbow_draw1.mp3 | mcl_bows_crossbow_drawback_0.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Contributeurs de VoxeLibre (licence par défaut des médias de VoxeLibre) | CC BY-SA 3.0 |
+| xbow_draw2.mp3 | mcl_bows_crossbow_drawback_1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Contributeurs de VoxeLibre (licence par défaut des médias de VoxeLibre) | CC BY-SA 3.0 |
+| xbow_load.mp3 | mcl_bows_crossbow_load.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Contributeurs de VoxeLibre (licence par défaut des médias de VoxeLibre) | CC BY-SA 3.0 |
+| xbow_shoot.mp3 | mcl_bows_crossbow_shoot.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Contributeurs de VoxeLibre (licence par défaut des médias de VoxeLibre) | CC BY-SA 3.0 |
 
 Licences : CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/), CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/),
 CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0/), CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/),
