@@ -1,13 +1,13 @@
-## Minecraft V2 2.0 — l'update de l'End
+## Minecraft V2 2.1 — l'update des enchantements
 
 **Nouveautés :**
-- **L'End et l'Ender Dragon** : forts cachés, yeux de l'Ender, portail, combat contre le dragon et ses cristaux, œuf, élytres et générique de fin.
-- **Endermen**, **élytres** pour planer, **feux d'artifice** (cœurs, étoiles, saules dorés… et des creepers !).
-- **Ciel nocturne** : aurores boréales, étoiles filantes, lucioles.
-- **Pêche et vie marine** : poissons tropicaux, poissons-globes, calmars (même luisants !), trésors ; chauves-souris dans les grottes.
-- **Eau plus belle** : reflets de lumière ondulants et meilleure vision sous l'eau.
-- **Carte du monde** (touche M), **étiquettes** pour nommer ses animaux, **écran des succès** et nouvel écran titre.
-- Pour trouver l'End : bouton « Comment aller dans l'End ? » sur l'écran titre.
+- **Les 43 enchantements** du vrai Minecraft, avec leurs vrais effets (Protection, Tranchant, Efficacité, Fortune, Toucher de soie, Raccommodage, Semelles givrantes, Loyauté, Canalisation, Densité, Fente…), et les deux malédictions.
+- **Table d'enchantement** avec bibliothèques, lapis-lazuli, indices et écriture mystérieuse, calculée comme dans le jeu original.
+- **Enclume** pour combiner livres et objets (Efficacité IV + IV = V), réparer et renommer — attention au « Trop cher ! ». **Meule** pour retirer les enchantements.
+- **Arbalète, trident, masse et lances**. Les **noyés** hantent les océans et lancent des tridents ; pendant les **orages**, Canalisation appelle la foudre.
+- **Livres enchantés** dans les coffres, à la pêche et chez le bibliothécaire ; fiole d'expérience chez le prêtre.
+- Guide « Comment enchanter ? » sur l'écran titre et 4 nouveaux succès.
+- La carte du monde a été retirée (elle n'existe pas dans le vrai Minecraft).
 
 Les mondes déjà créés sont conservés : il suffit d'installer cette version par-dessus l'ancienne.
 

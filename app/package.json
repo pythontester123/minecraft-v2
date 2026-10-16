@@ -1,7 +1,7 @@
 {
   "name": "minecraft-v2",
   "productName": "Minecraft V2",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Minecraft V2 - jeu de construction en blocs (WebGL2), solo et réseau local",
   "author": "pythontester123",
   "license": "UNLICENSED",

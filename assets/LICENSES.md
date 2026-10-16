@@ -9,7 +9,7 @@ Ils sont conservés ici pour pouvoir les vérifier, les remplacer ou les réutil
 | `fonts/monocraft-subset.woff2` | Police [Monocraft](https://github.com/IdreesInc/Monocraft) par Idrees Hassan, réduite aux caractères latins | SIL Open Font License 1.1 (`fonts/Monocraft-OFL.txt`) |
 | `sounds/kenney_land.mp3` | Kenney, [Starter Kit 3D Platformer](https://github.com/KenneyNL/Starter-Kit-3D-Platformer), `sounds/land.ogg` | CC0 1.0 (domaine public) |
 | `sounds/kenney_coin.mp3` | Kenney, même kit, `sounds/coin.ogg` | CC0 1.0 |
-| `sounds/sfx/*.mp3` (190 sons : blocs, pas, animaux, monstres, coups, portes, coffres, TNT, arc, pluie, tonnerre, Endermen, Ender Dragon, chauves-souris, calmars, poissons, pêche, feux d'artifice…) | Jeux de blocs libres [VoxeLibre](https://github.com/VoxeLibre/VoxeLibre), [Minetest Game](https://github.com/luanti-org/minetest_game), [mobs_animal](https://github.com/minetest-mirrors/mobs_animal) et [Animalia](https://github.com/ElCeejo/animalia) ; auteur et licence de chaque fichier dans `sounds/CREDITS.md` | CC0 1.0, CC BY 3.0, CC BY-SA 3.0, CC BY-SA 4.0 ou MIT selon le fichier |
+| `sounds/sfx/*.mp3` (197 sons : blocs, pas, animaux, monstres, coups, portes, coffres, TNT, arc, pluie, tonnerre, Endermen, Ender Dragon, chauves-souris, calmars, poissons, pêche, feux d'artifice, table d'enchantement, arbalète…) | Jeux de blocs libres [VoxeLibre](https://github.com/VoxeLibre/VoxeLibre), [Minetest Game](https://github.com/luanti-org/minetest_game), [mobs_animal](https://github.com/minetest-mirrors/mobs_animal) et [Animalia](https://github.com/ElCeejo/animalia) ; auteur et licence de chaque fichier dans `sounds/CREDITS.md` | CC0 1.0, CC BY 3.0, CC BY-SA 3.0, CC BY-SA 4.0 ou MIT selon le fichier |
 | `music/vibe/freecopyright.mp3` (musique de l'option « vibe ») | Créée par pythontester123, propriétaire de ce projet ; volume ajusté par `music/embed_vibe.py` | Fournie par son auteur pour Minecraft V2 |
 
 | `textures/pixel_perfection_sheet.png` | Textures d'objets, de blocs, de particules et d'animations (eau, lave, portail) du pack [Pixel Perfection Community Edition](https://github.com/Athemis/PixelPerfectionCE) (révision `28e38ca`), créé par XSSheep et mis à jour par la communauté (StonePendant, freejusticehere, Stingraych, Nova_Wostra, lazerl0rd et autres) ; index dans `textures/sheet_index.json` | CC BY-SA 4.0 (`textures/PixelPerfectionCE-LICENSE-CC-BY-SA-4.0.md`) |
@@ -19,7 +19,7 @@ Ils sont conservés ici pour pouvoir les vérifier, les remplacer ou les réutil
 ### Pixel Perfection CE : modifications apportées
 
 Conformément à la licence CC BY-SA 4.0, voici ce qui a été changé :
-- 439 textures 16×16 réunies dans une seule planche (`textures/pixel_perfection_sheet.png`) : objets, blocs, fissures, particules et images des animations ;
+- 464 textures 16×16 réunies dans une seule planche (`textures/pixel_perfection_sheet.png`) : objets, blocs, fissures, particules et images des animations ;
 - armures en cuir teintées avec la couleur de cuir par défaut (#A06540) puis superposées à leur calque `_overlay` ;
 - icône du lit recolorée du bleu au rouge pour correspondre au lit du jeu ;
 - textures teintées par le biome (dessus et côté de l'herbe, feuilles de chêne, herbes hautes, fougère, orbes d'expérience) : transparence fixée à 250/255 pour que le jeu y applique la couleur du biome ; côté de l'herbe fusionné avec son calque `_overlay` ;
@@ -43,10 +43,12 @@ textures problématiques ; aucune de celles utilisées ici n'y figure).
 - **Créatures** : `entity/steve`, `zombie/zombie`, `skeleton/skeleton`, `creeper/creeper`, `pig/pig`, `cow/cow`, `sheep/sheep`, `sheep/sheep_fur`, `chicken`, `spider/spider`, `spider_eyes`, `blaze`, `wolf/wolf`, `wolf/wolf_tame`, `wolf/wolf_angry`, `wolf/wolf_collar`, `villager/villager`, `villager/type/*` (7 biomes), `villager/profession/farmer`, `librarian`, `armorer`, `butcher`, `nitwit`, `entity/chest/normal` ;
 - **Ciel** : `environment/sun`, `environment/moon_phases`.
 - **Version 2.0** : `block/end_stone`, `end_stone_bricks`, `purpur_block`, `purpur_pillar`, `purpur_pillar_top`, `end_portal_frame_top`, `end_portal_frame_side`, `end_portal_frame_eye`, `end_rod`, `dragon_egg`, `iron_bars` ; `item/ender_eye`, `end_crystal`, `elytra`, `firework_rocket`, `fishing_rod`, `fishing_rod_cast`, `cod`, `salmon`, `tropical_fish`, `pufferfish`, `cooked_cod`, `cooked_salmon`, `ink_sac`.
+- **Version 2.1** : `block/enchanting_table_top`, `enchanting_table_side`, `enchanting_table_bottom`, `anvil`, `anvil_top`, `chipped_anvil_top`, `damaged_anvil_top`, `grindstone_side`, `grindstone_round`, `grindstone_pivot`, `frosted_ice_0…3`, `tripwire_hook` ; `item/enchanted_book`, `experience_bottle`, `crossbow_standby`, `crossbow_pulling_0…2`, `crossbow_arrow`, `crossbow_firework`, `trident` ; `particle/enchanted_hit`.
 
 Les créatures et objets ajoutés en 2.0 sans texture du pack (Enderman, Ender Dragon, cristal de l'End, élytres portées, calmars, poissons,
 poisson-globe, chauve-souris, étiquette, coquille de nautile, poche d'encre luisante, flotteur, étincelles) sont dessinés pixel par pixel
-par le code du jeu : ce sont des créations originales de ce projet.
+par le code du jeu : ce sont des créations originales de ce projet. De même pour ceux de la 2.1 : masse, lances, noyé, livre animé
+de la table d'enchantement, écriture mystérieuse de la table et reflet violet des objets enchantés.
 
 Les modèles 3D des créatures (taille et position des boîtes, coordonnées de texture,
 animations) sont écrits dans le code du jeu pour correspondre à ces textures.

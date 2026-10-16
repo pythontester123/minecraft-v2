@@ -276,8 +276,47 @@ Contenu :
       nouveautés, guide « Comment aller dans l'End », écran des succès (27).
     * Nouveaux sons libres (dragon, Endermen, élytres, feux d'artifice, pêche,
       calmars, chauves-souris), détaillés dans assets/sounds/CREDITS.md.
+  - Version 2.1 (l'update des enchantements) :
+    * Les 43 enchantements de Minecraft Java Edition, avec leurs vraies
+      données (niveau maximum, rareté, objets compatibles, incompatibilités)
+      et leurs vrais effets : Protection (et contre le feu, les explosions,
+      les projectiles), Chute amortie, Épines, Respiration, Affinité
+      aquatique, Agilité aquatique, Semelles givrantes, Agilité des âmes,
+      Furtivité, Tranchant, Châtiment, Fléau des arthropodes, Recul, Aura de
+      feu, Butin, Affilage, Efficacité, Toucher de soie, Fortune, Solidité,
+      Raccommodage, Puissance, Frappe, Flamme, Infinité, Chance de la mer,
+      Appât, Loyauté, Empalement, Impulsion, Canalisation, Charge rapide,
+      Tir multiple, Perforation, Densité, Brèche, Explosion de vent, Fente,
+      Malédiction du lien éternel et Malédiction de disparition.
+    * Table d'enchantement (1 livre, 2 diamants, 4 obsidiennes) : jusqu'à
+      15 bibliothèques autour, 3 choix payés en lapis-lazuli et en niveaux
+      (même calcul que le jeu original), indice au survol, écriture
+      mystérieuse, livre animé qui s'ouvre et suit le joueur, runes qui
+      volent des bibliothèques vers la table.
+    * Enclume : combine deux objets, ou un objet et un livre enchanté (deux
+      niveaux égaux donnent le niveau suivant), répare avec le matériau,
+      renomme ; le coût augmente à chaque passage (« Trop cher ! » à 40
+      niveaux) ; l'enclume s'abîme puis se casse, et tombe comme du sable.
+    * Meule : retire les enchantements (pas les malédictions) contre de
+      l'expérience et répare deux objets identiques ; l'établi aussi.
+    * Nouvelles armes : arbalète (avec le crochet), trident (lâché par les
+      noyés, nouveaux zombies des océans et des rivières), masse (coup
+      écrasant après une chute) et lances en bois, pierre, fer, or et
+      diamant (charge en courant et Fente).
+    * Orages : Canalisation fait tomber la foudre sur la cible du trident.
+    * Livres enchantés dans les coffres (donjons, forts, forteresses du
+      Nether, cités de l'End), à la pêche et chez le bibliothécaire ; fiole
+      d'expérience chez le prêtre ; équipement enchanté dans les cités de
+      l'End.
+    * Reflet violet des objets enchantés (inventaire, main, objets au sol),
+      noms colorés selon la rareté, 4 nouveaux succès (30 en tout), guide
+      « Comment enchanter ? » sur l'écran titre, nouveaux sons.
+    * Commandes : /enchant <enchantement> [niveau], /xp 30L,
+      /weather thunder.
+    * La carte du monde (touche M) a été retirée : elle n'existe pas dans
+      le vrai Minecraft.
   - Mode créatif (vol : double espace), commandes (/help, /gamemode,
-    /time, /tp, /give, /weather, /summon, /seed, /xp, /heal...).
+    /time, /tp, /give, /weather, /summon, /seed, /xp, /enchant, /heal...).
   - Sauvegarde locale de plusieurs mondes (localStorage), sauvegarde auto.
   - Interface FR/EN, écran de débogage F3, vue à la 3e personne F5,
     succès, sons et musique d'ambiance générés procéduralement,
