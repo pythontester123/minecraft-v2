@@ -592,7 +592,7 @@ const STR={
 'msg.ench.incompat':['{0} est incompatible avec les enchantements de l\'objet','{0} is incompatible with the item\'s enchantments'],'msg.ench.noitem':['Il faut tenir un objet en main','You must hold an item'],
 'msg.ench.max':['Le niveau maximum de {0} est {1}','{0} maximum level is {1}'],'msg.ench.unknown':['Enchantement inconnu : {0}','Unknown enchantment: {0}'],'msg.xpl':['+{0} niveaux','+{0} levels'],'msg.nameprompt':['Nom de la créature (Entrée pour valider)','Creature name (press Enter)'],
 'msg.elytrahint':['Élytres : équipez-les comme un plastron, sautez dans le vide puis appuyez encore sur Espace pour planer. Une fusée d\'artifice pour accélérer !','Elytra: wear them like a chestplate, jump off a ledge and press Space again to glide. Use a firework rocket to speed up!'],'die.lava':['{0} a essayé de nager dans la lave','{0} tried to swim in lava'],'die.drown':['{0} s\'est noyé','{0} drowned'],
- 'die.mob':['{0} a été tué par {1}','{0} was slain by {1}'],'die.explosion':['{0} a explosé','{0} blew up'],'die.arrow':['{0} a été abattu par {1}','{0} was shot by {1}'],
+ 'die.mob':['{0} a été tué par {1}','{0} was slain by {1}'],'die.anvil':['{0} a été écrasé par une enclume','{0} was squashed by a falling anvil'],'die.trident':['{0} a été embroché par {1}','{0} was impaled by {1}'],'die.explosion':['{0} a explosé','{0} blew up'],'die.arrow':['{0} a été abattu par {1}','{0} was shot by {1}'],
  'die.cactus':['{0} s\'est fait piquer à mort','{0} was pricked to death'],'die.starve':['{0} est mort de faim','{0} starved to death'],'die.void':['{0} est tombé dans le vide','{0} fell out of the world'],'die.cmd':['{0} a été tué','{0} was killed'],
  'die.fire':['{0} a brûlé vif','{0} burned to death'],
  'weather.clear':['Dégagé','Clear'],'weather.rain':['Pluie','Rain'],'weather.snow':['Neige','Snow'],
@@ -1849,6 +1849,7 @@ function processTicks(){
 /* ============================ TICKS ALÉATOIRES ============================ */
 function randomTick(x,y,z){
   const id=getBlock(x,y,z); if(!id) return; const r=Math.random;
+  if(id===B.frosted_ice){ frostMelt(x,y,z); return; }
   if(id===B.grass_block){ const ab=BLOCKS[getBlock(x,y+1,z)]; if((ab.opaque&&ab.shape==='cube')||getSky(x,y+1,z)<4&&getLight(x,y+1,z)<4&&ab.opacity>1){ if(getSky(x,y+1,z)<4||ab.opaque) setBlock(x,y,z,B.dirt); return; }
     if(lightAt(x,y+1,z)>=9&&r()<0.5){ const nx=x+(r()*3|0)-1, ny=y+(r()*5|0)-3, nz=z+(r()*3|0)-1; if(getBlock(nx,ny,nz)===B.dirt&&!BLOCKS[getBlock(nx,ny+1,nz)].opaque&&lightAt(nx,ny+1,nz)>=4) setBlock(nx,ny,nz,B.grass_block); } return; }
   if(id===B.wheat||id===B.carrots||id===B.potatoes){ const st=getMeta(x,y,z); if(st<7&&lightAt(x,y+1,z)>=9){ const wet=getMeta(x,y-1,z)>0; if(r()<(wet?0.4:0.18)) setBlock(x,y,z,id,st+1,{silent:true}); } return; }
@@ -2865,11 +2866,12 @@ function updatePlayer(dt){
   player.sneak=input.sneak&&!player.flying; 
   const wantSprint=(input.sprint||input.sprintToggle)&&fwd>0.5&&!player.sneak&&(player.food>6||creative)&&!web; player.sprint=wantSprint;
   if(player.flying) player.sneak=false;
-  let speed=player.sneak?1.31:player.sprint?5.6:4.32; if(player.inWater&&!player.flying) speed*=0.5; if(web) speed*=0.2; if(player.flying) speed=input.sprint?21:10.9;
+  let speed=player.sneak?4.32*Math.min(1,0.3+0.15*armorEnch('swift_sneak')):player.sprint?5.6:4.32; let dstr=player.inWater?Math.min(3,armorEnch('depth_strider')):0; if(!player.onGround) dstr*=0.5; if(player.inWater&&!player.flying) speed*=0.5+0.5*dstr/3;
+  if(player.onGround&&!player.flying&&getBlock(floor(player.x),floor(player.y-0.05),floor(player.z))===B.soul_sand){ const ss=armorEnch('soul_speed'); if(ss){ speed*=1.3+0.105*ss; if(!creative&&rnd()<dt*20*0.04){ damageItem(player.armor[3],1); cleanupArmor(); } if(settings.particles&&rnd()<dt*6&&Math.hypot(player.vx,player.vz)>1) addParticle({x:player.x+(rnd()-.5)*0.5,y:player.y+0.1,z:player.z+(rnd()-.5)*0.5,vy:0.6,life:0.9,size:0.09,tile:TEX.p_glint!==undefined?TEX.p_glint:TEX.white,gravity:-0.05,collide:false,bright:1,mul:true,r:120,g:220,b:255}); } else speed*=0.4; } if(web) speed*=0.2; if(player.flying) speed=input.sprint?21:10.9;
   if(player.eating>0||player.bowCharge>=0) speed*=0.35;
   const sy=Math.sin(player.yaw),cy=Math.cos(player.yaw); const tx=(-sy*fwd+cy*strafe)*speed, tz=(-cy*fwd-sy*strafe)*speed;
   const ice=BLOCKS[getBlock(floor(player.x),floor(player.y-0.05),floor(player.z))].slippery&&player.onGround;
-  let accel=player.flying?12:player.onGround?(ice?3:30):6; if(player.inWater) accel=8; if(web) accel=30;
+  let accel=player.flying?12:player.onGround?(ice?3:30):6; if(player.inWater) accel=8+22*dstr/3; if(web) accel=30;
   if(!player.gliding){ player.vx+=(tx-player.vx)*Math.min(1,accel*dt); player.vz+=(tz-player.vz)*Math.min(1,accel*dt); }
   const nowT=now();
   if(player.gliding) glidePhysics(dt);
@@ -2881,10 +2883,10 @@ function updatePlayer(dt){
   if(player.vy<0&&!player.onGround&&!player.flying) player.fallDist-=player.vy*dt; 
   if(player.gliding&&player.vy>-10) player.fallDist=0; // en vol plané, seuls les piqués font des dégâts à l'atterrissage
   const wasG=player.onGround, hs0=Math.hypot(player.vx,player.vz);
-  moveEntity(player,dt);
+  moveEntity(player,dt); frostWalk();
   if(player.gliding&&player.blockedH){ const dmg=(hs0-Math.hypot(player.vx,player.vz))/2-3; if(dmg>0&&!creative){ hurt(dmg,'wall'); sfx('fallbig'); } }
   if(player.gliding){ player.glideSnd=(player.glideSnd||0)-dt; if(player.glideSnd<=0){ player.glideSnd=0.55; const sp=Math.hypot(player.vx,player.vy,player.vz); if(sp>8) sfx('glide_wind',undefined,undefined,undefined,clamp(sp/45,0.15,0.9)); }
-    if(!creative){ player.elyT=(player.elyT||0)+dt; if(player.elyT>=1){ player.elyT=0; const a=player.armor[1]; if(a&&a.dur>1){ a.dur--; if(a.dur<=1){ chat(t('msg.elytrabroken'),'#f88'); player.gliding=false; } } } }
+    if(!creative){ player.elyT=(player.elyT||0)+dt; if(player.elyT>=1){ player.elyT=0; const a=player.armor[1]; if(a&&a.dur>1){ if(rnd()<1/(enchLvl(a,'unbreaking')+1)) a.dur--; if(a.dur<=1){ chat(t('msg.elytrabroken'),'#f88'); player.gliding=false; } } } }
     if(player.rocketT>0&&settings.particles) for(let k=0;k<3;k++) addGlow({x:player.x+(rnd()-.5)*0.3,y:player.y+0.6+(rnd()-.5)*0.3,z:player.z+(rnd()-.5)*0.3,vx:-player.vx*0.05+(rnd()-.5)*1.5,vy:-player.vy*0.05+(rnd()-.5)*1.5,vz:-player.vz*0.05+(rnd()-.5)*1.5,life:0.5+rnd()*0.5,size:0.16,r:255,g:180+rnd()*60,b:90,a:0.9,grav:1.5,drag:0.9,shrink:1}); }
   if(player.onGround&&!wasG){ if(player.fallDist>3.2&&!creative&&!player.inWater){ const dmg=floor(player.fallDist-3); if(dmg>0){ hurt(dmg,'fall'); sfx('fallbig'); } else sfx('fall'); } else if(player.fallDist>1.5) sfx('fall'); player.fallDist=0; if(creative&&player.flying) player.flying=false; }
   if(player.onGround) player.lastGround=nowT;
@@ -2893,10 +2895,10 @@ function updatePlayer(dt){
   if(hs>0.5&&player.onGround){ player.bobT+=dt*hs*1.6; player.bob=Math.min(1,player.bob+dt*6); exhaust(player.sprint?0.1*hs*dt:0.01*hs*dt); if(player.bobT-player.lastStep>PI){ player.lastStep=player.bobT; stepSound(); } } else player.bob=Math.max(0,player.bob-dt*6);
   if(player.inWater&&hs>0.5){ exhaust(0.01*hs*dt); }
   // Dégâts environnementaux
-  if(player.inLava&&!creative){ hurt(4,'lava',null,true); player.onFire=Math.max(player.onFire,5); }
+  if(player.inLava&&!creative){ hurt(4,'lava',null,true); player.onFire=Math.max(player.onFire,fireDur(5)); }
   if(player.onFire>0){ player.onFire-=dt; if(!creative&&!player.inWater){ player.fireT=(player.fireT||0)+dt; if(player.fireT>1){ player.fireT=0; hurt(1,'fire',null,true); } } if(player.inWater||world.rainLevel>0.5&&getSky(floor(player.x),floor(player.y+1),floor(player.z))>=14) player.onFire=0; if(settings.particles&&rnd()<0.5) addParticle({x:player.x+(rnd()-.5)*.6,y:player.y+rnd()*1.8,z:player.z+(rnd()-.5)*.6,vy:1+rnd(),life:0.5,size:0.14,tile:TEX.flame,gravity:-0.2,bright:1,collide:false}); }
   const headBlock=eyeInBlock(player.x,playerEye(),player.z);
-  if(headBlock===B.water&&!creative){ player.air-=dt*20; if(player.air<=-20){ player.air=0; hurt(2,'drown',null,true); } if(settings.particles&&rnd()<0.3) addParticle({x:player.x+(rnd()-.5)*.4,y:playerEye()+0.1,z:player.z+(rnd()-.5)*.4,vy:1.5,life:0.8,size:0.08,tile:TEX.bubble,gravity:-0.1,collide:false}); } else player.air=Math.min(300,player.air+dt*60);
+  if(headBlock===B.water&&!creative){ player.air-=dt*20/(1+armorEnch('respiration')); if(player.air<=-20){ player.air=0; hurt(2,'drown',null,true); } if(settings.particles&&rnd()<0.3) addParticle({x:player.x+(rnd()-.5)*.4,y:playerEye()+0.1,z:player.z+(rnd()-.5)*.4,vy:1.5,life:0.8,size:0.08,tile:TEX.bubble,gravity:-0.1,collide:false}); } else player.air=Math.min(300,player.air+dt*60);
   for(const [dx,dz] of [[0.3,0],[-0.3,0],[0,0.3],[0,-0.3]]){ if(getBlock(floor(player.x+dx),floor(player.y+0.5),floor(player.z+dz))===B.cactus&&!creative){ player.cactusT=(player.cactusT||0)+dt; if(player.cactusT>0.5){ player.cactusT=0; hurt(1,'cactus',null,true); } } }
   if(player.y<-8&&!creative) hurt(4,'void',null,true); if(player.y<-64) player.y=WH+10;
   updatePortal(dt);
@@ -2932,10 +2934,12 @@ function exhaust(v){ if(!isCreative()) player.exhaust+=v; }
 let damageFlash=0;
 function hurt(amount,cause,attacker,bypassArmor){
   if(player.dead||isCreative()) return; if(player.hurtTime>0&&amount<=(player.lastDmg||0)) return;
-  if(!bypassArmor){ const pts=armorPoints(); amount=amount*(1-Math.min(20,pts)*0.04); for(const a of player.armor) if(a&&!ITEMS[a.id].elytra){ damageItem(a,1); } cleanupArmor(); }
+  if(!bypassArmor){ const pts=armorPoints(), wear=Math.max(1,Math.floor(amount/4)); amount=amount*(1-Math.min(20,pts)*0.04); for(const a of player.armor) if(a&&!ITEMS[a.id].elytra){ damageItem(a,wear); } cleanupArmor(); }
+  { const epf=enchProtection(cause); if(epf>0) amount*=1-epf/25; }
   if(attacker&&attacker.id&&MOBS[attacker.type]) alertWolves(attacker);
   amount=Math.max(0,amount); player.lastDmg=amount; player.hurtTime=0.5; player.health-=amount; damageFlash=0.35; player.hurtYaw=(rnd()-0.5)*0.15; sfx('hurt'); exhaust(0.1);
-  if(attacker){ const dx=player.x-attacker.x, dz=player.z-attacker.z, l=sqrt(dx*dx+dz*dz)||1; player.vx+=dx/l*6; player.vz+=dz/l*6; player.vy=Math.max(player.vy,4); }
+  if(attacker){ const kbm=cause==='explosion'?Math.max(0,1-0.15*armorEnch('blast_protection')):1; const dx=player.x-attacker.x, dz=player.z-attacker.z, l=sqrt(dx*dx+dz*dz)||1; player.vx+=dx/l*6*kbm; player.vz+=dz/l*6*kbm; player.vy=Math.max(player.vy,4*kbm); }
+  if(cause==='mob') thornsReact(attacker);
   if(player.health<=0){ player.health=0; die(cause,attacker); }
 }
 function armorPoints(){ let p=0; for(const a of player.armor) if(a) p+=ITEMS[a.id].pts||0; return p; }
@@ -2943,7 +2947,7 @@ function cleanupArmor(){ for(let i=0;i<4;i++){ const a=player.armor[i]; if(a&&a.
 function die(cause,attacker){
   player.dead=true; player.deaths++; player.mineProg=0; player.eating=0; player.bowCharge=-1; player.flying=false; sfx('death');
   const name=player.name; const who=attacker?nameOfMob(attacker.type):'';
-  const key={wall:'die.wall',fall:'die.fall',lava:'die.lava',drown:'die.drown',mob:'die.mob',explosion:'die.explosion',arrow:'die.arrow',cactus:'die.cactus',starve:'die.starve',void:'die.void',cmd:'die.cmd',fire:'die.fire',poison:'die.mob'}[cause]||'die.cmd';
+  const key={wall:'die.wall',fall:'die.fall',lava:'die.lava',drown:'die.drown',mob:'die.mob',explosion:'die.explosion',arrow:'die.arrow',cactus:'die.cactus',starve:'die.starve',void:'die.void',cmd:'die.cmd',fire:'die.fire',poison:'die.mob',fireball:'die.mob',anvil:'die.anvil',trident:'die.trident'}[cause]||(attacker?'die.mob':'die.cmd');
   const msg=t(key,name,who||'?'); $('deathcause').textContent=msg; $('deathscore').textContent=t('death.score',player.score); chat(msg,'#f66');
   if(!isCreative()){ for(let i=0;i<36;i++){ const s=player.inv[i]; if(s){ if(!enchLvl(s,'vanishing_curse')) spawnItem(player.x,player.y+1,player.z,s.id,s.n,s.dur,true,undefined,s); player.inv[i]=null; } } for(let i=0;i<4;i++){ const s=player.armor[i]; if(s){ if(!enchLvl(s,'vanishing_curse')) spawnItem(player.x,player.y+1,player.z,s.id,1,s.dur,true,undefined,s); player.armor[i]=null; } } for(let i=0;i<9;i++){ const s=player.craft[i]; if(s){ spawnItem(player.x,player.y+1,player.z,s.id,s.n,s.dur,true,undefined,s); player.craft[i]=null; } } if(player.cursor){ spawnItem(player.x,player.y+1,player.z,player.cursor.id,player.cursor.n,player.cursor.dur,true,undefined,player.cursor); player.cursor=null; }
     const drop=Math.min(player.level*7,100); player.xp=0; player.level=0; for(let i=0;i<Math.min(drop,20);i++) spawnXp(player.x,player.y+1,player.z,Math.max(1,drop/20|0)); }
@@ -2968,7 +2972,7 @@ function addItem(id,n=1,dur,src){ if(!ITEMS[id]) return n; const sx=src||{}; con
 function countItem(id){ let c=0; for(const s of player.inv) if(s&&s.id===id) c+=s.n; return c; }
 function removeItem(id,n){ for(let i=0;i<36&&n>0;i++){ const s=player.inv[i]; if(s&&s.id===id){ const take=Math.min(n,s.n); s.n-=take; n-=take; if(s.n<=0) player.inv[i]=null; } } refreshHUD(); return n===0; }
 function consumeHeld(n=1){ if(isCreative()) return; const s=player.inv[player.hot]; if(!s) return; s.n-=n; if(s.n<=0) player.inv[player.hot]=null; refreshHUD(); }
-function damageItem(s,n=1){ if(!s||s.dur===undefined||isCreative()) return; s.dur-=n; if(s.dur<=0){ const i=player.inv.indexOf(s); if(i>=0){ player.inv[i]=null; sfx('break'); } } refreshHUD(); }
+function damageItem(s,n=1){ if(!s||s.dur===undefined||isCreative()) return; const ub=enchLvl(s,'unbreaking'); if(ub&&n>0){ const d=ITEMS[s.id], arm=!!d.armor&&!d.elytra; let k=0; for(let q=0;q<n;q++) if(arm?rnd()<0.6+0.4/(ub+1):rnd()<1/(ub+1)) k++; n=k; if(!n) return; } s.dur-=n; if(s.dur<=0){ const i=player.inv.indexOf(s); if(i>=0){ player.inv[i]=null; sfx('break'); } } refreshHUD(); }
 function setHeld(s){ player.inv[player.hot]=s; refreshHUD(); }
 function onItemGained(id,crafted){ if(id===I.elytra&&!world.achievements.elytra) actionBar(t('msg.elytrahint')); if(id===B.oak_log||id===B.birch_log||id===B.spruce_log) achieve('wood'); if(id===I.iron_ingot) achieve('iron'); if(id===I.diamond) achieve('diamond'); if(id===I.leather) achieve('cow'); if(id===I.wheat) achieve('farmer'); if(id===I.cooked_porkchop||id===I.cooked_beef) achieve('dish');
   if(crafted){ if(id===I.bread) achieve('bread'); if(id===B.crafting_table) achieve('bench'); if(id===I.wooden_pickaxe) achieve('pickaxe'); if(id===B.furnace) achieve('furnace'); } }
@@ -3309,6 +3313,73 @@ function anvilLand(e,bx,by,bz){ const fall=Math.max(0,(e.y0!==undefined?e.y0:by)
     if(rnd()<0.05+i*0.05) id=id===B.anvil?B.chipped_anvil:id===B.chipped_anvil?B.damaged_anvil:0; }
   sfx(id?'anvil_land':'anvil_break',bx+0.5,by+0.5,bz+0.5); return id; }
 
+/* ============================ EFFETS DES ENCHANTEMENTS ============================ */
+// Protections : points de protection d'enchantement (EPF) de toutes les pièces, plafonnés à 20 → -4 % par point
+function enchProtection(cause){ if(cause==='void'||cause==='cmd'||cause==='starve') return 0; let epf=0;
+  for(const a of player.armor){ if(!a||!a.ench) continue; const e=a.ench;
+    if(e.protection) epf+=e.protection;
+    if(e.fire_protection&&(cause==='fire'||cause==='lava'||cause==='fireball')) epf+=2*e.fire_protection;
+    if(e.blast_protection&&cause==='explosion') epf+=2*e.blast_protection;
+    if(e.projectile_protection&&(cause==='arrow'||cause==='trident'||cause==='fireball')) epf+=2*e.projectile_protection;
+    if(e.feather_falling&&cause==='fall') epf+=3*e.feather_falling; }
+  return Math.min(20,epf); }
+// Protection contre le feu : brûle moins longtemps (-15 % par niveau de la meilleure pièce)
+const fireDur=t=>{ const L=armorEnch('fire_protection'); return L?t-Math.floor(t*L*0.15*20)/20:t; };
+// Épines : 15 % par niveau de renvoyer 1 à 4 dégâts à l'agresseur ; la pièce perd 2 de durabilité
+function thornsReact(attacker){ if(!attacker||!attacker.id||!MOBS[attacker.type]||attacker.dead||isCreative()) return; const pcs=player.armor.filter(a=>a&&enchLvl(a,'thorns')); if(!pcs.length) return;
+  const a=pcs[rnd()*pcs.length|0], L=enchLvl(a,'thorns'); if(rnd()<0.15*L){ damageEntity(attacker,L>10?L-10:1+(rnd()*4|0),'player'); damageItem(a,2); cleanupArmor(); sfx('thorns',attacker.x,attacker.y,attacker.z); } }
+// Raccommodage : l'expérience ramassée répare un objet équipé au hasard (2 points de durabilité par point d'expérience)
+function mendingRepair(xp){ const c=[]; const hs=heldItem(); const ok=s=>s&&s.dur!==undefined&&enchLvl(s,'mending')&&s.dur<ITEMS[s.id].dur; if(ok(hs)) c.push(hs); for(const a of player.armor) if(ok(a)) c.push(a);
+  while(xp>0&&c.length){ const k=rnd()*c.length|0, s=c[k], rep=Math.min(xp*2,ITEMS[s.id].dur-s.dur); s.dur+=rep; xp-=Math.ceil(rep/2); if(s.dur>=ITEMS[s.id].dur) c.splice(k,1); }
+  return Math.max(0,xp); }
+function gainXp(v){ const left=mendingRepair(v); if(left>0) addXp(left); else refreshHUD(); }
+// Bonus de dégâts au corps à corps (ajouté après le coup critique, comme dans le jeu)
+const UNDEAD=new Set(['zombie','skeleton','drowned']), ARTHRO=new Set(['spider']), AQUATIC=new Set(['squid','glow_squid','cod','salmon','tropical_fish','pufferfish']);
+function meleeBonus(s,e){ if(!s||!s.ench) return 0; let b=0; const E=s.ench;
+  if(E.sharpness) b+=0.5*E.sharpness+0.5; if(E.smite&&UNDEAD.has(e.type)) b+=2.5*E.smite; if(E.bane_of_arthropods&&ARTHRO.has(e.type)) b+=2.5*E.bane_of_arthropods; if(E.impaling&&AQUATIC.has(e.type)) b+=2.5*E.impaling; return b; }
+function magicCrit(e){ if(!settings.particles||TEX.p_enchanted_hit===undefined) return; for(let k=0;k<14;k++) addParticle({x:e.x+(rnd()-.5)*e.w,y:e.y+e.h*0.5+(rnd()-.5)*e.h*0.6,z:e.z+(rnd()-.5)*e.w,vx:(rnd()-.5)*3,vy:rnd()*2.5,vz:(rnd()-.5)*3,life:0.6,size:0.1,tile:TEX.p_enchanted_hit,gravity:0.3,collide:false,bright:1}); }
+// effets après le coup : aura de feu, lenteur IV du fléau des arthropodes, butin
+function postMelee(s,e){ if(!s||!s.ench) return; const fa=enchLvl(s,'fire_aspect'); if(fa&&!e.dead&&MOBS[e.type]&&!MOBS[e.type].fireproof) e.onFire=Math.max(e.onFire||0,4*fa);
+  const ba=enchLvl(s,'bane_of_arthropods'); if(ba&&ARTHRO.has(e.type)&&!e.dead) e.slowT=1.5+rnd()*0.5*(ba-1); }
+// Affilage : le coup balayé de l'épée touche les créatures autour de la cible (1 + dégâts × niv/(niv+1))
+function sweepAttack(s,base,target){ const L=enchLvl(s,'sweeping_edge'), ratio=L/(L+1), tb=entityBox(target); let hit=false;
+  for(const o of world.entities.slice()){ if(o===target||o.dead||!MOBS[o.type]||o.tamed||MOBS[o.type].boss||MOBS[o.type].crystal||o.type==='villager') continue; const ob=entityBox(o);
+    if(ob[3]<tb[0]-1||ob[0]>tb[3]+1||ob[4]<tb[1]-0.25||ob[1]>tb[4]+0.25||ob[5]<tb[2]-1||ob[2]>tb[5]+1) continue; if(dist3(o.x,o.y,o.z,player.x,player.y,player.z)>=3) continue;
+    const dx=o.x-player.x, dz=o.z-player.z, l=Math.hypot(dx,dz)||1; o.lootL=enchLvl(s,'looting'); damageEntity(o,1+ratio*base+meleeBonus(s,o),'player',[dx/l*3,2.5,dz/l*3]); postMelee(s,o); hit=true; }
+  if(hit) sfx('sweep'); }
+// Toucher de soie et Fortune
+function silkable(id){ const d=BLOCKS[id]; if(!d||d.hard<0) return false; if(d.shape==='liquid'||d.shape==='door'||d.shape==='bed'||d.shape==='crop'||d.shape==='portal') return false;
+  return ![B.farmland,B.furnace_lit,B.blaze_spawner,B.tall_grass,B.fern,B.dead_bush,B.frosted_ice,B.end_portal_frame_eye].includes(id); }
+const binom=(n,p,r)=>{ let k=0; for(let i=0;i<n;i++) if(r()<p) k++; return k; };
+function leafDrops(id,F,r){ const o=[]; const f=Math.min(F,3); if(r()<[0.05,0.0625,0.083333336,0.1][f]) o.push([id===B.oak_leaves?B.oak_sapling:id===B.birch_leaves?B.birch_sapling:B.spruce_sapling,1]);
+  if(id===B.oak_leaves&&r()<[0.005,0.0055555557,0.00625,0.008333334][f]) o.push([I.apple,1]); if(r()<[0.02,0.022222223,0.025,0.033333335][f]) o.push([I.stick,1+(r()*2|0)]); return o; }
+function harvestDrops(id,meta,ti){ const s=ti.stack;
+  if(s&&enchLvl(s,'silk_touch')&&silkable(id)){ const o=[[id,id===B.snow?(meta|0)+1:1]]; o.silk=true; return o; }
+  let out=dropsFor(id,meta,ti.tool); const F=s?enchLvl(s,'fortune'):0; if(!F) return out; const r=Math.random, ore=n=>n*(Math.max(rInt(r,F+2)-1,0)+1);
+  if(id===B.coal_ore||id===B.diamond_ore||id===B.emerald_ore||id===B.nether_quartz_ore||id===B.lapis_ore) out=out.map(([i,n])=>[i,ore(n)]);
+  else if(id===B.redstone_ore) out=out.map(([i,n])=>[i,n+rInt(r,F+1)]);
+  else if(id===B.glowstone) out=out.map(([i,n])=>[i,Math.min(4,n+rInt(r,F+1))]);
+  else if(id===B.melon) out=out.map(([i,n])=>[i,Math.min(9,n+rInt(r,F+1))]);
+  else if(id===B.gravel) out=r()<[0.1,0.14285715,0.25,1][Math.min(F,3)]?[[I.flint,1]]:[[B.gravel,1]];
+  else if(id===B.oak_leaves||id===B.birch_leaves||id===B.spruce_leaves) out=leafDrops(id,F,r);
+  else if(id===B.tall_grass||id===B.fern) out=r()<0.125?[[I.wheat_seeds,1+rInt(r,F*2+1)]]:[];
+  else if((id===B.wheat||id===B.carrots||id===B.potatoes)&&meta>=7){ const ex=binom(F,0.5714286,r); out=out.map(([i,n])=>[i,(i===I.wheat_seeds||i===I.carrot||i===I.potato)?n+ex:n]); }
+  return out; }
+// Semelles givrantes : l'eau calme autour des pieds gèle en glace givrée, qui fond ensuite petit à petit
+function frostWalk(){ const L=armorEnch('frost_walker'); if(!L||!player.onGround||player.inWater||player.dead) return; const k=floor(player.x)+','+floor(player.y)+','+floor(player.z); if(k===player.frostK) return; player.frostK=k;
+  const r=Math.min(16,2+L), px=floor(player.x), py=floor(player.y+0.01)-1, pz=floor(player.z);
+  for(let dx=-r;dx<=r;dx++) for(let dz=-r;dz<=r;dz++){ if(dx*dx+dz*dz>r*r) continue; const x=px+dx, z=pz+dz; if(getBlock(x,py,z)!==B.water||getMeta(x,py,z)!==0||getBlock(x,py+1,z)!==0) continue; setBlock(x,py,z,B.frosted_ice,0); frostQ.push({x,y:py,z,t:1+rnd()}); } }
+const frostQ=[];
+function frostMelt(x,y,z){ const m=getMeta(x,y,z); let n=0; for(const [dx,dz] of [[1,0],[-1,0],[0,1],[0,-1]]) if(getBlock(x+dx,y,z+dz)===B.frosted_ice) n++;
+  if(!(rInt(Math.random,3)===0||n<4)) return false; if(m<3){ setBlock(x,y,z,B.frosted_ice,m+1,{silent:true}); return false; } setBlock(x,y,z,B.water,0); return true; }
+function updateFrost(dt){ for(let i=frostQ.length-1;i>=0;i--){ const f=frostQ[i]; if(getBlock(f.x,f.y,f.z)!==B.frosted_ice){ frostQ.splice(i,1); continue; } f.t-=dt; if(f.t>0) continue; f.t=1+rnd();
+    if(armorEnch('frost_walker')&&Math.abs(player.x-(f.x+0.5))<1.4&&Math.abs(player.z-(f.z+0.5))<1.4&&Math.abs(player.y-1-f.y)<1.5) continue; if(frostMelt(f.x,f.y,f.z)) frostQ.splice(i,1); } }
+// flèches tirées avec un arc ou une arbalète enchantés
+function arrowEnch(a,src){ if(!a||!src) return a; a.power=enchLvl(src,'power'); a.punch=enchLvl(src,'punch'); a.flame=enchLvl(src,'flame')>0; if(enchLvl(src,'infinity')) a.noPickup=true; return a; }
+// une créature tuée alors qu'elle brûle (Aura de feu, Flamme…) lâche sa viande déjà cuite
+const COOKED={};
+function cookedDrop(id,e){ if(!(e.onFire>0)) return id; if(!COOKED.ok){ COOKED.ok=1; for(const [a,b] of [['porkchop','cooked_porkchop'],['beef','cooked_beef'],['chicken','cooked_chicken'],['mutton','cooked_mutton'],['cod','cooked_cod'],['salmon','cooked_salmon']]) COOKED[I[a]]=I[b]; } return COOKED[id]||id; }
+
 /* ============================ ARTISANAT ============================ */
 function craftResult(grid,w){ // grid : tableau de w*w stacks (ou null)
   { const rp=craftRepair(grid); if(rp) return rp; }
@@ -3355,7 +3426,8 @@ function tickContainers(dt){ for(const [k,c] of world.containers){ if(c.type!=='
 function toolInfo(){ const s=heldItem(); const d=s?ITEMS[s.id]:null; return {stack:s,tool:d&&d.tool||null,tier:d&&d.tier||0,speed:d&&d.speed||1}; }
 function breakTime(id){ const d=BLOCKS[id]; if(d.hard<0) return Infinity; if(d.hard===0) return 0.05; const ti=toolInfo(); const correct=d.tool&&ti.tool===d.tool; const needTool=d.tool==='pickaxe'||d.tier>0||id===B.cobweb;
   let canHarvest=!needTool||(correct&&ti.tier>=d.tier)||(id===B.cobweb&&(ti.tool==='sword'||ti.tool==='shears')); let speed=correct?ti.speed:1; if(ti.tool==='shears'&&(d.tint==='foliage'||id===B.birch_leaves||id===B.spruce_leaves||id===B.cobweb||d.sound==='cloth')) { speed=15; canHarvest=true; } if(ti.tool==='sword'&&id===B.cobweb) speed=15;
-  let tm=d.hard*(canHarvest?1.5:5)/speed; if(!player.onGround&&!player.flying) tm*=5; if(player.inWater) tm*=5; return tm; }
+  if(speed>1){ const ef=enchLvl(ti.stack,'efficiency'); if(ef) speed+=ef*ef+1; }
+  let tm=d.hard*(canHarvest?1.5:5)/speed; if(!player.onGround&&!player.flying) tm*=5; if(player.inWater&&!armorEnch('aqua_affinity')) tm*=5; return tm; }
 function canHarvest(id){ const d=BLOCKS[id]; const ti=toolInfo(); const needTool=d.tool==='pickaxe'||d.tier>0; if(id===B.cobweb) return ti.tool==='sword'||ti.tool==='shears'; if(!needTool) return true; return ti.tool===d.tool&&ti.tier>=d.tier; }
 let target=null, targetEntity=null;
 function updateTarget(){ const e=playerEye(); const f=forwardVec(); const reach=isCreative()?5:4.5; const held=heldItem(); const fl=held&&(held.id===I.bucket); target=raycast(player.x,e,player.z,f[0],f[1],f[2],reach,fl);
@@ -3377,9 +3449,9 @@ function breakBlock(x,y,z,creative){
   sfx('break_'+d.sound,x,y,z); if(settings.particles) blockParticles(x,y,z,id,14);
   if(id===B.oak_door){ const other=(meta&8)?y-1:y+1; setBlock(x,y,z,B.air); if(getBlock(x,other,z)===B.oak_door) setBlock(x,other,z,B.air); if(!creative) spawnItem(x+0.5,y+0.5,z+0.5,B.oak_door,1); return; }
   if(id===B.bed){ const f=meta&3; const dir=DOORF[f]; const ox=(meta&8)?x-dir[0]:x+dir[0], oz=(meta&8)?z-dir[2]:z+dir[2]; setBlock(x,y,z,B.air); if(getBlock(ox,y,oz)===B.bed) setBlock(ox,y,oz,B.air); if(world.bed&&((world.bed.x===x&&world.bed.z===z)||(world.bed.x===ox&&world.bed.z===oz))) world.bed=null; if(!creative) spawnItem(x+0.5,y+0.5,z+0.5,B.bed,1); return; }
-  if(id===B.ice&&!creative&&BLOCKS[getBlock(x,y-1,z)].solid){ setBlock(x,y,z,B.water,0); return; }
+  if((id===B.ice&&!creative&&BLOCKS[getBlock(x,y-1,z)].solid&&!heldEnch('silk_touch'))||(id===B.frosted_ice&&!creative)){ setBlock(x,y,z,B.water,0); return; }
   setBlock(x,y,z,B.air);
-  if(!creative){ const ti=toolInfo(); if(canHarvest(id)){ dropsFor(id,meta,ti.tool).forEach(([i,n])=>spawnItem(x+0.5,y+0.5,z+0.5,i,n)); if(d.xp){ const n=d.xp[0]+(rnd()*(d.xp[1]-d.xp[0]+1)|0); for(let i=0;i<n;i++) spawnXp(x+0.5,y+0.5,z+0.5,1); } }
+  if(!creative){ const ti=toolInfo(); if(canHarvest(id)){ const drops=harvestDrops(id,meta,ti); drops.forEach(([i,n])=>spawnItem(x+0.5,y+0.5,z+0.5,i,n)); if(d.xp&&!drops.silk){ const n=d.xp[0]+(rnd()*(d.xp[1]-d.xp[0]+1)|0); for(let i=0;i<n;i++) spawnXp(x+0.5,y+0.5,z+0.5,1); } }
     if(ti.stack&&ti.tool&&d.hard>0) damageItem(ti.stack,ti.tool==='sword'?2:1); exhaust(0.005); world.stats.mined=(world.stats.mined||0)+1; player.score+=1; }
 }
 
@@ -3508,12 +3580,14 @@ function finishEating(){ const s=heldItem(); if(!s) return; const d=ITEMS[s.id];
   consumeHeld(); refreshHUD(); }
 function feedAnimal(){ const s=heldItem(); if(!s||!targetEntity) return false; const e=targetEntity; const likes={pig:[I.carrot,I.potato],cow:[I.wheat],sheep:[I.wheat],chicken:[I.wheat_seeds,I.pumpkin_seeds]}[e.type]; if(!likes||!likes.includes(s.id)) return false; if(e.baby>0){ e.baby=Math.max(0,e.baby-30); consumeHeld(); swingArm(); return true; } if(e.love>0||e.breedCd>0) return false; e.love=30; consumeHeld(); swingArm(); if(settings.particles) for(let i=0;i<7;i++) addParticle({x:e.x+(rnd()-.5)*e.w*1.5,y:e.y+e.h+rnd()*0.5,z:e.z+(rnd()-.5)*e.w*1.5,vy:0.5,life:1,size:0.12,tile:TEX.heart_p,gravity:-0.1,collide:false,bright:1}); return true; }
 function doUse(){ if(player.dead||ui.open) return; if(targetEntity&&(interactEntity()||feedAnimal())) return; if(!player.sneak&&interactBlock()) return; if(useItem()) return; if(targetEntity){ const s=heldItem(); if(s&&ITEMS[s.id].dye){ useItem(); } } }
-function attackEntity(e){ if(e.dead||e.type==='item'||e.type==='xp') return; const s=heldItem(); const d=s?ITEMS[s.id]:null; let dmg=d&&d.dmg?d.dmg:1; let crit=false; if(!player.onGround&&player.vy<0&&!player.inWater&&!player.onLadder){ dmg*=1.5; crit=true; }
-  const dx=e.x-player.x, dz=e.z-player.z, l=sqrt(dx*dx+dz*dz)||1; const kb=player.sprint?1.6:1; damageEntity(e,dmg,'player',[dx/l*6*kb,4.5,dz/l*6*kb]); if(!e.tamed) alertWolves(e);
+function attackEntity(e){ if(e.dead||e.type==='item'||e.type==='xp') return; const s=heldItem(); const d=s?ITEMS[s.id]:null; let dmg=d&&d.dmg?d.dmg:1; const base=dmg; let crit=false; if(!player.onGround&&player.vy<0&&!player.inWater&&!player.onLadder){ dmg*=1.5; crit=true; }
+  const eb=meleeBonus(s,e); dmg+=eb; e.lootL=enchLvl(s,'looting'); if(enchLvl(s,'fire_aspect')&&MOBS[e.type]&&!MOBS[e.type].fireproof) e.onFire=Math.max(e.onFire||0,1);
+  const dx=e.x-player.x, dz=e.z-player.z, l=sqrt(dx*dx+dz*dz)||1; const kb=(player.sprint?1.6:1)+enchLvl(s,'knockback'); damageEntity(e,dmg,'player',[dx/l*6*kb,4.5,dz/l*6*kb]); postMelee(s,e); if(eb>0) magicCrit(e);
+  if(d&&d.tool==='sword'&&player.onGround&&!player.sprint&&!crit) sweepAttack(s,base,e); if(!e.tamed) alertWolves(e);
   if(settings.particles){ const f=forwardVec(); const sw=pframes('p_sweep_',8); if(sw&&d&&d.tool==='sword'&&player.onGround) addParticle({x:player.x+f[0]*1.1,y:playerEye()-0.45,z:player.z+f[2]*1.1,life:0.24,size:0.95,tile:sw[0],frames:sw,gravity:0,collide:false,bright:1,a:230});
     if(TEX.p_damage!==undefined) for(let k=0;k<Math.min(6,Math.ceil(dmg/1.5));k++) addParticle({x:e.x+(rnd()-.5)*e.w,y:e.y+e.h*0.6,z:e.z+(rnd()-.5)*e.w,vx:(rnd()-.5)*1.5,vy:1.5+rnd(),vz:(rnd()-.5)*1.5,life:0.6,size:0.1,tile:TEX.p_damage,gravity:0.6,collide:false,bright:1}); } if(s&&d&&d.dur!==undefined&&d.tool) damageItem(s,d.tool==='sword'?1:2); exhaust(0.1); sfx('hit',e.x,e.y,e.z);
   if(crit) sfx('crit',e.x,e.y,e.z); if(crit&&settings.particles) for(let i=0;i<6;i++) addParticle({x:e.x+(rnd()-.5)*e.w,y:e.y+e.h*0.6+rnd()*0.4,z:e.z+(rnd()-.5)*e.w,vx:(rnd()-.5)*2,vy:rnd()*2,vz:(rnd()-.5)*2,life:0.5,size:0.1,tile:TEX.crit,gravity:0.3,collide:false,bright:1}); }
-function shootBow(){ const c=player.bowCharge; player.bowCharge=-1; if(c<0.15) return; const p=Math.min(1,c/1.0); const f=forwardVec(); const sp=3+p*p*27*1.0; spawnArrow(player.x,playerEye()-0.1,player.z,f[0]*sp+(rnd()-.5)*0.4*(1-p),f[1]*sp,f[2]*sp+(rnd()-.5)*0.4*(1-p),'player',p>=1?1.5:1); if(!isCreative()) removeItem(I.arrow,1); damageItem(heldItem(),1); sfx('bow'); exhaust(0.1); }
+function shootBow(){ const c=player.bowCharge; player.bowCharge=-1; if(c<0.15) return; const p=Math.min(1,c/1.0); const f=forwardVec(); const sp=3+p*p*27*1.0; const bow=heldItem(); arrowEnch(spawnArrow(player.x,playerEye()-0.1,player.z,f[0]*sp+(rnd()-.5)*0.4*(1-p),f[1]*sp,f[2]*sp+(rnd()-.5)*0.4*(1-p),'player',p>=1?1.5:1),bow); if(!isCreative()&&!enchLvl(bow,'infinity')) removeItem(I.arrow,1); damageItem(bow,1); sfx('bow'); exhaust(0.1); }
 function pickBlock(){ if(!target) return; const id=target.id; if(!ITEMS[id]||ITEMS[id].cat===null&&!isCreative()) return; let pid=id; if(id===B.furnace_lit) pid=B.furnace; if(id===B.wheat) pid=I.wheat_seeds; if(id===B.carrots) pid=I.carrot; if(id===B.potatoes) pid=I.potato; if(id===B.farmland) pid=B.dirt;
   for(let i=0;i<9;i++){ if(player.inv[i]&&player.inv[i].id===pid){ player.hot=i; refreshHUD(); return; } } if(isCreative()){ for(let i=0;i<9;i++){ if(!player.inv[i]){ player.inv[i]=makeStack(pid,1); player.hot=i; refreshHUD(); return; } } player.inv[player.hot]=makeStack(pid,1); refreshHUD(); } else { for(let i=9;i<36;i++){ if(player.inv[i]&&player.inv[i].id===pid){ const t=player.inv[player.hot]; player.inv[player.hot]=player.inv[i]; player.inv[i]=t; refreshHUD(); return; } } } }
 function dropHeld(all){ const s=heldItem(); if(!s) return; const n=all?s.n:1; const f=forwardVec(); spawnItem(player.x+f[0]*0.5,playerEye()-0.3,player.z+f[2]*0.5,s.id,n,s.dur,true,[f[0]*6,f[1]*6+1.5,f[2]*6],s); s.n-=n; if(s.n<=0) player.inv[player.hot]=null; refreshHUD(); swingArm(); }
@@ -3740,7 +3814,7 @@ function spawnFireball(e){ const m=MOBS[e.type]; const ex=e.x,ey=e.y+m.eye,ez=e.
 function updateFireball(e,dt,i){ if(e.age>6){ world.entities.splice(i,1); return; } const sp=sqrt(e.vx*e.vx+e.vy*e.vy+e.vz*e.vz)||1; const nx=e.x+e.vx*dt,ny=e.y+e.vy*dt,nz=e.z+e.vz*dt; const hit=raycast(e.x,e.y,e.z,e.vx/sp,e.vy/sp,e.vz/sp,sp*dt,false);
   const b=entityBox(player); const hitP=!player.dead&&nx>b[0]-0.2&&nx<b[3]+0.2&&ny>b[1]-0.2&&ny<b[4]+0.2&&nz>b[2]-0.2&&nz<b[5]+0.2;
   const hitPeer=!hit&&!hitP&&mp.peers.size&&mpHitPeer(e,nx,ny,nz,0.2,5,'mob',5);
-  if(hit||hitP||hitPeer){ world.entities.splice(i,1); const hx=hit?hit.hx:nx,hy=hit?hit.hy:ny,hz=hit?hit.hz:nz; if(hitP){ hurt(5,'mob',e.ownerEnt||{x:e.x,y:e.y,z:e.z,type:'blaze'}); if(!isCreative()) player.onFire=Math.max(player.onFire,5); } sfx('fire',hx,hy,hz,0.8); if(settings.particles) for(let k=0;k<8;k++) addParticle({x:hx,y:hy,z:hz,vx:(rnd()-.5)*3,vy:rnd()*3,vz:(rnd()-.5)*3,life:0.5,size:0.15,tile:TEX.flame,gravity:0.2,bright:1,collide:false}); return; }
+  if(hit||hitP||hitPeer){ world.entities.splice(i,1); const hx=hit?hit.hx:nx,hy=hit?hit.hy:ny,hz=hit?hit.hz:nz; if(hitP){ hurt(5,'fireball',e.ownerEnt||{x:e.x,y:e.y,z:e.z,type:'blaze'}); if(!isCreative()) player.onFire=Math.max(player.onFire,fireDur(5)); } sfx('fire',hx,hy,hz,0.8); if(settings.particles) for(let k=0;k<8;k++) addParticle({x:hx,y:hy,z:hz,vx:(rnd()-.5)*3,vy:rnd()*3,vz:(rnd()-.5)*3,life:0.5,size:0.15,tile:TEX.flame,gravity:0.2,bright:1,collide:false}); return; }
   e.x=nx; e.y=ny; e.z=nz; if(settings.particles&&rnd()<0.6) addParticle({x:e.x,y:e.y,z:e.z,vy:0.3,life:0.35,size:0.12,tile:TEX.smoke,frames:pframes('p_generic_',8,true),r:80,g:80,b:80,mul:true,gravity:-0.2,collide:false}); }
 // Œil de l'Ender : s'élève, file vers le fort le plus proche, puis retombe (ou se brise une fois sur cinq).
 function throwEye(){ makeEye(player.x,playerEye()-0.2,player.z); sfx('throw'); achieve('eye'); }
@@ -3768,7 +3842,7 @@ const FISH_LOOT={fish:[[()=>I.cod,60],[()=>I.salmon,25],[()=>I.tropical_fish,2],
   junk:[[()=>I.leather,10],[()=>I.leather_boots,10],[()=>I.rotten_flesh,10],[()=>I.stick,5],[()=>I.string,5],[()=>I.bone,10],[()=>I.ink_sac,1]],
   treasure:[[()=>I.bow,1],[()=>I.fishing_rod,1],[()=>I.book,1],[()=>I.name_tag,1],[()=>I.nautilus_shell,1],[()=>I.emerald,1]]};
 function castRod(){ const f=forwardVec(), cp=Math.max(0.2,Math.cos(player.pitch)), sp=Math.min(0.6+0.5/cp,2.2);
-  player.hook={x:player.x+f[0]*0.3,y:playerEye()-0.1,z:player.z+f[2]*0.3,vx:f[0]*sp+(rnd()-.5)*0.02,vy:f[1]*sp+(rnd()-.5)*0.02,vz:f[2]*sp+(rnd()-.5)*0.02,state:0,acc:0,lured:0,hooked:0,nibble:0,ang:0,outT:0,age:0,open:true};
+  player.hook={x:player.x+f[0]*0.3,y:playerEye()-0.1,z:player.z+f[2]*0.3,vx:f[0]*sp+(rnd()-.5)*0.02,vy:f[1]*sp+(rnd()-.5)*0.02,vz:f[2]*sp+(rnd()-.5)*0.02,state:0,acc:0,lured:0,hooked:0,nibble:0,ang:0,outT:0,age:0,open:true,lure:heldEnch('lure'),luck:heldEnch('luck_of_the_sea')};
   sfx('throw',undefined,undefined,undefined,0.8); }
 function hookWater(h){ const bx=floor(h.x), by=floor(h.y), bz=floor(h.z); if(getBlock(bx,by,bz)!==B.water) return -1; return getBlock(bx,by+1,bz)===B.water?1:0.875; }
 function openWaterAt(h){ const by=floor(h.y); let n=0; for(let dx=-2;dx<=2;dx++) for(let dz=-2;dz<=2;dz++){ const x=floor(h.x)+dx, z=floor(h.z)+dz; if(getBlock(x,by,z)===B.water&&getBlock(x,by-1,z)===B.water&&!BLOCKS[getBlock(x,by+1,z)].solid) n++; } return n>=22; }
@@ -3797,15 +3871,16 @@ function catchingFish(h,by){ let i=1; const sky=getSky(floor(h.x),by+1,floor(h.z
   else if(h.lured>0){ h.lured-=i; let f5=0.15; if(h.lured<20) f5+=(20-h.lured)*0.05; else if(h.lured<40) f5+=(40-h.lured)*0.02; else if(h.lured<60) f5+=(60-h.lured)*0.01;
     if(rnd()<f5&&settings.particles){ const a=rnd()*TAU, d=(25+rnd()*35)*0.1, x=h.x+Math.sin(a)*d, z=h.z+Math.cos(a)*d; if(getBlock(floor(x),by,floor(z))===B.water) splashAt(x,surf,z,2+(rnd()*2|0)); }
     if(h.lured<=0){ h.ang=rnd()*360; h.hooked=20+(rnd()*61|0); } }
-  else h.lured=100+(rnd()*501|0); }
+  else h.lured=Math.max(1,100+(rnd()*501|0)-(h.lure||0)*100); }
 function splashAt(x,y,z,n){ const fr=pframes('p_splash_',4); for(let k=0;k<n;k++) addParticle({x:x+(rnd()-.5)*0.3,y:y+0.05,z:z+(rnd()-.5)*0.3,vx:(rnd()-.5)*1.5,vy:1.5+rnd()*1.5,vz:(rnd()-.5)*1.5,life:0.5,size:0.06,tile:fr?fr[0]:TEX.white,frames:fr,gravity:0.8}); }
-function fishLoot(open){ const r=rnd(); const pool=open&&r<0.05?'treasure':r<0.15?'junk':'fish'; const L=FISH_LOOT[pool]; let tot=0; for(const q of L) tot+=q[1]; let k=rnd()*tot; for(const q of L){ k-=q[1]; if(k<=0) return {id:q[0](),pool}; } return {id:I.cod,pool:'fish'}; }
+function fishLoot(open,luck=0){ const wf=85-luck, wj=Math.max(0,10-2*luck), wt=open?5+2*luck:0, r=rnd()*(wf+wj+wt); const pool=r<wt?'treasure':r<wt+wj?'junk':'fish'; const L=FISH_LOOT[pool]; let tot=0; for(const q of L) tot+=q[1]; let k=rnd()*tot; for(const q of L){ k-=q[1]; if(k<=0) return {id:q[0](),pool}; } return {id:I.cod,pool:'fish'}; }
 function reelIn(){ const h=player.hook; player.hook=null; if(!h) return; const rod=heldItem(); let wear=0;
-  if(h.nibble>0){ const lt=fishLoot(h.open); const d=ITEMS[lt.id]; let n=1, dur=d.dur; if(lt.pool==='treasure'&&d.dur) dur=Math.max(1,Math.round(d.dur*(0.25+rnd()*0.65))); if(lt.id===I.emerald) n=1+(rnd()*3|0);
+  if(h.nibble>0){ const lt=fishLoot(h.open,h.luck||0); const d=ITEMS[lt.id]; let n=1, dur=d.dur; if(lt.pool==='treasure'&&d.dur) dur=Math.max(1,Math.round(d.dur*(0.25+rnd()*0.65))); if(lt.id===I.emerald) n=1+(rnd()*3|0);
     if(lt.pool==='junk'&&d.dur) dur=Math.max(1,Math.round(d.dur*(0.1+rnd()*0.8)));
     const sy=floor(h.y)+1.3, dx=player.x-h.x, dz=player.z-h.z, dy=player.y+1-sy, dd=Math.hypot(dx,dz), T=clamp(0.5+dd*0.05,0.55,1.3);
-    spawnItem(h.x,sy,h.z,lt.id,n,dur,false,[dx/T,(dy+0.5*GRAVITY*0.6*T*T)/T,dz/T]);
-    addXp(1+(rnd()*6|0)); sfx('orb'); wear=1;
+    let st=makeStack(lt.id,n,dur); if(lt.pool==='treasure'&&(lt.id===I.bow||lt.id===I.fishing_rod||lt.id===I.book)) st=enchantWithLevels(st,30,Math.random,true);
+    spawnItem(h.x,sy,h.z,st.id,n,st.dur,false,[dx/T,(dy+0.5*GRAVITY*0.6*T*T)/T,dz/T],st);
+    gainXp(1+(rnd()*6|0)); sfx('orb'); wear=1;
     if(lt.pool==='fish'){ achieve('fish'); world.stats.fish=(world.stats.fish||0)+1; }
     if(lt.pool==='treasure'){ actionBar(t('msg.treasure')); sfx('levelup',undefined,undefined,undefined,0.5); if(settings.particles) for(let k=0;k<20;k++) addGlow({x:h.x+(rnd()-.5)*0.6,y:sy+rnd()*0.5,z:h.z+(rnd()-.5)*0.6,vx:(rnd()-.5)*2,vy:1+rnd()*2,vz:(rnd()-.5)*2,life:0.8+rnd()*0.6,size:0.12,r:255,g:220,b:90,a:1,grav:3,drag:0.9}); } }
   else if(h.state===2) wear=2;
@@ -3872,7 +3947,7 @@ function damageEntity(e,amount,source,knock){
 }
 function killEntity(e,source){ const m=MOBS[e.type]; e.dead=true; e.deadTime=0; e.vx=e.vz=0; sfx(m.sound+'_death',e.x,e.y,e.z);
   if(ui.villager===e) closeGui();
-  if(source==='player'||source==='arrow_player'||source==='wolf'){ for(const [fn,a,b] of m.drops){ const n=a+(rnd()*(b-a+1)|0); if(n>0) spawnItem(e.x,e.y+0.3,e.z,fn(),n); } if(e.type==='sheep'&&!e.sheared) spawnItem(e.x,e.y+0.3,e.z,B['wool_'+e.color],1); if(e.onFire>0&&e.type==='cow') {} 
+  if(source==='player'||source==='arrow_player'||source==='wolf'){ const lo=source==='player'?(e.lootL||0):0; for(const [fn,a,b] of m.drops){ const n=a+(rnd()*(b-a+1)|0)+(lo?rInt(Math.random,lo+1):0); if(n>0) spawnItem(e.x,e.y+0.3,e.z,cookedDrop(fn(),e),n); } if(e.type==='sheep'&&!e.sheared) spawnItem(e.x,e.y+0.3,e.z,B['wool_'+e.color],1); if(e.onFire>0&&e.type==='cow') {} 
     const xp=m.xp||(1+(rnd()*3|0)); for(let i=0;i<Math.min(xp,5);i++) spawnXp(e.x,e.y+0.5,e.z,Math.ceil(xp/Math.min(xp,5))); if(m.hostile) achieve('hunter'); player.score+=m.hostile?10:2; world.stats.kills=(world.stats.kills||0)+1; } }
 function explode(x,y,z,power,source){
   sfx('explode',x,y,z,1.5); const r=power; const rr=Math.ceil(r);
@@ -3884,7 +3959,7 @@ function explode(x,y,z,power,source){
   for(const e of world.entities.slice()){ if(e.dead) continue; const d=dist3(e.x,e.y+e.h/2,e.z,x,y,z); if(d>r*2) continue; const f=(1-d/(r*2)); const dmg=(f*f+f)*power*3.5+1; const dx=e.x-x,dy=e.y+e.h/2-y,dz=e.z-z,l=sqrt(dx*dx+dy*dy+dz*dz)||1;
     if(e.type==='tnt'){ e.vx+=dx/l*f*8; e.vy+=f*8; e.vz+=dz/l*f*8; e.fuse=Math.min(e.fuse,10+(rnd()*20|0)); continue; } if(e.type==='item'||e.type==='xp'||e.type==='arrow'||e.type==='fireball'||e.type==='throw'){ if(e.type==='item'&&f>0.5) removeEntity(e); continue; }
     damageEntity(e,dmg,source,[dx/l*f*10,f*8+2,dz/l*f*10]); }
-  const pd=dist3(player.x,player.y+0.9,player.z,x,y,z); if(pd<r*2){ const f=1-pd/(r*2); const dmg=(f*f+f)*power*3.5+1; hurt(dmg,'explosion',{x,y,z}); player.vy+=f*8; }
+  const pd=dist3(player.x,player.y+0.9,player.z,x,y,z); if(pd<r*2){ const f=1-pd/(r*2); const dmg=(f*f+f)*power*3.5+1; hurt(dmg,'explosion',{x,y,z}); player.vy+=f*8*Math.max(0,1-0.15*armorEnch('blast_protection')); }
   if(mp.role==='host'&&mp.peers.size) mpExplodePeers(x,y,z,r,power);
   explodeFx(x,y,z,r);
   camShake=0.6; achieve('explode');
@@ -3920,15 +3995,15 @@ function updateItem(e,dt,i){
 }
 function updateXp(e,dt,i){ if(e.age>300){ world.entities.splice(i,1); return; } const tp=mpXpTarget(e); const dx=tp.x-e.x,dy=tp.y+0.8-e.y,dz=tp.z-e.z,d=sqrt(dx*dx+dy*dy+dz*dz);
   if(d<6&&!tp.dead){ const f=(1-d/6)*22; e.vx+=dx/d*f*dt; e.vy+=dy/d*f*dt; e.vz+=dz/d*f*dt; } else e.vy-=GRAVITY*0.5*dt; e.vx*=0.98; e.vz*=0.98; moveEntity(e,dt); if(e.onGround){ e.vx*=0.7; e.vz*=0.7; }
-  if(d<0.9&&!tp.dead){ if(tp!==player){ mpSendTo(tp.id,{t:'xp',n:e.value}); world.entities.splice(i,1); return; } addXp(e.value); sfx('orb'); world.entities.splice(i,1); } }
+  if(d<0.9&&!tp.dead){ if(tp!==player){ mpSendTo(tp.id,{t:'xp',n:e.value}); world.entities.splice(i,1); return; } gainXp(e.value); sfx('orb'); world.entities.splice(i,1); } }
 function updateArrow(e,dt,i){
-  if(e.stuck){ e.stuckT+=dt; if(e.stuckT>15){ world.entities.splice(i,1); return; } if(e.owner==='player'&&dist3(e.x,e.y,e.z,player.x,player.y+0.9,player.z)<1.4&&!player.dead){ if(addItem(I.arrow,1)===0){ sfx('pop'); world.entities.splice(i,1); } } if(mp.role==='host'&&e.owner==='player'&&world.entities[i]===e) mpArrowPickup(e,i); return; }
+  if(e.stuck){ e.stuckT+=dt; if(e.stuckT>15){ world.entities.splice(i,1); return; } if(e.owner==='player'&&!e.noPickup&&dist3(e.x,e.y,e.z,player.x,player.y+0.9,player.z)<1.4&&!player.dead){ if(addItem(I.arrow,1)===0){ sfx('pop'); world.entities.splice(i,1); } } if(mp.role==='host'&&e.owner==='player'&&!e.noPickup&&world.entities[i]===e) mpArrowPickup(e,i); return; }
   if(e.age>20){ world.entities.splice(i,1); return; }
   e.vy-=20*dt; e.vx*=0.995; e.vz*=0.995; const sp=sqrt(e.vx*e.vx+e.vy*e.vy+e.vz*e.vz); const nx=e.x+e.vx*dt,ny=e.y+e.vy*dt,nz=e.z+e.vz*dt;
   const hit=raycast(e.x,e.y,e.z,e.vx/sp,e.vy/sp,e.vz/sp,sp*dt,false);
-  if(hit){ e.x=hit.hx-e.vx/sp*0.05; e.y=hit.hy-e.vy/sp*0.05; e.z=hit.hz-e.vz/sp*0.05; e.stuck=true; e.stuckT=0; sfx('arrowhit',e.x,e.y,e.z); e.vx=e.vy=e.vz=0; return; }
+  if(hit){ e.x=hit.hx-e.vx/sp*0.05; e.y=hit.hy-e.vy/sp*0.05; e.z=hit.hz-e.vz/sp*0.05; e.stuck=true; e.stuckT=0; sfx('arrowhit',e.x,e.y,e.z); e.vx=e.vy=e.vz=0; if(e.flame&&hit.id===B.tnt){ setBlock(hit.x,hit.y,hit.z,B.air); spawnTNT(hit.x,hit.y,hit.z,80); } return; }
   // entités
-  for(const o of world.entities){ if(o===e||o.dead||o.type==='item'||o.type==='xp'||o.type==='arrow'||o.type==='throw'||o.type==='falling'||o.type==='tnt'||o.type==='eye') continue; if(e.owner!=='player'&&o.hostile) continue; const b=entityBox(o); if(nx>b[0]-0.1&&nx<b[3]+0.1&&ny>b[1]-0.1&&ny<b[4]+0.1&&nz>b[2]-0.1&&nz<b[5]+0.1){ if(o.type==='enderman'){ if(!o.dodgeT||o.age>o.dodgeT){ o.dodgeT=o.age+1; enderTeleport(o,o.x,o.z,10); } continue; } const dmg=Math.ceil((2+sp*0.25)*e.dmgMul); damageEntity(o,dmg,e.owner==='player'?'arrow_player':'arrow',[e.vx*0.15,3,e.vz*0.15]); world.entities.splice(i,1); return; } }
+  for(const o of world.entities){ if(o===e||o.dead||o.type==='item'||o.type==='xp'||o.type==='arrow'||o.type==='throw'||o.type==='falling'||o.type==='tnt'||o.type==='eye') continue; if(e.owner!=='player'&&o.hostile) continue; const b=entityBox(o); if(nx>b[0]-0.1&&nx<b[3]+0.1&&ny>b[1]-0.1&&ny<b[4]+0.1&&nz>b[2]-0.1&&nz<b[5]+0.1){ if(o.type==='enderman'){ if(!o.dodgeT||o.age>o.dodgeT){ o.dodgeT=o.age+1; enderTeleport(o,o.x,o.z,10); } continue; } const dmg=Math.ceil((2+sp*0.25)*e.dmgMul*(e.power?(2.5+0.5*e.power)/2:1)); const ph=Math.hypot(e.vx,e.vz)||1, pk=(e.punch||0)*9; if(e.flame&&MOBS[o.type]&&!MOBS[o.type].fireproof) o.onFire=Math.max(o.onFire||0,5); damageEntity(o,dmg,e.owner==='player'?'arrow_player':'arrow',[e.vx*0.15+e.vx/ph*pk,3,e.vz*0.15+e.vz/ph*pk]); world.entities.splice(i,1); return; } }
   if(e.owner!=='player'&&!player.dead){ const b=entityBox(player); if(nx>b[0]-0.1&&nx<b[3]+0.1&&ny>b[1]-0.1&&ny<b[4]+0.1&&nz>b[2]-0.1&&nz<b[5]+0.1){ hurt(Math.ceil(2+sp*0.15),'arrow',e.ownerEnt||{x:e.x-e.vx,y:e.y,z:e.z-e.vz,type:'skeleton'}); world.entities.splice(i,1); return; } }
   if(e.owner!=='player'&&mp.peers.size&&mpHitPeer(e,nx,ny,nz,0.1,Math.ceil(2+sp*0.15),'arrow',0)){ world.entities.splice(i,1); return; }
   e.x=nx; e.y=ny; e.z=nz; e.yaw=Math.atan2(-e.vx,-e.vz); e.pitch=Math.atan2(e.vy,sqrt(e.vx*e.vx+e.vz*e.vz));
@@ -4011,6 +4086,7 @@ function updateMob(e,dt,i,d2){
   if(m.fly){ let ty=e.y; if(chase) ty=player.y+2.5; else if(e.tx!==null) ty=topY(floor(e.x),floor(e.z))+2; const dyy=clamp(ty-e.y,-1,1); e.vy+=(dyy*2.2+Math.sin(e.age*2.5)*0.25-e.vy)*Math.min(1,dt*3); }
   else if(fl.water){ e.vy+=(chase||speed>0?2.5:1.2)*dt*8; e.vy=Math.min(e.vy,2.5); e.vx*=0.95; e.vz*=0.95; } else { e.vy-=GRAVITY*dt; if(m.slowFall&&e.vy<-2.5) e.vy=-2.5; }
   e.chasing=chase; if(e.aimT>0) e.aimT-=dt; if(e.eatT>0) speed=0;
+  if(e.slowT>0){ e.slowT-=dt; speed*=0.4; }
   const tx=-Math.sin(e.yaw)*speed, tz=-Math.cos(e.yaw)*speed; const acc=e.onGround?12:3; e.vx+=(tx-e.vx)*Math.min(1,acc*dt); e.vz+=(tz-e.vz)*Math.min(1,acc*dt);
   const wasG=e.onGround; moveEntity(e,dt);
   if(e.blockedH&&e.onGround&&speed>0&&!m.fly){ e.vy=9; e.onGround=false; } if(m.fly&&e.blockedH) e.vy=Math.max(e.vy,1.5);
@@ -4654,13 +4730,14 @@ function slotClick(arr,i,button,shift,tpl){
   if(arr==='xout'){ takeSpecial(shift); return; }
   if(arr==='catalog'){ const id=i; if(player.cursor){ if(button===0){ player.cursor=null; } } else { const n=button===2?1:stackMax(id); if(shift){ addItem(id,n,undefined,tpl); } else player.cursor=makeStack(id,n,undefined,tpl); } refreshGui(); return; }
   const a=slotArray(arr); if(!a) return; const s=a[i]; const c=player.cursor;
+  if(arr==='armor'&&s&&enchLvl(s,'binding_curse')&&!isCreative()) return;
   if(shift){ if(!s) return; quickMove(arr,i); refreshGui(); refreshHotbar(); return; }
   if(encSlotClick(arr,i,button)) return;
   if(button===0){
     if(c&&s&&sameStack(c,s)&&stackMax(s.id)>1){ const add=Math.min(c.n,stackMax(s.id)-s.n); s.n+=add; c.n-=add; if(c.n<=0) player.cursor=null; }
     else if(c&&!s){ if(canPlaceIn(arr,i,c)){ a[i]=c; player.cursor=null; } }
     else if(c&&s){ if(canPlaceIn(arr,i,c)){ a[i]=c; player.cursor=s; } }
-    else if(!c&&s){ a[i]=null; player.cursor=s; if(arr==='cont'&&ui.open==='furnace'&&i===2&&ui.container.xp){ const n=Math.floor(ui.container.xp); if(n>0){ addXp(n); sfx('orb'); } ui.container.xp-=n; } }
+    else if(!c&&s){ a[i]=null; player.cursor=s; if(arr==='cont'&&ui.open==='furnace'&&i===2&&ui.container.xp){ const n=Math.floor(ui.container.xp); if(n>0){ gainXp(n); sfx('orb'); } ui.container.xp-=n; } }
   } else if(button===2){
     if(!c&&s){ const half=Math.ceil(s.n/2); player.cursor=cloneStack(s,half); s.n-=half; if(s.n<=0) a[i]=null; }
     else if(c&&!s){ if(canPlaceIn(arr,i,c)){ a[i]=cloneStack(c,1); c.n--; if(c.n<=0) player.cursor=null; } }
@@ -4677,10 +4754,10 @@ function quickMove(arr,i){ const a=slotArray(arr); const s=a[i]; if(!s) return;
     if(ui.open==='furnace'){ if(SMELT[s.id]){ if(moveInto(s,'cont',0,1)) a[i]=null; return; } if(d.fuel){ if(moveInto(s,'cont',1,2)) a[i]=null; return; } }
     if(d.armor&&(ui.open==='inventory'||ui.open==='creative')){ const k=ARMORSLOTS.indexOf(d.armor); if(!player.armor[k]){ player.armor[k]=s; a[i]=null; hud.lastArmor=-1; return; } }
     if(i<9){ if(moveInto(s,'inv',9,36)) a[i]=null; } else { if(moveInto(s,'inv',0,9)) a[i]=null; } return; }
-  if(arr==='cont'&&ui.open==='furnace'&&i===2&&ui.container.xp){ const n=Math.floor(ui.container.xp); if(n>0){ addXp(n); sfx('orb'); } ui.container.xp-=n; }
+  if(arr==='cont'&&ui.open==='furnace'&&i===2&&ui.container.xp){ const n=Math.floor(ui.container.xp); if(n>0){ gainXp(n); sfx('orb'); } ui.container.xp-=n; }
   if(moveInto(s,'inv',0,36)) a[i]=null; if(arr==='armor') hud.lastArmor=-1; }
-function hotbarSwapHover(k){ const h=ui.hover; if(!h||h.arr==='result'||h.arr==='catalog') return; const a=slotArray(h.arr); if(!a) return; if(h.arr==='inv'&&h.i===k) return; const s=a[h.i]; const o=player.inv[k]; if(o&&!canPlaceIn(h.arr,h.i,o)) return; a[h.i]=o; player.inv[k]=s; refreshGui(); refreshHotbar(); }
-function dropHover(all){ const h=ui.hover; if(!h) return; const a=slotArray(h.arr); if(!a) return; const s=a[h.i]; if(!s) return; const n=all?s.n:1; const f=forwardVec(); spawnItem(player.x+f[0]*0.5,playerEye()-0.3,player.z+f[2]*0.5,s.id,n,s.dur,true,[f[0]*5,2,f[2]*5],s); s.n-=n; if(s.n<=0) a[h.i]=null; refreshGui(); refreshHotbar(); }
+function hotbarSwapHover(k){ const h=ui.hover; if(!h||h.arr==='result'||h.arr==='catalog') return; const a=slotArray(h.arr); if(!a) return; if(h.arr==='inv'&&h.i===k) return; const s=a[h.i]; const o=player.inv[k]; if(h.arr==='armor'&&s&&enchLvl(s,'binding_curse')&&!isCreative()) return; if(o&&!canPlaceIn(h.arr,h.i,o)) return; a[h.i]=o; player.inv[k]=s; refreshGui(); refreshHotbar(); }
+function dropHover(all){ const h=ui.hover; if(!h) return; const a=slotArray(h.arr); if(!a) return; const s=a[h.i]; if(!s) return; if(h.arr==='armor'&&enchLvl(s,'binding_curse')&&!isCreative()) return; const n=all?s.n:1; const f=forwardVec(); spawnItem(player.x+f[0]*0.5,playerEye()-0.3,player.z+f[2]*0.5,s.id,n,s.dur,true,[f[0]*5,2,f[2]*5],s); s.n-=n; if(s.n<=0) a[h.i]=null; refreshGui(); refreshHotbar(); }
 function buildCatalog(){ const cat=$('catalog'); const q=ui.search.trim().toLowerCase(); const list=[]; for(const id in ITEMS){ const d=ITEMS[id]; if(d.cat===null) continue; if(d.block&&d.name.endsWith('_placeholder')) continue; const c=d.block?'blocks':(d.cat||'misc'); if(ui.tab!=='all'&&c!==ui.tab&&!(ui.tab==='misc'&&!d.block&&!d.cat)) continue; if(q&&!(d.fr.toLowerCase().includes(q)||d.en.toLowerCase().includes(q)||d.name.includes(q))) continue; list.push(+id); }
   const books=(ui.tab==='misc'||ui.tab==='all'||ui.tab==='tools')?ENCH_KEYS.filter(k=>{ if(!q) return true; const e=ENCH[k]; return e.fr.toLowerCase().includes(q)||e.en.toLowerCase().includes(q)||k.includes(q)||nameOf(I.enchanted_book).toLowerCase().includes(q); }):[];
   let h='<div class="grid" style="grid-template-columns:repeat(9,38px)">'; for(const id of list) h+=`<div class="slot" data-arr="catalog" data-i="${id}" data-id="${id}"><img alt="" src="${iconURL(id)}"></div>`; for(const k of books) h+=`<div class="slot glint" data-arr="catalog" data-i="${I.enchanted_book}" data-id="${I.enchanted_book}" data-ek="${k}" style="--ic:url(${iconURL(I.enchanted_book)})"><img alt="" src="${iconURL(I.enchanted_book)}"></div>`; cat.innerHTML=h+'</div>';
@@ -5180,6 +5257,7 @@ function drawEntities(proj,view){
       if(settings.particles&&rnd()<0.9) addParticle({x:e.x+(rnd()-.5)*0.1,y:e.y-0.2,z:e.z+(rnd()-.5)*0.1,vx:(rnd()-.5)*0.6,vy:-1-rnd(),vz:(rnd()-.5)*0.6,life:0.5+rnd()*0.4,size:0.06,tile:TEX.p_glint!==undefined?TEX.p_glint:TEX.white,gravity:0.3,collide:false,bright:1,r:255,g:210,b:140,mul:true,fadeOut:true}); continue; }
     if(e.type==='item'){ const d=ITEMS[e.item.id]; const bob=Math.sin(e.age*2)*0.05+0.1; if(d.block){ const s=0.25; const m=M4.mul(M4.translate(e.x,e.y+bob,e.z),M4.mul(M4.rotY(e.spin),M4.mul(M4.scale(s,s,s),M4.translate(-0.5,0,-0.5)))); emitBlockModel(itemB,e.item.id,m,sk,bl,blockTint(d,floor(e.x),floor(e.z))); } else { const m=M4.mul(M4.translate(e.x,e.y+bob+0.15,e.z),M4.mul(M4.rotY(e.spin),M4.scale(0.35,0.35,0.35))); itemQuad(itemB,m,d.tile,sk,bl,WHITE); if(stackGlint(e.item)) itemQuad(glintB,m,d.tile,sk,bl,WHITE); } continue; }
     if(e.type==='xp'){ const v=e.value||1; const fi=v>=37?4:v>=17?3:v>=7?2:v>=3?1:0; const tile=TEX['xp_orb_'+fi]!==undefined?TEX['xp_orb_'+fi]:TEX.xp_orb; const f=e.age*10; const col=[(Math.sin(f)+1)*0.5*255|0,255,(Math.sin(f+4.18879)+1)*0.1*255|0]; const m=M4.mul(M4.translate(e.x,e.y+0.15+Math.sin(e.age*3)*0.05,e.z),M4.mul(M4.rotY(cam.yaw),M4.scale(0.32,0.32,0.32))); itemQuad(itemB,m,tile,15,15,col); continue; }
+    if(e.type==='arrow'&&e.flame&&!e.stuck&&settings.particles&&rnd()<0.6) addParticle({x:e.x,y:e.y,z:e.z,vy:0.4,life:0.4,size:0.1,tile:TEX.flame,gravity:-0.1,collide:false,bright:1});
     if(e.type==='arrow'){ const m=M4.mul(M4.translate(e.x,e.y,e.z),M4.mul(M4.rotY(e.yaw),M4.mul(M4.rotX(e.pitch),M4.mul(M4.rotY(-PI/2),M4.scale(0.5,0.5,0.5))))); itemQuad(itemB,m,TEX.arrow_entity,sk,bl,WHITE); continue; }
     if(e.type==='throw'){ const m=M4.mul(M4.translate(e.x,e.y,e.z),M4.mul(M4.rotY(cam.yaw),M4.scale(0.3,0.3,0.3))); itemQuad(itemB,m,ITEMS[e.item].tile,sk,bl,WHITE); continue; }
     if(e.type==='eye'){ const m=M4.mul(M4.translate(e.x,e.y,e.z),M4.mul(M4.rotY(cam.yaw),M4.scale(0.4,0.4,0.4))); itemQuad(itemB,m,ITEMS[I.ender_eye].tile,15,15,WHITE); continue; }
@@ -5311,7 +5389,7 @@ function simStep(dt,scr){
     randomTickAcc+=dt*20*3; const rt=floor(randomTickAcc); if(rt>0){ randomTickAcc-=rt; runRandomTicks(floor(player.x),floor(player.z),Math.min(rt,6)); }
     tickContainers(dt);
     if(!ui.open&&!player.dead&&scr===null){ if(input.use){ useRepeat-=dt; if(useRepeat<=0){ useRepeat=0.25; doUse(); } } }
-    updatePlayer(dt); updateFishing(dt); updateTarget(); updateEntities(dt); updateSpawning(dt); updateSpawners(dt); animateTick(dt); updateParticles(dt); updateGlows(dt); updateSkyFx(dt); updateEncTables(dt); updateMusic(dt);
+    updatePlayer(dt); updateFishing(dt); updateTarget(); updateEntities(dt); updateSpawning(dt); updateSpawners(dt); animateTick(dt); updateParticles(dt); updateGlows(dt); updateSkyFx(dt); updateEncTables(dt); updateFrost(dt); updateMusic(dt);
     autosaveT+=dt; if(autosaveT>90){ autosaveT=0; saveWorld(); }
     processNeighborUpdates();
 }
@@ -5511,8 +5589,8 @@ function mpGuestMsg(m){
     case 'bolt': { if(!m.parts||!m.parts[0]) break; lightning.bolts.push({parts:m.parts,t:0,life:0.6}); lightning.flash=1; const b=m.parts[0][0]; const d=Math.hypot(b[0]-player.x,b[2]-player.z); lightning.thunder.push({t:d/340+0.1,v:clamp(1.2-d/90,0.35,1)}); break; }
     case 'chat': if(m.sys) chat(m.sys,'#ff8'); else chat('<'+(m.name||'?')+'> '+m.text); break;
     case 'give': { if(!ITEMS[m.id]) break; const left=addItem(m.id,m.n,m.dur,m.xs); if(left<m.n){ sfx('pop'); pickups.push({id:m.id,x:m.x,y:m.y,z:m.z,spin:0,t0:now()}); } if(left>0) spawnItem(player.x,player.y+0.5,player.z,m.id,left,m.dur,true,undefined,m.xs); refreshHUD(); break; }
-    case 'xp': addXp(m.n|0); sfx('orb'); break;
-    case 'hurt': if(player.dead) break; hurt(+m.a||0,m.c,m.ax!=null?{x:m.ax,y:player.y,z:m.az,type:m.at,id:m.ai}:null,!!m.bp); if(m.vy&&!isCreative()) player.vy+=m.vy; if(m.f&&!isCreative()) player.onFire=Math.max(player.onFire,m.f); break;
+    case 'xp': gainXp(m.n|0); sfx('orb'); break;
+    case 'hurt': if(player.dead) break; hurt(+m.a||0,m.c,m.ax!=null?{x:m.ax,y:player.y,z:m.az,type:m.at,id:m.ai}:null,!!m.bp); if(m.vy&&!isCreative()) player.vy+=m.vy; if(m.f&&!isCreative()) player.onFire=Math.max(player.onFire,fireDur(m.f)); break;
     case 'cData': mpGuestContainer(m); break;
     case 'invd': for(const [i,a,b] of m.l){ if(JSON.stringify(player.inv[i]||null)===JSON.stringify(a)) player.inv[i]=mpCloneStack(b); } refreshHUD(); break;
     case 'trade': { const v=mp.mirrors.get(m.id); if(v){ v.offers=m.offers; openGui('trade',null,null,v); } break; }
