@@ -202,6 +202,18 @@ leur volume a été normalisé et leur silence de début coupé (modifications).
 | xbow_draw2.mp3 | mcl_bows_crossbow_drawback_1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Contributeurs de VoxeLibre (licence par défaut des médias de VoxeLibre) | CC BY-SA 3.0 |
 | xbow_load.mp3 | mcl_bows_crossbow_load.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Contributeurs de VoxeLibre (licence par défaut des médias de VoxeLibre) | CC BY-SA 3.0 |
 | xbow_shoot.mp3 | mcl_bows_crossbow_shoot.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Contributeurs de VoxeLibre (licence par défaut des médias de VoxeLibre) | CC BY-SA 3.0 |
+| witch_laugh1.mp3 | vl_witch_laugh.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | DarkReaven (sons) et Herowl (filtrage), via VoxeLibre | CC0 |
+| witch_laugh2.mp3 | vl_witch_laugh.2.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | DarkReaven (sons) et Herowl (filtrage), via VoxeLibre | CC0 |
+| witch_hit1.mp3 | vl_witch_hit.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | DarkReaven (sons) et Herowl (filtrage), via VoxeLibre | CC0 |
+| witch_hit2.mp3 | vl_witch_hit.2.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | DarkReaven (sons) et Herowl (filtrage), via VoxeLibre | CC0 |
+| witch_death.mp3 | vl_witch_death.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | DarkReaven (sons) et Herowl (filtrage), via VoxeLibre | CC0 |
+| witch_attack1.mp3 | vl_witch_attack.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | DarkReaven (sons) et Herowl (filtrage), via VoxeLibre | CC0 |
+| witch_attack2.mp3 | vl_witch_attack.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | DarkReaven (sons) et Herowl (filtrage), via VoxeLibre | CC0 |
+| drink.mp3 | mcl_potions_drinking.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Contributeurs de VoxeLibre (mcl_potions) | CC0 |
+| bottle_fill.mp3 | mcl_potions_bottle_fill.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Contributeurs de VoxeLibre (mcl_potions) | CC0 |
+| bottle_pour.mp3 | mcl_potions_bottle_pour.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Contributeurs de VoxeLibre (mcl_potions) | CC0 |
+| potion_break.mp3 | mcl_potions_breaking_glass.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Contributeurs de VoxeLibre (mcl_potions) | CC0 |
+| brew.mp3 | mcl_brewing_complete.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Contributeurs de VoxeLibre (licence par défaut des médias de VoxeLibre) | CC BY-SA 3.0 |
 
 Licences : CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/), CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/),
 CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0/), CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/),
