@@ -4504,7 +4504,7 @@ function rsDim(){ const d=world.dims[world.dim]; if(!d.rs) d.rs={q:new Map(),hop
 const pk=(x,y,z)=>x+','+y+','+z;
 function rsSchedule(x,y,z,delay,prio){ const q=rsDim().q, k=pk(x,y,z); if(q.has(k)) return false; q.set(k,{x,y,z,t:RS.tick+Math.max(1,delay|0),p:prio||0,s:RS.seq++}); return true; }
 function rsScheduled(x,y,z){ return rsDim().q.has(pk(x,y,z)); }
-function rsStep(dt){ if(mp.role==='guest') return; RS.acc+=dt; let n=0; while(RS.acc>=0.05&&n<4){ RS.acc-=0.05; n++; RS.tick++; rsTickOnce(); } if(RS.acc>0.15) RS.acc=0.15; }
+function rsStep(dt){ if(mp.role==='guest'){ RS.acc+=dt; while(RS.acc>=0.05){ RS.acc-=0.05; RS.tick++; for(let i=RS.moving.length-1;i>=0;i--) if(RS.tick-RS.moving[i].t0>=2) RS.moving.splice(i,1); } return; } RS.acc+=dt; let n=0; while(RS.acc>=0.05&&n<4){ RS.acc-=0.05; n++; RS.tick++; rsTickOnce(); } if(RS.acc>0.15) RS.acc=0.15; }
 function rsTickOnce(){ const R=rsDim(), q=R.q;
   if(q.size){ const due=[]; for(const e of q.values()) if(e.t<=RS.tick) due.push(e); if(due.length){ due.sort((a,b)=>a.t-b.t||a.p-b.p||a.s-b.s); for(const e of due){ q.delete(pk(e.x,e.y,e.z)); rsBlockTick(e.x,e.y,e.z); } } }
   rsPlates(); rsMovingTick();
@@ -4764,14 +4764,15 @@ function pistonMove(x,y,z,id,m,ext){ const f=m&7, sticky=!!BLOCKS[id].sticky; co
     RS.moving.push({id:B.piston_head,meta:f|(sticky?8:0),sx:hx,sy:hy,sz:hz,x,y,z,t0:RS.tick,ghost:true});
     if(sticky){ const r=pistonResolve(x,y,z,f,false); if(r&&r.move.length) pistonShift(r.move,r.pd); }
     sfx('piston_in',x+0.5,y+0.5,z+0.5); }
-  rsNotifyAround(x,y,z); rsNotifyAround(hx,hy,hz); processNeighborUpdates(); }
+  rsNotifyAround(x,y,z); rsNotifyAround(hx,hy,hz); processNeighborUpdates();
+  if(mp.role==='host'&&mp.peers.size){ const l=RS.moving.filter(v=>v.t0===RS.tick).map(v=>[v.id,v.meta,v.sx,v.sy,v.sz,v.x,v.y,v.z]); if(l.length) mpSend({t:'fx',k:'pm',l,to:'*'}); } }
 function pistonShift(move,pd){ const v=D6[pd]; for(const [x,y,z] of move) setBlock(x,y,z,B.air,0,{silent:true});
   for(const [x,y,z,id,meta] of move){ const nx=x+v[0],ny=y+v[1],nz=z+v[2]; const cur=getBlock(nx,ny,nz); if(cur&&cur!==B.air&&pushReaction(cur)==='destroy') breakBlockNatural(nx,ny,nz); setBlock(nx,ny,nz,B.moving_piston,0,{silent:true}); RS.moving.push({id,meta,sx:x,sy:y,sz:z,x:nx,y:ny,z:nz,t0:RS.tick}); pushEntities(nx,ny,nz,pd,!!BLOCKS[id].stickyBlock); }
   for(const [x,y,z] of move){ rsNotifyAround(x,y,z); } }
 function pushEntities(x,y,z,dir,slime){ const v=D6[dir]; const box=[x-0.02,y-0.02,z-0.02,x+1.02,y+1.02+(dir===1?0.1:0),z+1.02];
   const hit=b=>b[3]>box[0]&&b[0]<box[3]&&b[4]>box[1]&&b[1]<box[4]&&b[5]>box[2]&&b[2]<box[5];
   const moveIt=e=>{ e.pistonPush={v,left:1,slime}; };
-  if(!player.dead&&hit(entityBox(player))) moveIt(player); for(const e of world.entities) if(!e.dead&&!e.mirror&&(MOBS[e.type]||e.type==='item'||e.type==='tnt'||e.type==='falling'||e.type==='cart'||e.type==='boat')&&hit(entityBox(e))) moveIt(e); }
+  if(!player.dead&&hit(entityBox(player))) moveIt(player); if(mp.role==='host') for(const p of mp.peers.values()) if(!p.dead&&p.dim===world.dim&&hit([p.x-0.3,p.y,p.z-0.3,p.x+0.3,p.y+1.8,p.z+0.3])) mpSendTo(p.id,{t:'ppush',v,s:slime?1:0}); for(const e of world.entities) if(!e.dead&&!e.mirror&&(MOBS[e.type]||e.type==='item'||e.type==='tnt'||e.type==='falling'||e.type==='cart'||e.type==='boat')&&hit(entityBox(e))) moveIt(e); }
 function applyPistonPush(e,dt){ const p=e.pistonPush; if(!p) return; const step=Math.min(p.left,dt*10); p.left-=step; e.x+=p.v[0]*step; e.y+=p.v[1]*step; e.z+=p.v[2]*step; if(p.v[1]>0&&e.vy<0) e.vy=0;
   if(p.left<=0){ if(p.slime){ e.vx+=p.v[0]*12; e.vy+=p.v[1]*12; e.vz+=p.v[2]*12; } e.pistonPush=null; } }
 function rsMovingTick(){ for(let i=RS.moving.length-1;i>=0;i--){ const mv=RS.moving[i]; if(RS.tick-mv.t0<2) continue; RS.moving.splice(i,1);
@@ -4795,7 +4796,7 @@ function rsPlace(id,d,x,y,z,tgt,usedSelf){ const f=facingFromYaw(); const look=p
     case 'repeater': case 'comparator': if(!supportsTop(below,bm)) return -1; return f;
     case 'lever': case 'button': { const fa=usedSelf?2:tgt.face; let a=OPP6[FACE2D6[fa]]; const sid=getBlock(x+D6[a][0],y+D6[a][1],z+D6[a][2]); const sd=BLOCKS[sid]; if(!sd||!sd.solid||(!sd.opaque&&sd.shape!=='cube')) return -1; return a|((a<2&&(f&1))?16:0); }
     case 'plate': return supportsTop(below,bm)||below===B.oak_fence||below===B.cobblestone_wall?0:-1;
-    case 'observer': { const lk=look>0.75?1:look<-0.75?0:H2D6[f]; return OPP6[lk]; }
+    case 'observer': { const lk=look>0.75?1:look<-0.75?0:H2D6[f]; return lk; }
     case 'piston': case 'dispenser': case 'dropper': { const lk=look>0.75?0:look<-0.75?1:H2D6[(f+2)&3]; return lk; }
     case 'hopper': { const fa=usedSelf?2:tgt.face; const k=FACE2D6[fa]; return k===1||k===0?0:OPP6[k]; }
     case 'daylight': case 'note': case 'lamp': case 'target': return 0;
@@ -6268,6 +6269,7 @@ function mpHostMsg(m){
     case 'atk': { const e=mpEntById(m.id); if(!e||e.dead) break; e.lootL=Math.min(3,m.lo|0); mpRunAs(p,null,0,()=>{ damageEntity(e,+m.dmg||1,m.src==='arrow_player'?'arrow_player':'player',Array.isArray(m.kb)?m.kb:null); if(!e.tamed) alertWolves(e); if(e.fleeFrom===player) e.fleeFrom=p; }); break; }
     case 'use': mpUseEntity(p,m); break;
       case 'nametag': { const e=mpEntById(m.id); if(e&&MOBS[e.type]&&typeof m.n==='string') e.customName=m.n.slice(0,24); break; }
+    case 'rsUse': { const id=getBlock(m.x,m.y,m.z); if(BLOCKS[id]&&BLOCKS[id].rs&&dist3(p.x,p.y,p.z,m.x,m.y,m.z)<8) mpRunAs(p,null,0,()=>rsInteract(id,m.x,m.y,m.z,getMeta(m.x,m.y,m.z))); break; }
     case 'cOpen': { const c=getContainer(m.x,m.y,m.z,true); if(!c) break; p.openC=[m.x,m.y,m.z]; p.cAck=0; p.lastC=JSON.stringify(mpContData(c)); mpSendTo(p.id,{t:'cData',x:m.x,y:m.y,z:m.z,c:mpContData(c),ack:0,open:1}); break; }
     case 'cSet': { const c=getContainer(m.x,m.y,m.z,false); if(!c||!Array.isArray(m.items)||m.items.length!==c.items.length) break; c.items=m.items.map(mpCloneStack); p.cAck=m.seq|0; p.lastC=JSON.stringify(mpContData(c)); if(ui.container===c) refreshGui(); break; }
     case 'cClose': p.openC=null; break;
@@ -6338,7 +6340,8 @@ function mpGuestMsg(m){
     case 'ents': mpApplyEnts(m.l); break;
     case 'time': { const d=m.ti-world.time; if(abs(d)>300||m.dy!==world.day) world.time=m.ti; else world.time+=d*0.5; world.day=m.dy; world.weather=m.w; world.thunder=!!m.th; if(abs(m.rl-world.rainLevel)>0.3) world.rainLevel=m.rl; break; }
     case 'sfx': mp.inNet++; try{ if(m.l){ for(const s of m.l) sfx(s[0],s[1],s[2],s[3],s[4]); } else sfx(m.n,undefined,undefined,undefined,m.v); } finally{ mp.inNet--; } break;
-    case 'fx': if(m.k==='fw'){ fireworkBurst(m.x,m.y,m.z,m.s); break; } if(m.k==='boom'){ explodeFx(m.x,m.y,m.z,m.r); if(dist3(player.x,player.y,player.z,m.x,m.y,m.z)<24) camShake=0.6; } break;
+    case 'ppush': if(Array.isArray(m.v)&&m.v.length===3) player.pistonPush={v:m.v,left:1,slime:!!m.s}; break;
+    case 'fx': if(m.k==='fw'){ fireworkBurst(m.x,m.y,m.z,m.s); break; } if(m.k==='note'){ noteSound(m.i,Math.pow(2,((m.n|0)-12)/12),m.x+0.5,m.y+0.5,m.z+0.5); noteParticle(m.x,m.y,m.z,m.n|0); break; } if(m.k==='pm'&&Array.isArray(m.l)){ for(const q of m.l) if(BLOCKS[q[0]]) RS.moving.push({id:q[0],meta:q[1],sx:q[2],sy:q[3],sz:q[4],x:q[5],y:q[6],z:q[7],t0:RS.tick,ghost:true}); break; } if(m.k==='boom'){ explodeFx(m.x,m.y,m.z,m.r); if(dist3(player.x,player.y,player.z,m.x,m.y,m.z)<24) camShake=0.6; } break;
     case 'bolt': { if(!m.parts||!m.parts[0]) break; lightning.bolts.push({parts:m.parts,t:0,life:0.6}); lightning.flash=1; const b=m.parts[0][0]; const d=Math.hypot(b[0]-player.x,b[2]-player.z); lightning.thunder.push({t:d/340+0.1,v:clamp(1.2-d/90,0.35,1)}); break; }
     case 'chat': if(m.sys) chat(m.sys,'#ff8'); else chat('<'+(m.name||'?')+'> '+m.text); break;
     case 'give': { if(!ITEMS[m.id]) break; let left; if(ITEMS[m.id].trident&&Number.isInteger(m.sl)&&m.sl>=0&&m.sl<9&&!player.inv[m.sl]){ player.inv[m.sl]=makeStack(m.id,1,m.dur,m.xs); left=0; } else left=addItem(m.id,m.n,m.dur,m.xs); if(left<m.n){ sfx('pop'); pickups.push({id:m.id,x:m.x,y:m.y,z:m.z,spin:0,t0:now()}); } if(left>0) spawnItem(player.x,player.y+0.5,player.z,m.id,left,m.dur,true,undefined,m.xs); refreshHUD(); break; }
@@ -6395,7 +6398,7 @@ function mpUseApplies(e){ const s=heldItem(), id=s?s.id:-1, d=s?ITEMS[s.id]:null
   const likes={pig:[I.carrot,I.potato],cow:[I.wheat],sheep:[I.wheat],chicken:[I.wheat_seeds,I.pumpkin_seeds]}[e.type]; if(likes&&likes.includes(id)) return true;
   if(e.type==='sheep'&&((id===I.shears&&!e.sheared)||(d&&d.dye))) return true; if(e.type==='cow'&&id===I.bucket) return true; return false; }
 function mpGuestContainer(m){ const key=m.x+','+m.y+','+m.z; let c=mp.openC;
-  if(m.open){ c={type:m.c.type,items:m.c.items,burn:m.c.burn,burnMax:m.c.burnMax,cook:m.c.cook,mpKey:key,mpPos:[m.x,m.y,m.z],sent:0}; mp.openC=c; openGui(c.type==='chest'?'chest':'furnace',c,[m.x,m.y,m.z]); if(c.type==='chest') sfx('chest'); return; }
+  if(m.open){ c={type:m.c.type,items:m.c.items,burn:m.c.burn,burnMax:m.c.burnMax,cook:m.c.cook,mpKey:key,mpPos:[m.x,m.y,m.z],sent:0}; mp.openC=c; openGui(c.type==='chest'?'chest':c.type==='disp'?'disp':c.type==='hopper'?'hopper':'furnace',c,[m.x,m.y,m.z]); if(c.type==='chest') sfx('chest'); return; }
   if(!c||c.mpKey!==key||ui.container!==c||(m.ack|0)<c.sent) return; c.items=m.c.items; c.burn=m.c.burn; c.burnMax=m.c.burnMax; c.cook=m.c.cook; refreshGui(); }
 function mpSendContainer(){ const c=ui.container; if(mp.role!=='guest'||!c||!c.mpPos) return; c.sent=++mp.cSeq; mpSend({t:'cSet',x:c.mpPos[0],y:c.mpPos[1],z:c.mpPos[2],items:c.items.map(mpCloneStack),seq:mp.cSeq}); }
 /* ---------- boucle réseau (appelée à chaque image) ---------- */
@@ -6485,7 +6488,8 @@ function mpInitUI(){
   const _doUse=doUse; doUse=function(){ if(!isG()) return _doUse(); if(player.dead||ui.open) return; const e=targetEntity;
     if(e&&e.mirror&&!e.dead&&mpUseApplies(e)){ mpSend({t:'use',id:e.id,inv:mpInvCopy(player.inv),hot:player.hot}); swingArm(); return; } if(!player.sneak&&interactBlock()) return; useItem(); };
   const _interactBlock=interactBlock; interactBlock=function(){ if(isG()&&target){ const id=target.id;
-      if(id===B.chest||id===B.furnace||id===B.furnace_lit){ mpSend({t:'cOpen',x:target.x,y:target.y,z:target.z}); return true; }
+      if(id===B.chest||id===B.furnace||id===B.furnace_lit||BLOCKS[id].tile==='container'){ mpSend({t:'cOpen',x:target.x,y:target.y,z:target.z}); return true; }
+      if(BLOCKS[id].rs&&['lever','button','repeater','comparator','daylight','wire','note','trapdoor','gate'].includes(BLOCKS[id].rs)){ if(BLOCKS[id].rs==='trapdoor'&&BLOCKS[id].iron) return false; if(BLOCKS[id].rs==='wire'&&wireSides(getBlock,getMeta,target.x,target.y,target.z).some(v=>v>0)) return false; mpSend({t:'rsUse',x:target.x,y:target.y,z:target.z}); swingArm(); return true; }
       if(id===B.bed){ world.bed={x:target.x,y:target.y,z:target.z}; actionBar(tr('Point de réapparition défini (seul l\'hôte peut dormir pour passer la nuit).','Spawn point set (only the host can sleep through the night).')); return true; } }
     return _interactBlock(); };
   const _closeGui=closeGui; closeGui=function(keep){ if(isG()&&ui.container&&ui.container.mpPos){ mpSendContainer(); mpSend({t:'cClose'}); mp.openC=null; } return _closeGui(keep); };
