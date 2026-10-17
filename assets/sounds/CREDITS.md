@@ -261,6 +261,9 @@ leur volume a été normalisé et leur silence de début coupé (modifications).
 | magma_big.mp3 | mobs_mc_magma_cube_big.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | LukeIRL — freesound.org/people/LukeIRL/sounds/176123 (dérivé) | CC BY 4.0 |
 | magma_small.mp3 | mobs_mc_magma_cube_small.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | LukeIRL — freesound.org/people/LukeIRL/sounds/176123 (dérivé) | CC BY 4.0 |
 | magma_attack.mp3 | mobs_mc_magma_cube_attack.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | kbnevel — freesound.org/people/kbnevel/sounds/119863 (dérivé) | CC0 |
+| sf_idle.mp3 | mobs_mc_silverfish_idle.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Inocodum — forum.luanti.org/viewtopic.php?f=17&t=10013 | CC BY-SA 4.0 |
+| sf_hurt.mp3 | mobs_mc_silverfish_hurt.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Inocodum — forum.luanti.org/viewtopic.php?f=17&t=10013 | CC BY-SA 4.0 |
+| sf_death.mp3 | mobs_mc_silverfish_death.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Inocodum — forum.luanti.org/viewtopic.php?f=17&t=10013 | CC BY-SA 4.0 |
 
 Licences : CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/), CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/), CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/),
 CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0/), CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/),
