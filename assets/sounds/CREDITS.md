@@ -225,6 +225,31 @@ leur volume a été normalisé et leur silence de début coupé (modifications).
 | saddle.mp3 | mcl_armor_equip_leather.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | artisticdude — opengameart.org/content/rpg-sound-pack | CC0 |
 | harmor_iron.mp3 | mcl_armor_equip_iron.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | mitchanary — freesound.org/people/mitchanary/sounds/506148 | CC0 |
 | harmor_diamond.mp3 | mcl_armor_equip_diamond.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | juryduty — freesound.org/people/juryduty/sounds/180231 | CC0 |
+| rabbit1.mp3 | mobs_mc_rabbit_random.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Alshred — freesound.org/people/Alshred/sounds/403773 (modifié) | CC0 |
+| rabbit2.mp3 | mobs_mc_rabbit_random.4.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Alshred — freesound.org/people/Alshred/sounds/403773 (modifié) | CC0 |
+| rabbit_hurt1.mp3 | mobs_mc_rabbit_hurt.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | kessir — freesound.org/people/kessir/sounds/372075 | CC0 |
+| rabbit_hurt2.mp3 | mobs_mc_rabbit_hurt.3.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | kessir — freesound.org/people/kessir/sounds/372075 | CC0 |
+| rabbit_death.mp3 | mobs_mc_rabbit_death.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | kessir — freesound.org/people/kessir/sounds/385850 | CC0 |
+| slime_jump.mp3 | green_slime_jump.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Dr. Minky — freesound.org/people/DrMinky | CC BY 3.0 |
+| slime_land.mp3 | green_slime_land.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Dr. Minky — freesound.org/people/DrMinky | CC BY 3.0 |
+| slime_death.mp3 | green_slime_death.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Dr. Minky — freesound.org/people/DrMinky | CC BY 3.0 |
+| slime_attack.mp3 | green_slime_attack.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | RandomationPictures — freesound.org/people/RandomationPictures/sounds/138481 | CC0 |
+| slime_hurt.mp3 | green_slime_damage.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | RandomationPictures — freesound.org/people/RandomationPictures/sounds/138481 | CC0 |
+| cat_meow1.mp3 | mobs_mc_cat_idle.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | TenPlus1 (mobs_animal), via VoxeLibre | MIT |
+| cat_meow2.mp3 | mobs_mc_cat_idle.2.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | SelsRoyalNavy — freesound.org/people/SelsRoyalNavy/sounds/427081 | CC0 |
+| cat_meow3.mp3 | animalia_cat_idle.ogg | Animalia par ElCeejo (https://github.com/ElCeejo/animalia) | ElCeejo (Animalia) | MIT |
+| cat_purr.mp3 | animalia_cat_purr.ogg | Animalia par ElCeejo (https://github.com/ElCeejo/animalia) | ElCeejo (Animalia) | MIT |
+| cat_hurt.mp3 | animalia_cat_hurt.ogg | Animalia par ElCeejo (https://github.com/ElCeejo/animalia) | ElCeejo (Animalia) | MIT |
+| cat_hiss.mp3 | mobs_mc_cat_hiss.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | cmusounddesign — freesound.org/people/cmusounddesign/sounds/71899 | CC BY 3.0 |
+| ocelot_hurt.mp3 | mobs_mc_ocelot_hurt.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | ebcrosby — freesound.org/people/ebcrosby/sounds/332979 | CC BY 3.0 |
+| snow_hurt1.mp3 | mobs_mc_snowman_hurt.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | kyles — freesound.org/people/kyles/sounds/450848 | CC0 |
+| snow_hurt2.mp3 | mobs_mc_snowman_hurt.2.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | cabled_mess — freesound.org/people/cabled_mess/sounds/384424 | CC0 |
+| snow_death.mp3 | mobs_mc_snowman_death.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | alexo400 — freesound.org/people/alexo400/sounds/543385 | CC0 |
+| bear1.mp3 | mobs_mc_bear_random.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | tbsounddesigns — freesound.org/people/tbsounddesigns/sounds/416853 | CC BY 3.0 |
+| bear2.mp3 | mobs_mc_bear_random.3.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | tbsounddesigns — freesound.org/people/tbsounddesigns/sounds/416855 | CC BY 3.0 |
+| bear_growl.mp3 | mobs_mc_bear_growl.3.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | tbsounddesigns — freesound.org/people/tbsounddesigns/sounds/416862 | CC BY 3.0 |
+| bear_hurt.mp3 | mobs_mc_bear_hurt.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | YleArkisto — freesound.org/people/YleArkisto/sounds/249441 (modifié) | CC BY 3.0 |
+| bear_death.mp3 | mobs_mc_bear_death.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | YleArkisto — freesound.org/people/YleArkisto/sounds/249441 (modifié) | CC BY 3.0 |
 
 Licences : CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/), CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/),
 CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0/), CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/),
