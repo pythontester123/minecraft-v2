@@ -214,6 +214,17 @@ leur volume a été normalisé et leur silence de début coupé (modifications).
 | bottle_pour.mp3 | mcl_potions_bottle_pour.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Contributeurs de VoxeLibre (mcl_potions) | CC0 |
 | potion_break.mp3 | mcl_potions_breaking_glass.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Contributeurs de VoxeLibre (mcl_potions) | CC0 |
 | brew.mp3 | mcl_brewing_complete.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Contributeurs de VoxeLibre (licence par défaut des médias de VoxeLibre) | CC BY-SA 3.0 |
+| horse1.mp3 | mobs_mc_horse_random.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | GoodListener — freesound.org/people/GoodListener/sounds/322454 | CC BY 3.0 |
+| horse2.mp3 | mobs_mc_horse_random.2.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | ERH — freesound.org/people/ERH/sounds/32043 | CC BY 3.0 |
+| horse_death.mp3 | mobs_mc_horse_death.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | GoodListener — freesound.org/people/GoodListener/sounds/322445 | CC BY 3.0 |
+| horse_hurt.mp3 | mobs_mc_horse_death.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | GoodListener — freesound.org/people/GoodListener/sounds/322445 (extrait, modifié) | CC BY 3.0 |
+| donkey1.mp3 | mobs_mc_donkey_random.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Garuda1982 — freesound.org/people/Garuda1982/sounds/539505 | CC BY 3.0 |
+| donkey2.mp3 | mobs_mc_donkey_random.2.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | JarredGibb — freesound.org/people/JarredGibb/sounds/233131 | CC0 |
+| donkey_hurt.mp3 | mobs_mc_donkey_hurt.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Garuda1982 — freesound.org/people/Garuda1982/sounds/539505 | CC BY 3.0 |
+| donkey_death.mp3 | mobs_mc_donkey_death.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Garuda1982 — freesound.org/people/Garuda1982/sounds/539505 | CC BY 3.0 |
+| saddle.mp3 | mcl_armor_equip_leather.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | artisticdude — opengameart.org/content/rpg-sound-pack | CC0 |
+| harmor_iron.mp3 | mcl_armor_equip_iron.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | mitchanary — freesound.org/people/mitchanary/sounds/506148 | CC0 |
+| harmor_diamond.mp3 | mcl_armor_equip_diamond.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | juryduty — freesound.org/people/juryduty/sounds/180231 | CC0 |
 
 Licences : CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/), CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/),
 CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0/), CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/),
