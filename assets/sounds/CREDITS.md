@@ -250,7 +250,18 @@ leur volume a été normalisé et leur silence de début coupé (modifications).
 | bear_growl.mp3 | mobs_mc_bear_growl.3.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | tbsounddesigns — freesound.org/people/tbsounddesigns/sounds/416862 | CC BY 3.0 |
 | bear_hurt.mp3 | mobs_mc_bear_hurt.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | YleArkisto — freesound.org/people/YleArkisto/sounds/249441 (modifié) | CC BY 3.0 |
 | bear_death.mp3 | mobs_mc_bear_death.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | YleArkisto — freesound.org/people/YleArkisto/sounds/249441 (modifié) | CC BY 3.0 |
+| zp1.mp3 | mobs_mc_zombiepig_random.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | rubberduck — opengameart.org/content/80-cc0-creature-sfx | CC0 |
+| zp_angry.mp3 | mobs_mc_zombiepig_war_cry.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | rubberduck — opengameart.org/content/80-cc0-creature-sfx | CC0 |
+| zp_hurt1.mp3 | mobs_mc_zombiepig_hurt.2.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | rubberduck — opengameart.org/content/80-cc0-creature-sfx | CC0 |
+| zp_hurt2.mp3 | mobs_mc_zombiepig_hurt.3.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | rubberduck — opengameart.org/content/80-cc0-creature-sfx | CC0 |
+| zp_death.mp3 | mobs_mc_zombiepig_death.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | rubberduck — opengameart.org/content/80-cc0-creature-sfx | CC0 |
+| mite1.mp3 | mobs_mc_endermite_random.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | rubberduck — opengameart.org/content/80-cc0-creature-sfx | CC0 |
+| mite_hurt.mp3 | mobs_mc_endermite_hurt.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | rubberduck — opengameart.org/content/80-cc0-creature-sfx | CC0 |
+| mite_death.mp3 | mobs_mc_endermite_death.1.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | rubberduck — opengameart.org/content/80-cc0-creature-sfx | CC0 |
+| magma_big.mp3 | mobs_mc_magma_cube_big.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | LukeIRL — freesound.org/people/LukeIRL/sounds/176123 (dérivé) | CC BY 4.0 |
+| magma_small.mp3 | mobs_mc_magma_cube_small.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | LukeIRL — freesound.org/people/LukeIRL/sounds/176123 (dérivé) | CC BY 4.0 |
+| magma_attack.mp3 | mobs_mc_magma_cube_attack.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | kbnevel — freesound.org/people/kbnevel/sounds/119863 (dérivé) | CC0 |
 
-Licences : CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/), CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/),
+Licences : CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/), CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/), CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/),
 CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0/), CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/),
 MIT (texte complet : licence MIT de TenPlus1 / daufinsyd / ElCeejo, « Permission is hereby granted, free of charge… »).
