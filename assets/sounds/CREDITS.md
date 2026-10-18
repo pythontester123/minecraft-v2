@@ -264,6 +264,11 @@ leur volume a été normalisé et leur silence de début coupé (modifications).
 | sf_idle.mp3 | mobs_mc_silverfish_idle.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Inocodum — forum.luanti.org/viewtopic.php?f=17&t=10013 | CC BY-SA 4.0 |
 | sf_hurt.mp3 | mobs_mc_silverfish_hurt.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Inocodum — forum.luanti.org/viewtopic.php?f=17&t=10013 | CC BY-SA 4.0 |
 | sf_death.mp3 | mobs_mc_silverfish_death.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | Inocodum — forum.luanti.org/viewtopic.php?f=17&t=10013 | CC BY-SA 4.0 |
+| vex_hurt.mp3 | mobs_mc_vex_hurt.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | pauliw — opengameart.org/users/pauliw | CC0 |
+| vex_death.mp3 | mobs_mc_vex_death.ogg | VoxeLibre (https://github.com/VoxeLibre/VoxeLibre) | pauliw — opengameart.org/users/pauliw | CC0 |
+| fangs.mp3 | fangs.wav | Minecraft V2 | synthétisé pour Minecraft V2 (assets/sounds/synth34.py) | CC0 |
+| totem.mp3 | totem.wav | Minecraft V2 | synthétisé pour Minecraft V2 (assets/sounds/synth34.py) | CC0 |
+| raid_horn.mp3 | raid_horn.wav | Minecraft V2 | synthétisé pour Minecraft V2 (assets/sounds/synth34.py) | CC0 |
 
 Licences : CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/), CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/), CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/),
 CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0/), CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/),
