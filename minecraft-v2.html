@@ -1115,6 +1115,11 @@ item('spawn_egg_ravager','Œuf d\'apparition de ravageur','Ravager Spawn Egg',{t
   family('stained_pane_block','Vitre teintée','Stained Glass Pane',{hard:0.3,shape:'pane',opaque:false,opacity:0,translucent:true,sound:'glass',tex:'white_stained_glass'},WOOLS.map(w=>[w[0]+'_stained_glass_pane','Vitre '+w[1],w[2]+' Stained Glass Pane',w[0]+'_stained_glass']));
   family('glazed_terracotta_block','Terre cuite émaillée','Glazed Terracotta',{hard:1.4,tool:'pickaxe',resist:1.4,tex:'white_glazed_terracotta',noSticky:true},WOOLS.map(w=>[w[0]+'_glazed_terracotta','Terre cuite émaillée '+w[1],w[2]+' Glazed Terracotta',w[0]+'_glazed_terracotta']));
   BLOCKS[B.stained_glass_block].drop=null; BLOCKS[B.stained_pane_block].drop=null; }
+// 3.0 : dalles supplémentaires
+for(const [k,base,fr,en,res] of [['quartz_slab','quartz_block','Dalle de quartz','Quartz Slab',0.8],['granite_slab','granite','Dalle de granite','Granite Slab',6],['diorite_slab','diorite','Dalle de diorite','Diorite Slab',6],['andesite_slab','andesite','Dalle d\'andésite','Andesite Slab',6],
+  ['polished_granite_slab','polished_granite','Dalle de granite poli','Polished Granite Slab',6],['polished_diorite_slab','polished_diorite','Dalle de diorite polie','Polished Diorite Slab',6],['polished_andesite_slab','polished_andesite','Dalle d\'andésite polie','Polished Andesite Slab',6],
+  ['nether_brick_slab','nether_bricks','Dalle de briques du Nether','Nether Brick Slab',6],['purpur_slab','purpur_block','Dalle de purpur','Purpur Slab',6],['end_stone_brick_slab','end_stone_bricks','Dalle de briques de l\'End','End Stone Brick Slab',9],['mossy_cobblestone_slab','mossy_cobblestone','Dalle de pierres moussues','Mossy Cobblestone Slab',6]])
+  blk(k,fr,en,{hard:2,tool:'pickaxe',shape:'slab',opaque:false,opacity:0,tex:BLOCKS[B[base]].tex,resist:res});
 // combustibles des blocs
 for(const n of ['oak_planks','birch_planks','spruce_planks','oak_log','birch_log','spruce_log','oak_sapling','birch_sapling','spruce_sapling','jungle_planks','acacia_planks','dark_oak_planks','jungle_log','acacia_log','dark_oak_log','jungle_sapling','acacia_sapling','dark_oak_sapling','bookshelf','crafting_table','chest','oak_slab','ladder','oak_fence','oak_door']) BLOCKS[B[n]].fuel=(n.endsWith('sapling')?5:n==='oak_door'?10:15);
 BLOCKS[B.coal_block].fuel=800; BLOCKS[B.dead_bush].fuel=5;
@@ -1312,6 +1317,7 @@ for(const w of WOOLS){ const c=w[0];
   R(['GGG','GGG'],{G:c+'_stained_glass'},c+'_stained_glass_pane',16);
   R(['PPP','PDP','PPP'],{P:'glass_pane',D:c+'_dye'},c+'_stained_glass_pane',8);
   smelt(I[c+'_terracotta'],I[c+'_glazed_terracotta'],0.1); }
+for(const [k,base] of [['quartz_slab','quartz_block'],['granite_slab','granite'],['diorite_slab','diorite'],['andesite_slab','andesite'],['polished_granite_slab','polished_granite'],['polished_diorite_slab','polished_diorite'],['polished_andesite_slab','polished_andesite'],['nether_brick_slab','nether_bricks'],['purpur_slab','purpur_block'],['end_stone_brick_slab','end_stone_bricks'],['mossy_cobblestone_slab','mossy_cobblestone']]) R(['CCC'],{C:base},k,6);
 // Normalisation en grilles d'ids (avec variantes horizontales/miroir)
 for(const r of RECIPES){
   r.outId=nid(r.out); r.h=r.pattern.length; r.w=Math.max(...r.pattern.map(l=>l.length));
