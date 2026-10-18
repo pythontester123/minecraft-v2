@@ -15,6 +15,8 @@ Ils sont conservés ici pour pouvoir les vérifier, les remplacer ou les réutil
 | `textures/pixel_perfection_sheet.png` | Textures d'objets, de blocs, de particules et d'animations (eau, lave, portail) du pack [Pixel Perfection Community Edition](https://github.com/Athemis/PixelPerfectionCE) (révision `28e38ca`), créé par XSSheep et mis à jour par la communauté (StonePendant, freejusticehere, Stingraych, Nova_Wostra, lazerl0rd et autres) ; index dans `textures/sheet_index.json` | CC BY-SA 4.0 (`textures/PixelPerfectionCE-LICENSE-CC-BY-SA-4.0.md`) |
 | `textures/pixel_perfection_sky.png` | Même pack : `environment/sun.png` et `environment/moon_phases.png` | CC BY-SA 4.0 |
 | `textures/pixel_perfection_entities.png` | Même pack : textures des créatures (`entity/…`) ; index dans `textures/entities_index.json` | CC BY-SA 4.0 |
+| Planche `ENT_SHEET2` intégrée au jeu (version 3.0) : pillard, évocateur, vex (et vex en charge) | [VoxeLibre](https://github.com/VoxeLibre/VoxeLibre) : `textures/mobs_mc_pillager.png`, `mobs_mc_evoker.png`, `mobs_mc_vex.png`, `mobs_mc_vex_charging.png`, textures dérivées de Pixel Perfection (voir `LEGAL.md` de VoxeLibre) | CC BY-SA 4.0 |
+| Bannière sinistre (même planche, version 3.0) | Motifs de bannière de VoxeLibre (`textures/mcl_banners_banner_base.png`, `mcl_banners_base.png` et motifs `rhombus`, `stripe_bottom`, `stripe_center`, `border`, `stripe_middle`, `half_horizontal`, `circle`), recolorés et superposés pour ce projet dans l'ordre des motifs de la bannière sinistre du jeu original | CC BY-SA 4.0 |
 
 ### Pixel Perfection CE : modifications apportées
 
