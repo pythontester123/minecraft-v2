@@ -17,7 +17,7 @@ Ils sont conservés ici pour pouvoir les vérifier, les remplacer ou les réutil
 | `textures/pixel_perfection_entities.png` | Même pack : textures des créatures (`entity/…`) ; index dans `textures/entities_index.json` | CC BY-SA 4.0 |
 | Planche `ENT_SHEET2` intégrée au jeu (version 3.0) : pillard, évocateur, vex (et vex en charge) | [VoxeLibre](https://github.com/VoxeLibre/VoxeLibre) : `textures/mobs_mc_pillager.png`, `mobs_mc_evoker.png`, `mobs_mc_vex.png`, `mobs_mc_vex_charging.png`, textures dérivées de Pixel Perfection (voir `LEGAL.md` de VoxeLibre) | CC BY-SA 4.0 |
 | Bannière sinistre (même planche, version 3.0) | Motifs de bannière de VoxeLibre (`textures/mcl_banners_banner_base.png`, `mcl_banners_base.png` et motifs `rhombus`, `stripe_bottom`, `stripe_center`, `border`, `stripe_middle`, `half_horizontal`, `circle`), recolorés et superposés pour ce projet dans l'ordre des motifs de la bannière sinistre du jeu original | CC BY-SA 4.0 |
-| Planche `ENT_SHEET3` intégrée au jeu (version 3.0) : ravageur | Texture originale peinte par le code de ce projet (`tools/ravager_tex.py` du dépôt de travail), sur le gabarit d'UV du modèle de ravageur | CC BY-SA 4.0 (comme les autres textures de créatures) |
+| Planche `ENT_SHEET3` intégrée au jeu (version 3.0) : ravageur | Texture originale peinte pour ce projet, sur le gabarit d’UV du modèle de ravageur | CC BY-SA 4.0 (comme les autres textures de créatures) |
 
 ### Pixel Perfection CE : modifications apportées
 
